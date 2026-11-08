@@ -1,7 +1,9 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 import { test, expect, _electron as electron } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
+import { resolveSystemLanguage } from "../electron/language.cjs";
 
 let app, page, temp, file, profile;
 const original = "# Writing\r\n\r\nOriginal **words**.\r\n";
@@ -29,6 +31,7 @@ async function launch({
   };
   delete env.ELECTRON_RUN_AS_NODE;
   app = await electron.launch({
+    chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
     args: [process.cwd(), ...(named ? [file] : [])],
     env,
   });
@@ -109,7 +112,11 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     INKSTONE_USER_DATA: profile,
   };
   delete env.ELECTRON_RUN_AS_NODE;
-  app = await electron.launch({ args: [hook], env });
+  app = await electron.launch({
+    chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+    args: [hook],
+    env,
+  });
   page = await app.firstWindow();
   await page.waitForFunction(() => window.__inkstone?.editor);
   await expect.poll(() => app.evaluate(() => global.uxStartupScan)).toBe(true);
@@ -394,12 +401,17 @@ test("closing during an in-flight save preserves later edits until the user deci
   expect(await fs.readFile(file, "utf8")).toBe(original + "Snapshot A.");
 });
 
-test("fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo", async () => {
+test("fresh profiles follow the system language; first-run and preferences switch all UI while preserving text, selection and undo", async () => {
   await launch({ named: false, preferences: null });
-  await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator("#welcome-language")).toHaveValue("en");
+  const systemLocale = await resolveSystemLanguage(
+    await app.evaluate(({ app }) => app.getPreferredSystemLanguages()),
+  );
+  await expect(page.locator("html")).toHaveAttribute("lang", systemLocale);
+  await expect(page.locator("#welcome-language")).toHaveValue(systemLocale);
   expect(await page.evaluate(() => __inkstone.editor.getText())).toContain(
-    "A place for your thoughts",
+    systemLocale === "zh-CN"
+      ? "写下值得留下的想法"
+      : "A place for your thoughts",
   );
   await page.locator("#welcome-language").selectOption("zh-CN");
   await page.locator("#welcome-continue").click();
@@ -440,9 +452,9 @@ test("fresh profiles default to English; first-run and preferences switch all UI
     JSON.parse(await fs.readFile(path.join(profile, "settings.json"), "utf8"))
       .locale,
   ).toBe("en");
-  await fs.mkdir("artifacts/ux-validation", { recursive: true });
+  await fs.mkdir(artifactPath("ux-validation"), { recursive: true });
   await page.screenshot({
-    path: "artifacts/ux-validation/english-desktop.png",
+    path: artifactPath("ux-validation", "english-desktop.png"),
   });
 });
 
@@ -540,12 +552,39 @@ test("desktop math edits stay inline, render in the sandbox, and survive Save an
     });
     __inkstone.editor.focus();
   });
-  await page.locator(".cm-live-block .math-inline").click();
+  const glyphPoint = await page
+    .locator(".cm-live-block .math-inline")
+    .evaluate((element) => {
+      const walker = document.createTreeWalker(
+        element.querySelector(".katex-html"),
+        NodeFilter.SHOW_TEXT,
+      );
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const index = node.textContent.indexOf("x");
+        if (index < 0) continue;
+        const range = document.createRange();
+        range.setStart(node, index);
+        range.setEnd(node, index + 1);
+        const box = range.getBoundingClientRect();
+        if (box.width && box.height)
+          return { x: box.left + box.width * 0.2, y: box.top + box.height / 2 };
+      }
+      throw Error("Fraction numerator glyph missing");
+    });
+  await page.mouse.click(glyphPoint.x, glyphPoint.y);
+  expect(await page.evaluate(() => __inkstone.editor.getSelection().head)).toBe(
+    raw.replaceAll("\r\n", "\n").indexOf("{x}") + 1,
+  );
   await expect(page.locator(".cm-math-source")).toHaveText("$\\frac{x}{y}$");
   await page.keyboard.type("Q");
-  await expect(page.locator(".cm-inline-math-preview .katex")).toBeVisible();
+  await expect(page.locator(".cm-inline-math-preview")).toHaveCount(0);
+  await expect(page.locator(".cm-math-source")).toHaveText("$\\frac{Qx}{y}$");
   await page.keyboard.press("Control+Enter");
-  const modified = raw.replace("\\frac", "Q\\frac");
+  await expect(
+    page.locator(".cm-math-source, .cm-inline-math-preview"),
+  ).toHaveCount(0);
+  await expect(page.locator(".cm-inline-math .katex")).toHaveCount(1);
+  const modified = raw.replace("{x}", "{Qx}");
   expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(modified);
   const destination = path.join(temp, "Math 中文.md");
   await app.evaluate(({ dialog }, destination) => {
@@ -574,12 +613,12 @@ test("desktop math edits stay inline, render in the sandbox, and survive Save an
       const { from, to } = __inkstone.editor.view.state.selection.main;
       return __inkstone.editor.view.state.sliceDoc(from, to);
     }),
-  ).toBe("Q\\frac{x}{y}");
+  ).toBe("\\frac{Qx}{y}");
   await page.keyboard.type("z^2");
   await page.keyboard.press("Control+Enter");
   await page.evaluate(() => __inkstone.execute("save"));
   expect(await fs.readFile(destination, "utf8")).toBe(
-    modified.replace("Q\\frac{x}{y}", "z^2"),
+    modified.replace("\\frac{Qx}{y}", "z^2"),
   );
 });
 

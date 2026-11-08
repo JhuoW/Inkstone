@@ -1,3 +1,4 @@
+import { artifactPath } from "./artifact-path.mjs";
 // Static PE/resource verification only; never claims that Windows was executed.
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -83,7 +84,7 @@ for (const filename of files) {
     versions,
   });
 }
-const folder = "artifacts/windows-package-validation";
+const folder = artifactPath("windows-package-validation");
 await fs.mkdir(folder, { recursive: true });
 const result = {
   version: manifest.version,

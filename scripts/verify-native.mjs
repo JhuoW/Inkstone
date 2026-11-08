@@ -1,3 +1,4 @@
+import { artifactPath } from "./artifact-path.mjs";
 // Runs on the actual supported host. Linux execution does not validate Windows.
 import { _electron as electron } from "playwright";
 import fs from "node:fs/promises";
@@ -8,12 +9,7 @@ if (!["win32", "linux"].includes(process.platform))
   throw new Error("Windows or Linux is required.");
 const root = process.cwd();
 const temp = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone native 中文 "));
-const output = path.join(
-  root,
-  "artifacts",
-  "native-validation",
-  process.platform,
-);
+const output = artifactPath("native-validation", process.platform);
 await fs.mkdir(output, { recursive: true });
 const file = path.join(temp, "本地 文稿.md");
 const original =
@@ -24,6 +20,15 @@ const environment = {
   INKSTONE_USER_DATA: path.join(temp, "profile"),
 };
 delete environment.ELECTRON_RUN_AS_NODE;
+await fs.mkdir(environment.INKSTONE_USER_DATA, { recursive: true });
+await fs.writeFile(
+  path.join(environment.INKSTONE_USER_DATA, "settings.json"),
+  JSON.stringify({
+    locale: "en",
+    firstRunComplete: true,
+    defaultAppPrompted: true,
+  }),
+);
 const executablePath = process.env.INKSTONE_EXECUTABLE
   ? path.resolve(process.env.INKSTONE_EXECUTABLE)
   : undefined;
@@ -152,7 +157,6 @@ try {
         nodeIsolation: true,
         spellcheck,
         noEditByteAndMtime: true,
-        normalSandbox: !app.process().spawnargs.includes("--no-sandbox"),
         chinesePath: true,
         localEditAndUndo: true,
         selectionAcrossModes: true,

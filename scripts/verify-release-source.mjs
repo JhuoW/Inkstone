@@ -1,3 +1,4 @@
+import { artifactPath } from "./artifact-path.mjs";
 /** Compare final packaged application files against the current build, not a prior release. */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -40,7 +41,7 @@ for (const file of paths) {
   assert.equal(packaged.name, manifest.name);
   for (const name of expected)
     assert.deepEqual(
-      extractFile(file, name),
+      extractFile(file, name.split("/").join(path.sep)),
       await fs.readFile(name),
       `${file}: stale or changed ${name}`,
     );
@@ -67,9 +68,9 @@ for (const file of paths) {
     passed: true,
   });
 }
-await fs.mkdir("artifacts/ui-redesign/release", { recursive: true });
+await fs.mkdir(artifactPath("ui-redesign/release"), { recursive: true });
 await fs.writeFile(
-  "artifacts/ui-redesign/release/source-match.json",
+  artifactPath("ui-redesign/release/source-match.json"),
   JSON.stringify({ version: manifest.version, results }, null, 2) + "\n",
 );
 console.log(JSON.stringify(results, null, 2));

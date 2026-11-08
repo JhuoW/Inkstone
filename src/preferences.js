@@ -4,6 +4,7 @@ import { resolveAsset } from "./markdown.js";
 export const defaults = {
   locale: "en",
   firstRunComplete: false,
+  defaultAppPrompted: false,
   theme: "light",
   fontFamily:
     '"Segoe UI", "Noto Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
@@ -253,6 +254,17 @@ export function showPreferences(
       ),
     files:
       group(
+        t("Markdown 默认打开方式", "Default Markdown app"),
+        hint(
+          t(
+            "在 Windows 中选择用 Inkstone 打开 Markdown 文件。",
+            "Choose Inkstone to open Markdown files in Windows.",
+          ),
+        ) +
+          '<p id="default-app-status" class="setting-help muted" role="status" aria-live="polite"></p>' +
+          `<button type="button" id="set-default-markdown" disabled>${t("在 Windows 中设置", "Set in Windows")}</button>`,
+      ) +
+      group(
         t("保存与恢复", "Saving and recovery"),
         field(
           "autoSave",
@@ -487,6 +499,83 @@ export function showPreferences(
     }
   };
   refreshSpellcheckStatus();
+  let defaultAppRefresh;
+  const refreshDefaultApp = () => {
+    if (defaultAppRefresh || !d.el.isConnected) return defaultAppRefresh;
+    defaultAppRefresh = (async () => {
+      const button = $("#set-default-markdown", d.el);
+      const status = $("#default-app-status", d.el);
+      try {
+        const info = await invoke("getDefaultAppInfo");
+        if (!d.el.isConnected) return;
+        button.disabled = !info?.supported;
+        if (!info?.supported) {
+          status.textContent = t(
+            "此入口适用于 Windows。",
+            "This action is available on Windows.",
+          );
+        } else if (info.error) {
+          status.textContent = t(
+            "暂时无法查询默认应用，仍可打开 Windows 设置。",
+            "The current default could not be checked. You can still open Windows Settings.",
+          );
+        } else if (info.requiresInstallation) {
+          status.textContent = t(
+            "请先安装 Inkstone，使它出现在系统的默认应用和打开方式列表中。",
+            "Install Inkstone first so it appears in Default apps and Open with.",
+          );
+        } else {
+          status.textContent = info.currentDefault?.name
+            ? t("当前默认：", "Current default: ") + info.currentDefault.name
+            : t(
+                "Windows 尚未提供可确认的默认应用。",
+                "Windows did not report a confirmed default app.",
+              );
+        }
+      } catch (error) {
+        if (d.el.isConnected) {
+          status.textContent = error.message;
+          button.disabled = true;
+        }
+      } finally {
+        defaultAppRefresh = null;
+      }
+    })();
+    return defaultAppRefresh;
+  };
+  refreshDefaultApp();
+  window.addEventListener("focus", refreshDefaultApp);
+  d.el.addEventListener(
+    "close",
+    () => window.removeEventListener("focus", refreshDefaultApp),
+    { once: true },
+  );
+  $("#set-default-markdown", d.el).onclick = async () => {
+    const button = $("#set-default-markdown", d.el);
+    button.disabled = true;
+    try {
+      const result = await invoke("openDefaultApps");
+      if (!result?.opened)
+        throw Error(
+          t(
+            "Windows 默认应用设置不可用。",
+            "Windows Default apps is unavailable.",
+          ),
+        );
+      $("#default-app-status", d.el).textContent = t(
+        result.requiresInstallation
+          ? "已打开 Windows 设置。请先安装 Inkstone，使它出现在默认应用列表中。"
+          : "请在 Windows 设置中选择 Inkstone；返回后将更新默认应用状态。",
+        result.requiresInstallation
+          ? "Windows Settings is open. Install Inkstone first so it appears in Default apps."
+          : "Choose Inkstone in Windows Settings. The status refreshes when you return.",
+      );
+    } catch (error) {
+      toast(error.message, true);
+    } finally {
+      if (d.el.isConnected) button.disabled = false;
+    }
+  };
   $("#detect-tools", d.el).onclick = async () => {
     const button = $("#detect-tools", d.el),
       result = $("#tool-results", d.el);

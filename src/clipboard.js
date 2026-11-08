@@ -3,6 +3,7 @@ import { gfm } from "turndown-plugin-gfm";
 import DOMPurify from "dompurify";
 import { renderMarkdown } from "./markdown.js";
 import { locateTable } from "./tables.js";
+import { isolateHistory } from "@codemirror/commands";
 
 const converter = new TurndownService({
   headingStyle: "atx",
@@ -11,6 +12,14 @@ const converter = new TurndownService({
   emDelimiter: "*",
 });
 converter.use(gfm);
+converter.addRule("escapedTableCell", {
+  filter: ["th", "td"],
+  replacement: (content, node) => {
+    const first = [...node.parentNode.children].indexOf(node) === 0;
+    // The table parser removes one pipe-escape slash before parsing inline Markdown.
+    return (first ? "| " : " ") + content.replace(/\|/g, "\\|") + " |";
+  },
+});
 converter.keep([
   "video",
   "audio",
@@ -69,20 +78,45 @@ export function htmlToMarkdown(html) {
     }),
   );
 }
-export function installClipboard(host, editor, getContext) {
+let pendingNativeCopy = null;
+function insertClipboardText(editor, value) {
+  if (editor.view.state.readOnly) return;
+  editor.view.dispatch({ annotations: isolateHistory.of("full") });
+  editor.insert(value);
+  editor.view.dispatch({ annotations: isolateHistory.of("full") });
+}
+export function installClipboard(
+  host,
+  editor,
+  getContext,
+  onError = console.error,
+) {
   host.addEventListener(
     "copy",
     (event) => {
-      if (editor.view.state.readOnly) return;
+      if (event.target.closest(".inkstone-table-cell-editor")) return;
       const selection = editor.view.state.selection.main;
       if (selection.empty || !event.clipboardData) return;
       const markdown = editor.view.state.sliceDoc(selection.from, selection.to);
+      const html = renderMarkdown(markdown, { basePath: getContext().path });
+      if (window.inkstone && /Electron\//.test(navigator.userAgent)) {
+        event.preventDefault();
+        // Leave DataTransfer empty: Chromium would otherwise overwrite the native
+        // custom representation after this copy listener finishes.
+        const operation = window.inkstone.invoke("writeClipboard", {
+          text: markdown,
+          html,
+          markdown,
+        });
+        pendingNativeCopy = operation;
+        operation.catch(onError).finally(() => {
+          if (pendingNativeCopy === operation) pendingNativeCopy = null;
+        });
+        return;
+      }
       event.clipboardData.setData("text/plain", markdown);
       event.clipboardData.setData("text/x-inkstone-markdown", markdown);
-      event.clipboardData.setData(
-        "text/html",
-        renderMarkdown(markdown, { basePath: getContext().path }),
-      );
+      event.clipboardData.setData("text/html", html);
       event.preventDefault();
     },
     true,
@@ -92,15 +126,48 @@ export function installClipboard(host, editor, getContext) {
     (event) => {
       if (event.target.closest(".inkstone-table-cell-editor")) return;
       if (event.defaultPrevented || !event.clipboardData) return;
+      if (window.inkstone && pendingNativeCopy) {
+        event.preventDefault();
+        event.stopPropagation();
+        const doc = editor.view.state.doc,
+          selection = editor.view.state.selection,
+          path = getContext().path;
+        const sourceMode =
+          editor.getMode() === "source" || editor.isInCodeBlock?.();
+        pendingNativeCopy
+          .then(() => window.inkstone.invoke("readClipboard"))
+          .then((clipboard) => {
+            if (
+              !editor.view.dom.isConnected ||
+              editor.view.state.readOnly ||
+              editor.view.state.doc !== doc ||
+              !editor.view.state.selection.eq(selection) ||
+              getContext().path !== path
+            )
+              throw Error(
+                "The document or insertion point changed while reading the clipboard. Paste again.",
+              );
+            const insertion =
+              typeof clipboard.markdown === "string"
+                ? clipboard.markdown
+                : !sourceMode && clipboard.html
+                  ? htmlToMarkdown(clipboard.html)
+                  : clipboard.text;
+            if (insertion) insertClipboardText(editor, insertion);
+          })
+          .catch(onError);
+        return;
+      }
       const own = event.clipboardData.getData("text/x-inkstone-markdown");
       if (own) {
         event.preventDefault();
         event.stopPropagation();
-        editor.insert(own);
+        insertClipboardText(editor, own);
         return;
       }
       if (
         editor.getMode() === "source" ||
+        editor.isInCodeBlock?.() ||
         [...event.clipboardData.items].some((i) => i.type.startsWith("image/"))
       )
         return;
@@ -117,7 +184,37 @@ export function installClipboard(host, editor, getContext) {
       if (html) {
         event.preventDefault();
         event.stopPropagation();
-        editor.insert(htmlToMarkdown(html));
+        if (!window.inkstone) {
+          insertClipboardText(editor, htmlToMarkdown(html));
+          return;
+        }
+        const doc = editor.view.state.doc;
+        const selection = editor.view.state.selection;
+        const path = getContext().path;
+        window.inkstone
+          .invoke("readClipboard")
+          .then((clipboard) => {
+            if (
+              !editor.view.dom.isConnected ||
+              editor.view.state.readOnly ||
+              editor.view.state.doc !== doc ||
+              !editor.view.state.selection.eq(selection) ||
+              getContext().path !== path
+            )
+              throw Error(
+                "The document or insertion point changed while reading the clipboard. Paste again.",
+              );
+            const normalize = (value) => value.replace(/\r\n|\r/g, "\n");
+            const own =
+              typeof clipboard.markdown === "string" &&
+              normalize(clipboard.text) === normalize(plain) &&
+              normalize(clipboard.markdown) === normalize(plain);
+            insertClipboardText(
+              editor,
+              own ? clipboard.markdown : htmlToMarkdown(html),
+            );
+          })
+          .catch(onError);
       }
     },
     true,
@@ -131,6 +228,7 @@ export async function writeRichClipboard(markdown, context, plainOnly = false) {
     return window.inkstone.invoke("writeClipboard", {
       text: plainOnly ? el.textContent : markdown,
       ...(!plainOnly ? { html } : {}),
+      ...(!plainOnly ? { markdown } : {}),
     });
   if (plainOnly) return navigator.clipboard.writeText(el.textContent);
   await navigator.clipboard.write([

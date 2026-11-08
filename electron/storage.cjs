@@ -142,8 +142,11 @@ async function atomicWrite(file, bytes, { beforeRename } = {}) {
     await fs.rename(temp, file);
     try {
       const dir = await fs.open(path.dirname(file), "r");
-      await dir.sync();
-      await dir.close();
+      try {
+        await dir.sync();
+      } finally {
+        await dir.close();
+      }
     } catch (e) {
       if (
         !["EINVAL", "EISDIR", "EPERM", "EACCES", "ENOTSUP", "EBADF"].includes(

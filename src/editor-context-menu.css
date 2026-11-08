@@ -1,0 +1,101 @@
+.editor-context-menu {
+  position: fixed;
+  inset: auto;
+  z-index: 10000;
+  width: min(276px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow:
+    0 8px 30px #0003,
+    0 2px 6px #0001;
+  font: 13px/1.35 var(--font-ui);
+  user-select: none;
+  overscroll-behavior: contain;
+}
+.editor-context-menu::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+.editor-context-menu button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 30px;
+  margin: 0;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  white-space: normal;
+}
+.editor-context-menu button:hover:not(:disabled),
+.editor-context-menu button:focus-visible,
+.editor-context-menu button[aria-expanded="true"] {
+  background: var(--accent-soft);
+}
+.editor-context-menu button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+.editor-context-menu button:disabled {
+  opacity: 0.35;
+}
+.editor-context-menu .is-destructive {
+  color: var(--error);
+}
+.editor-context-label {
+  flex: 1;
+}
+.editor-context-symbol,
+.editor-context-chevron {
+  display: inline-flex;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+.editor-context-symbol svg,
+.editor-context-chevron svg {
+  width: 18px;
+  height: 18px;
+}
+.editor-context-chevron {
+  margin-left: auto;
+}
+.editor-context-separator {
+  height: 1px;
+  margin: 5px 3px;
+  background: var(--border);
+}
+.editor-context-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--context-columns), minmax(0, 1fr));
+  gap: 2px;
+  padding: 2px;
+}
+.editor-context-menu .editor-context-icon {
+  justify-content: center;
+  min-height: 34px;
+  padding: 5px;
+}
+.editor-context-menu[data-context-depth="1"] {
+  width: min(258px, calc(100vw - 16px));
+}
+@media (forced-colors: active) {
+  .editor-context-menu {
+    border-color: CanvasText;
+  }
+  .editor-context-menu button:disabled {
+    color: GrayText;
+    opacity: 1;
+  }
+}

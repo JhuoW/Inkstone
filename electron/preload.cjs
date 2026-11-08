@@ -2,6 +2,10 @@
 const { contextBridge, ipcRenderer, webUtils } = require("electron");
 const methods = new Set([
   "bootstrap",
+  "getAboutInfo",
+  "getDefaultAppInfo",
+  "openDefaultApps",
+  "claimDefaultAppPrompt",
   "spellcheckStatus",
   "openFile",
   "saveFile",
@@ -19,6 +23,8 @@ const methods = new Set([
   "downloadImage",
   "clipboardImage",
   "writeClipboard",
+  "readClipboard",
+  "addDictionaryWord",
   "saveRecovery",
   "deleteRecovery",
   "discardRecovery",
@@ -48,6 +54,7 @@ const events = new Set([
   "settings-changed",
   "open-path",
   "folder-change",
+  "context-menu-details",
 ]);
 contextBridge.exposeInMainWorld("inkstone", {
   invoke(method, payload = {}) {

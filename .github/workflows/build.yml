@@ -1,6 +1,7 @@
 name: Windows and Linux local editor
 on:
   push:
+    branches: [master]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -24,13 +25,24 @@ jobs:
       - run: npm run dist:win
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Run Windows editing and context menu regressions
+        run: node node_modules/playwright/cli.js test tests/windows-regressions.spec.js tests/context-menu.spec.js tests/native-context.spec.js
+      - name: Verify native installer language and file associations
+        run: |
+          node scripts/verify-installer-language.mjs
+          node scripts/verify-installer-associations.mjs
       - name: Run the actual packaged Windows application
         run: npm run test:native
         env:
           INKSTONE_EXECUTABLE: release/win-unpacked/Inkstone.exe
+      - name: Verify packaged inline math and table context menus
+        run: npm run test:interactive-native
+        env:
+          INKSTONE_EXECUTABLE: release/win-unpacked/Inkstone.exe
+          INKSTONE_NATIVE_VARIANT: packaged
   linux:
     name: Linux x64
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

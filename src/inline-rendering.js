@@ -1,5 +1,6 @@
 import { markdownLanguage } from "@codemirror/lang-markdown";
 import { Decoration, WidgetType } from "@codemirror/view";
+import { inlineMathOffsetAtPoint } from "./inline-math-caret.js";
 
 const styled = {
   StrongEmphasis: "cm-inline-strong",
@@ -149,27 +150,23 @@ export function inlineRanges(block, selection, math = []) {
 }
 
 class InlineMathWidget extends WidgetType {
-  constructor(html, range, preview, locale, onActivate) {
+  constructor(html, range, locale, onActivate) {
     super();
     this.html = html;
     this.range = range;
-    this.preview = preview;
     this.locale = locale;
     this.onActivate = onActivate;
   }
   eq(other) {
     return (
       this.html === other.html &&
-      this.preview === other.preview &&
       this.locale === other.locale &&
       this.range.to - this.range.from === other.range.to - other.range.from
     );
   }
   toDOM(view) {
     const element = document.createElement("span");
-    element.className = this.preview
-      ? "cm-inline-math-preview"
-      : "cm-inline-math";
+    element.className = "cm-inline-math";
     element.innerHTML = this.html;
     element.title =
       this.locale === "zh-CN"
@@ -180,18 +177,23 @@ class InlineMathWidget extends WidgetType {
       if (event.button !== 0 || view.state.readOnly) return;
       event.preventDefault();
       event.stopPropagation();
-      // For a preview widget posAtDOM is the end of the source span. For a
-      // replacement widget it is the start. Both remain correct after mapping.
-      const position = view.posAtDOM(element);
-      const from = this.preview
-        ? position - (this.range.to - this.range.from)
-        : position;
-      const head = from + this.range.contentFrom - this.range.from;
+      const from = view.posAtDOM(element);
+      const contentFrom = from + this.range.contentFrom - this.range.from;
+      const contentTo = from + this.range.contentTo - this.range.from;
+      const head =
+        contentFrom +
+        inlineMathOffsetAtPoint(
+          element,
+          view.state.sliceDoc(contentFrom, contentTo),
+          event.clientX,
+          event.clientY,
+        );
       this.onActivate?.(
         view,
         {
-          contentFrom: head,
-          contentTo: from + this.range.contentTo - this.range.from,
+          contentFrom,
+          contentTo,
+          head,
         },
         event,
       );
@@ -239,13 +241,10 @@ export function makeInlineDecorations(blocks, state, mathOptions = {}) {
         );
     }
     for (const range of math) {
-      const active = touches(state.selection, range.from, range.to);
-      const widget = new InlineMathWidget(
-        mathOptions.render(range.token, block),
-        range,
-        active,
-        mathOptions.locale,
-        mathOptions.onActivate,
+      const active = state.selection.ranges.some((selection) =>
+        selection.empty
+          ? selection.head >= range.from && selection.head < range.to
+          : selection.from < range.to && selection.to > range.from,
       );
       if (active) {
         ranges.push(
@@ -254,8 +253,13 @@ export function makeInlineDecorations(blocks, state, mathOptions = {}) {
             range.to,
           ),
         );
-        ranges.push(Decoration.widget({ widget, side: 1 }).range(range.to));
       } else {
+        const widget = new InlineMathWidget(
+          mathOptions.render(range.token, block),
+          range,
+          mathOptions.locale,
+          mathOptions.onActivate,
+        );
         ranges.push(Decoration.replace({ widget }).range(range.from, range.to));
       }
     }

@@ -280,30 +280,106 @@
   color: var(--muted, #67636b);
   user-select: none;
 }
-.cm-inline-math,
-.cm-inline-math-preview {
+.cm-inline-math {
   display: inline-block;
   vertical-align: baseline;
   white-space: normal;
   cursor: text;
   max-width: 100%;
 }
-.cm-inline-math-preview {
-  margin-left: 0.65em;
-  padding: 0.1em 0.4em;
-  border-left: 1px solid var(--control-border, #95929b);
-}
 .cm-math-source,
 .cm-rendered-source {
   font-family: var(--code-font, Consolas, "Liberation Mono", monospace);
   font-size: 0.9em;
 }
+.cm-editor .cm-line.cm-code-heading,
+.cm-editor .cm-line.cm-code-ending {
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
+.cm-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  padding: 5px 12px;
+  margin-top: 8px;
+  background: var(--ink-code-bg);
+  border: 1px solid var(--border, #dedee0);
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  font: 12px/1.5 var(--font-ui, "Segoe UI", sans-serif);
+}
+.cm-code-label {
+  color: var(--muted, #67636b);
+}
+.cm-code-header .cm-code-language {
+  min-height: 26px;
+  max-width: min(230px, 75%);
+  padding: 2px 5px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text, #1c1a21);
+  font: inherit;
+  cursor: pointer;
+}
+.cm-code-language:hover:not(:disabled),
+.cm-code-language:focus-visible {
+  border-color: var(--control-border, #95929b);
+}
+.cm-code-language option {
+  background: var(--panel, #fff);
+  color: var(--text, #1c1a21);
+}
+.cm-editor .cm-line.cm-code-line {
+  padding: 0 14px;
+  min-height: 1.65em;
+  background: var(--ink-code-bg);
+  border-inline: 1px solid var(--border, #dedee0);
+  font-family: var(--code-font, Consolas, "Liberation Mono", monospace);
+  font-size: 0.88em;
+  line-height: 1.65;
+  font-variant-ligatures: none;
+}
+.cm-code-line[data-code-number] {
+  padding-left: 3.5em !important;
+}
+.cm-code-line[data-code-number]::before {
+  content: attr(data-code-number);
+  position: absolute;
+  left: 0;
+  width: 2.7em;
+  text-align: right;
+  color: var(--syntax-comment);
+  user-select: none;
+}
+.cm-editor .cm-line.cm-code-nowrap {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+.cm-code-footer {
+  display: block;
+  height: 12px;
+  margin-bottom: 12px;
+  background: var(--ink-code-bg);
+  border: 1px solid var(--border, #dedee0);
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+}
+.cm-code-empty {
+  height: 38px;
+  cursor: text;
+}
+.cm-code-last {
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid var(--border, #dedee0);
+}
 .cm-math-source {
   background: var(--ink-code-bg);
-}
-.cm-inline-math-preview .math-error small {
-  font-size: 12px;
-  max-width: 32em;
+  border-radius: 2px;
 }
 .equation-number {
   position: absolute;

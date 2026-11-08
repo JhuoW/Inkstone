@@ -75,7 +75,7 @@ test("ordinary recovery cleanup after saving still permits recovery of subsequen
   });
   assert.equal((await store.recoveries())[0].text, "edits after save");
 });
-test("first language defaults to English and installer language never replaces saved preferences", async (t) => {
+test("installer language completes language choice without replacing saved preferences", async (t) => {
   const { dir } = await fixture(t);
   assert.deepEqual(await initialLanguage({}, dir), {
     locale: "en",
@@ -87,7 +87,7 @@ test("first language defaults to English and installer language never replaces s
   );
   assert.deepEqual(await initialLanguage({}, dir), {
     locale: "zh-CN",
-    configured: false,
+    configured: true,
     installerSeed: true,
   });
   assert.deepEqual(await initialLanguage({ locale: "en" }, dir), {
@@ -101,6 +101,39 @@ test("first language defaults to English and installer language never replaces s
   assert.deepEqual(await initialLanguage({}, dir), {
     locale: "en",
     configured: false,
+  });
+});
+
+test("first app language follows the preferred system UI language", async (t) => {
+  const { dir } = await fixture(t);
+  for (const preferred of ["zh-CN", "zh-TW", "zh-HK", "zh-SG", "ZH_cn"]) {
+    assert.deepEqual(await initialLanguage({}, dir, [preferred, "en-US"]), {
+      locale: "zh-CN",
+      configured: false,
+    });
+  }
+  for (const preferred of ["en-US", "en-GB", "fr-FR", "ja-JP", "", undefined]) {
+    assert.deepEqual(await initialLanguage({}, dir, preferred), {
+      locale: "en",
+      configured: false,
+    });
+  }
+  assert.deepEqual(await initialLanguage({ locale: "en" }, dir, ["zh-CN"]), {
+    locale: "en",
+    configured: true,
+  });
+  await fs.writeFile(
+    path.join(dir, "installer-locale.json"),
+    JSON.stringify({ locale: "en", configured: true }),
+  );
+  assert.deepEqual(await initialLanguage({}, dir, ["zh-CN"]), {
+    locale: "en",
+    configured: true,
+    installerSeed: true,
+  });
+  assert.deepEqual(await initialLanguage({ locale: "zh-CN" }, dir, ["en-US"]), {
+    locale: "zh-CN",
+    configured: true,
   });
 });
 test("invalid JSON with a failed backup blocks subsequent state writes and preserves the original bytes", async (t) => {
@@ -213,6 +246,36 @@ test("atomic write failure leaves original and no temporary file", async (t) => 
     (await fs.readdir(dir)).filter((n) => n.endsWith(".tmp")).length,
     0,
   );
+});
+test("atomic writes close directory handles when Windows refuses directory fsync", async (t) => {
+  const { file, dir } = await fixture(t);
+  const open = fs.open;
+  let directoryCloses = 0;
+  fs.open = async (target, ...args) => {
+    if (target === dir)
+      return {
+        sync: async () => {
+          const error = new Error("Windows directory fsync is unsupported");
+          error.code = "EPERM";
+          throw error;
+        },
+        close: async () => {
+          directoryCloses++;
+        },
+      };
+    return open(target, ...args);
+  };
+  try {
+    await atomicWrite(file, "saved safely");
+    assert.equal(await fs.readFile(file, "utf8"), "saved safely");
+    assert.equal(directoryCloses, 1);
+    const image = path.join(dir, "image.svg");
+    await atomicCreate(image, "<svg/>");
+    assert.equal(await fs.readFile(image, "utf8"), "<svg/>");
+    assert.equal(directoryCloses, 2);
+  } finally {
+    fs.open = open;
+  }
 });
 test("recovery drafts survive restart and can be explicitly dismissed", async (t) => {
   const { store, dir } = await fixture(t);
@@ -351,6 +414,7 @@ test("unrepresentable legacy characters refuse saving, while explicit UTF-8 conv
 const {
   imageSpans,
   ImageResourceManager,
+  atomicCreate,
 } = require("../electron/image-resources.cjs");
 function resourceManager(store, root, trashed = []) {
   return new ImageResourceManager({

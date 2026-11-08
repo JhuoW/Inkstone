@@ -1,40 +1,14 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 /** Real Chromium UI behavior; desktop operations are explicitly stubbed. No platform-install claims. */
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import { createServer } from "vite";
 import { chromium } from "playwright";
-const output = path.resolve("artifacts/ui-polish-validation");
+const output = artifactPath("ui-polish-validation");
 const { version } = JSON.parse(await fs.readFile("package.json", "utf8"));
 await fs.mkdir(output, { recursive: true });
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    for (const dir of (
-      await fs.readdir(path.join(os.homedir(), ".cache/ms-playwright"))
-    )
-      .filter((n) => n.startsWith("chromium-"))
-      .sort()
-      .reverse()) {
-      for (const binary of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const file = path.join(
-          os.homedir(),
-          ".cache/ms-playwright",
-          dir,
-          binary,
-        );
-        if (await fs.stat(file).catch(() => null)) {
-          executablePath = file;
-          break;
-        }
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const server = await createServer({
   configFile: false,
   root: process.cwd(),
@@ -904,7 +878,8 @@ try {
     JSON.stringify(
       {
         version,
-        platform: "Linux Chromium",
+        platform: process.platform,
+        browser: await browser.version(),
         desktopIPC: "stubbed; not file/OS integration validation",
         passed: checks.length,
         checks,

@@ -12,6 +12,7 @@ import {
   nextTableCell,
   createTable,
   tableCellRanges,
+  isTableDivider,
 } from "../src/tables.js";
 
 test("unmodified source is identical including BOM, CRLF, YAML, unknown syntax and HTML", () => {
@@ -109,6 +110,50 @@ test("Tab skips table delimiter and appends final row", () => {
 test("table creation is bounded and valid", () => {
   assert.equal(createTable(2, 3).split("\n").length, 4);
   assert.equal(locateTable(createTable(2, 3), 0).width, 3);
+});
+
+test("single-column tables support creation, navigation and column edits", () => {
+  const text = createTable(1, 1);
+  assert.equal(isTableDivider("| --- |"), true);
+  assert.equal(isTableDivider("---"), false);
+  assert.equal(locateTable(text, 0)?.width, 1);
+  const next = nextTableCell(text, text.indexOf("Column"));
+  assert.equal(next.position, tableCellRanges(text)[2][0].from);
+  const changed = modifyTable(text, next.position, "addColumn");
+  assert.equal(locateTable(changed.insert, 0)?.width, 2);
+});
+
+test("table navigation follows exact cell spans with indentation and code fences", () => {
+  for (const text of [
+    "  | A | B |\n  | --- | --- |\n  | x | y |",
+    "| ``a|b`` | second |\n| --- | --- |\n| x | y |",
+  ]) {
+    const ranges = tableCellRanges(text);
+    const next = nextTableCell(text, ranges[0][0].from);
+    assert.equal(next.position, ranges[0][1].from);
+    const previous = nextTableCell(text, ranges[0][1].from, true);
+    assert.equal(previous.position, ranges[0][0].from);
+  }
+});
+
+test("table row splitting treats an even backslash run before a pipe as a delimiter", () => {
+  const row = "| trailing" + "\\".repeat(2) + "|";
+  assert.deepEqual(splitTableRow(row), ["trailing" + "\\".repeat(2)]);
+  const text = `${row}\n| --- |\n| value |`;
+  assert.equal(locateTable(text, 0)?.width, 1);
+});
+
+test("TSV paste keeps pre-escaped pipes inside their target cells", () => {
+  const text = "| A | B |\n| --- | --- |\n| x | y |";
+  const changed = modifyTable(
+    text,
+    text.indexOf("x"),
+    "paste",
+    "one\\|two\tthree",
+  );
+  const table = locateTable(changed.insert, 0);
+  assert.equal(table.rows[2].length, 2);
+  assert.deepEqual(table.rows[2], ["one\\|two", "three"]);
 });
 test("mixed LF/CRLF/CR metadata restores arbitrary inserted ranges without full-text snapshots", () => {
   const raw = "\uFEFFone\r\ntwo\nthree\rfour\r\n";

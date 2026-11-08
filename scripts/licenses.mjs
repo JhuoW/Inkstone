@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 const lock = JSON.parse(await fs.readFile("package-lock.json", "utf8"));
 let output =
-  "# Third-party notices\n\nInkstone source is MIT licensed. This file records installed dependency licenses, including bundled renderer libraries and build/test tools. Electron distributions additionally contain LICENSE.electron.txt and LICENSES.chromium.html. No Typora source, assets, themes, or binaries are included.\n\nDOMPurify is used under its Apache-2.0 licensing option. KaTeX fonts are distributed under their upstream license. External Pandoc is user-installed and not bundled. Build-time platform tooling is not a product capability.\n";
+  "# Third-party notices\n\nInkstone source is licensed under AGPL-3.0-only. See LICENSE for the complete GNU Affero General Public License version 3. Dependency licenses remain their own. This file records installed dependency licenses, including bundled renderer libraries and build/test tools. Electron distributions additionally contain LICENSE.electron.txt and LICENSES.chromium.html. No Typora source, assets, themes, or binaries are included.\n\nDOMPurify is used under its Apache-2.0 licensing option. KaTeX fonts are distributed under their upstream license. External Pandoc is user-installed and not bundled. Build-time platform tooling is not a product capability.\n";
 const seen = new Set();
 for (const [location, entry] of Object.entries(lock.packages).sort()) {
   if (!location) continue;

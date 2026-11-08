@@ -1,3 +1,7 @@
+import { withPreservedClipboard } from "./helpers/clipboard.mjs";
+import { artifactPath } from "../scripts/artifact-path.mjs";
+import { findPandoc } from "./helpers/tools.mjs";
+import { extract } from "@electron-internal/extract-zip";
 import { test, expect, _electron as electron } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -24,7 +28,8 @@ test.beforeAll(async () => {
     JSON.stringify({ locale: "zh-CN", firstRunComplete: true }),
   );
   app = await electron.launch({
-    args: ["--no-sandbox", root, fixture],
+    chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+    args: [root, fixture],
     env: environment,
   });
   page = await app.firstWindow();
@@ -207,109 +212,115 @@ test("visual table grid edits, pastes TSV, reorders cells, and cancels without c
   expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(original);
 });
 
-test("HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats", async () => {
-  const original = await page.evaluate(() => __inkstone.editor.getText());
-  await page.evaluate(async () => {
-    const e = __inkstone.editor;
-    e.setMode("live");
-    e.setSelection({
-      anchor: e.view.state.doc.length,
-      head: e.view.state.doc.length,
+test("HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats", async () =>
+  withPreservedClipboard(app, async () => {
+    const original = await page.evaluate(() => __inkstone.editor.getText());
+    await page.evaluate(async () => {
+      const e = __inkstone.editor;
+      e.setMode("live");
+      e.setSelection({
+        anchor: e.view.state.doc.length,
+        head: e.view.state.doc.length,
+      });
+      e.focus();
+      await __inkstone.invoke("writeClipboard", {
+        text: "剪贴板标题\n带格式",
+        html: '<h2>剪贴板标题</h2><p><strong>带格式</strong>与<a href="https://example.com">链接</a></p>',
+      });
     });
-    e.focus();
-    await __inkstone.invoke("writeClipboard", {
-      text: "剪贴板标题\n带格式",
-      html: '<h2>剪贴板标题</h2><p><strong>带格式</strong>与<a href="https://example.com">链接</a></p>',
+    await page.keyboard.press("Control+v");
+    await expect
+      .poll(() => page.evaluate(() => __inkstone.editor.getText()))
+      .toContain("## 剪贴板标题");
+    expect(await page.evaluate(() => __inkstone.editor.getText())).toContain(
+      "**带格式**",
+    );
+    await page.evaluate(() => __inkstone.execute("copyRich"));
+    const formats = await app.evaluate(async ({ clipboard }) => {
+      const items = await clipboard.read();
+      return items.flatMap((i) => i.types);
     });
-  });
-  await page.keyboard.press("Control+v");
-  await expect
-    .poll(() => page.evaluate(() => __inkstone.editor.getText()))
-    .toContain("## 剪贴板标题");
-  expect(await page.evaluate(() => __inkstone.editor.getText())).toContain(
-    "**带格式**",
-  );
-  await page.evaluate(() => __inkstone.execute("copyRich"));
-  const formats = await app.evaluate(async ({ clipboard }) => {
-    const items = await clipboard.read();
-    return items.flatMap((i) => i.types);
-  });
-  expect(formats).toContain("text/html");
-  expect(formats).toContain("text/plain");
-  await page.evaluate(() => __inkstone.editor.command("undo"));
-  expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(original);
-});
+    expect(formats).toContain("text/html");
+    expect(formats).toContain("text/plain");
+    await page.evaluate(() => __inkstone.editor.command("undo"));
+    expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(
+      original,
+    );
+  }));
 
-test("read-only, math copy, theme import, sidebar persistence, and export presets have real effects", async () => {
-  const original = await page.evaluate(() => __inkstone.editor.getText());
-  await page.evaluate(() => __inkstone.execute("readOnly"));
-  expect(
-    await page.locator(".cm-content").getAttribute("contenteditable"),
-  ).toBe("false");
-  await page.evaluate(() => __inkstone.execute("bold"));
-  expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(original);
-  await page.evaluate(() => __inkstone.execute("refresh"));
-  await page.evaluate(() => __inkstone.execute("readOnly"));
-  await page.evaluate(() => {
-    const e = __inkstone.editor;
-    const at = e.view.state.doc.toString().indexOf("$$");
-    e.setSelection({
-      anchor: at,
-      head: at + e.view.state.doc.toString().slice(at).indexOf("$$", 2) + 2,
+test("read-only, math copy, theme import, sidebar persistence, and export presets have real effects", async () =>
+  withPreservedClipboard(app, async () => {
+    const original = await page.evaluate(() => __inkstone.editor.getText());
+    await page.evaluate(() => __inkstone.execute("readOnly"));
+    expect(
+      await page.locator(".cm-content").getAttribute("contenteditable"),
+    ).toBe("false");
+    await page.evaluate(() => __inkstone.execute("bold"));
+    expect(await page.evaluate(() => __inkstone.editor.getText())).toBe(
+      original,
+    );
+    await page.evaluate(() => __inkstone.execute("refresh"));
+    await page.evaluate(() => __inkstone.execute("readOnly"));
+    await page.evaluate(() => {
+      const e = __inkstone.editor;
+      const at = e.view.state.doc.toString().indexOf("$$");
+      e.setSelection({
+        anchor: at,
+        head: at + e.view.state.doc.toString().slice(at).indexOf("$$", 2) + 2,
+      });
+      return __inkstone.execute("copyMathML");
     });
-    return __inkstone.execute("copyMathML");
-  });
-  const math = await app.evaluate(async ({ clipboard }) => {
-    const items = await clipboard.read();
-    return (await items[0].getType("text/plain")).text();
-  });
-  expect(math).toContain("<math");
-  expect(math).toContain("mc");
-  await page.locator("#sidebar-resize").focus();
-  await page.keyboard.press("ArrowRight");
-  await expect
-    .poll(
-      async () =>
-        (await page.evaluate(() => __inkstone.invoke("bootstrap"))).settings
-          .sidebarWidth,
-    )
-    .toBe(266);
-  const css = path.join(temp, "my-theme.css");
-  await fs.writeFile(css, ".cm-live-block h1 { color: rgb(127, 40, 65); }");
-  await app.evaluate(({ dialog }, file) => {
-    dialog.showOpenDialog = async () => ({
-      canceled: false,
-      filePaths: [file],
+    const math = await app.evaluate(async ({ clipboard }) => {
+      const items = await clipboard.read();
+      return (await items[0].getType("text/plain")).text();
     });
-  }, css);
-  await page.evaluate(() => __inkstone.execute("settings"));
-  await page.locator('[data-section="appearance"]').click();
-  await page.locator("#import-theme").click();
-  await expect(page.locator('textarea[name="customCSS"]')).toHaveValue(
-    /rgb\(127, 40, 65\)/,
-  );
-  await page.locator('textarea[name="customCSS"]').fill("");
-  await page.locator('textarea[name="customCSS"]').dispatchEvent("change");
-  await page.locator("#settings-done").click();
-  await page.evaluate(() => __inkstone.execute("export"));
-  await page.locator('select[name="format"]').selectOption("jpeg");
-  await page.locator('input[name="quality"]').fill("78");
-  await page.locator("#save-export-profile").click();
-  await page.locator('dialog input[name="value"]').fill("测试预设");
-  await page.locator('dialog form button[type="submit"]').last().click();
-  await expect
-    .poll(
-      async () =>
-        (await page.evaluate(() => __inkstone.invoke("bootstrap"))).settings
-          .exportProfiles?.[0]?.name,
-    )
-    .toBe("测试预设");
-  await page.locator('select[name="format"]').selectOption("pdf");
-  await page.locator('select[name="profile"]').selectOption("0");
-  await expect(page.locator('select[name="format"]')).toHaveValue("jpeg");
-  await expect(page.locator('input[name="quality"]')).toHaveValue("78");
-  await page.locator("dialog .close").click();
-});
+    expect(math).toContain("<math");
+    expect(math).toContain("mc");
+    await page.locator("#sidebar-resize").focus();
+    await page.keyboard.press("ArrowRight");
+    await expect
+      .poll(
+        async () =>
+          (await page.evaluate(() => __inkstone.invoke("bootstrap"))).settings
+            .sidebarWidth,
+      )
+      .toBe(266);
+    const css = path.join(temp, "my-theme.css");
+    await fs.writeFile(css, ".cm-live-block h1 { color: rgb(127, 40, 65); }");
+    await app.evaluate(({ dialog }, file) => {
+      dialog.showOpenDialog = async () => ({
+        canceled: false,
+        filePaths: [file],
+      });
+    }, css);
+    await page.evaluate(() => __inkstone.execute("settings"));
+    await page.locator('[data-section="appearance"]').click();
+    await page.locator("#import-theme").click();
+    await expect(page.locator('textarea[name="customCSS"]')).toHaveValue(
+      /rgb\(127, 40, 65\)/,
+    );
+    await page.locator('textarea[name="customCSS"]').fill("");
+    await page.locator('textarea[name="customCSS"]').dispatchEvent("change");
+    await page.locator("#settings-done").click();
+    await page.evaluate(() => __inkstone.execute("export"));
+    await page.locator('select[name="format"]').selectOption("jpeg");
+    await page.locator('input[name="quality"]').fill("78");
+    await page.locator("#save-export-profile").click();
+    await page.locator('dialog input[name="value"]').fill("测试预设");
+    await page.locator('dialog form button[type="submit"]').last().click();
+    await expect
+      .poll(
+        async () =>
+          (await page.evaluate(() => __inkstone.invoke("bootstrap"))).settings
+            .exportProfiles?.[0]?.name,
+      )
+      .toBe("测试预设");
+    await page.locator('select[name="format"]').selectOption("pdf");
+    await page.locator('select[name="profile"]').selectOption("0");
+    await expect(page.locator('select[name="format"]')).toHaveValue("jpeg");
+    await expect(page.locator('input[name="quality"]')).toHaveValue("78");
+    await page.locator("dialog .close").click();
+  }));
 
 test("external edit conflict keeps unsaved text and disk contents", async () => {
   await page.evaluate(() => {
@@ -334,12 +345,15 @@ test("external edit conflict keeps unsaved text and disk contents", async () => 
   await expect
     .poll(() => page.evaluate(() => __inkstone.getDocument().text))
     .toContain("外部新增");
+  // The new text is published before recent-file/session persistence finishes.
+  // Commands remain locked until the complete external-reload transition ends.
+  await page.waitForFunction(() => !__inkstone.editor.view.state.readOnly);
   const data = await page.evaluate(() => __inkstone.invoke("bootstrap"));
   expect(data.recovery.some((r) => r.text?.includes("本地未保存"))).toBe(true);
 });
 
 test("real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated math and Mermaid", async () => {
-  await fs.mkdir(path.join(root, "artifacts", "desktop-validation"), {
+  await fs.mkdir(artifactPath("desktop-validation"), {
     recursive: true,
   });
   const paths = {};
@@ -362,7 +376,7 @@ test("real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated ma
     expect((await fs.stat(output)).size).toBeGreaterThan(5000);
     await fs.copyFile(
       output,
-      path.join(root, "artifacts", "desktop-validation", "writing." + format),
+      artifactPath("desktop-validation", "writing." + format),
     );
   }
   const html = await fs.readFile(paths.html, "utf8");
@@ -391,22 +405,14 @@ test("real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated ma
     __inkstone.editor.view.scrollDOM.scrollTop = 0;
   });
   await page.screenshot({
-    path: path.join(
-      root,
-      "artifacts",
-      "desktop-validation",
-      "inkstone-desktop.png",
-    ),
+    path: artifactPath("desktop-validation", "inkstone-desktop.png"),
   });
   expect(errors).toEqual([]);
 });
 
 test("Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back", async () => {
-  const pandoc = path.join(root, ".tools", "pandoc", "bin", "pandoc");
-  test.skip(
-    !(await fs.stat(pandoc).catch(() => null)),
-    "Install Pandoc to validate DOCX diagram embedding",
-  );
+  const pandoc = await findPandoc();
+  test.skip(!pandoc, "Install Pandoc to validate DOCX diagram embedding");
   const output = path.join(temp, "diagram.docx");
   await page.evaluate(
     (path) => __inkstone.invoke("updateSettings", { pandocPath: path }),
@@ -422,26 +428,21 @@ test("Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back
     timeout: 60000,
   });
   await page.locator("dialog .close").click();
-  const listing = execFileSync(
-    "python3",
-    [
-      "-c",
-      'import sys,zipfile;z=zipfile.ZipFile(sys.argv[1]);print("\\n".join(z.namelist()))',
-      output,
-    ],
-    { encoding: "utf8" },
+  const extracted = path.join(temp, "diagram-docx");
+  await extract(output, { dir: extracted });
+  const media = path.join(extracted, "word", "media");
+  const image = (await fs.readdir(media)).find((name) => name.endsWith(".png"));
+  expect(image).toBeTruthy();
+  expect((await fs.readFile(path.join(media, image))).subarray(0, 8)).toEqual(
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
   );
-  expect(listing).toMatch(/word\/media\/.*\.png/);
   const imported = await page.evaluate(
     (path) => __inkstone.invoke("runPandoc", { direction: "import", path }),
     output,
   );
   expect(imported.text).toContain("data:image/png;base64,");
   expect(imported.text).toContain("中文写作");
-  await fs.copyFile(
-    output,
-    path.join(root, "artifacts", "desktop-validation", "writing.docx"),
-  );
+  await fs.copyFile(output, artifactPath("desktop-validation", "writing.docx"));
 });
 
 test("complete offline acceptance sample renders native legacy diagrams and advanced math in the desktop CSP", async () => {
@@ -475,7 +476,7 @@ test("complete offline acceptance sample renders native legacy diagrams and adva
   expect(html).toContain("<svg");
   await fs.copyFile(
     output,
-    path.join(root, "artifacts", "desktop-validation", "acceptance.html"),
+    artifactPath("desktop-validation", "acceptance.html"),
   );
   expect(errors).toEqual([]);
 });
@@ -509,7 +510,7 @@ test("one-megabyte document editing and switching produce measured performance e
     };
   });
   await fs.writeFile(
-    path.join(root, "artifacts", "desktop-validation", "performance.json"),
+    artifactPath("desktop-validation", "performance.json"),
     JSON.stringify(result, null, 2),
   );
   console.log("Document performance:", result);
@@ -562,7 +563,18 @@ test("process termination recovers the unsaved draft on restart without modifyin
   expect(await fs.readFile(before.path, "utf8")).not.toContain(
     "进程终止恢复标记",
   );
-  app.process().kill("SIGKILL");
+  if (process.platform === "win32") {
+    // Playwright's Windows launcher may be a wrapper process. Terminating only
+    // that PID leaves Electron alive with the profile lock and inspector open.
+    execFileSync(
+      "taskkill.exe",
+      ["/PID", String(app.process().pid), "/T", "/F"],
+      {
+        windowsHide: true,
+        stdio: "ignore",
+      },
+    );
+  } else app.process().kill("SIGKILL");
   await app.close().catch(() => {});
   const environment = {
     ...process.env,
@@ -571,7 +583,8 @@ test("process termination recovers the unsaved draft on restart without modifyin
   };
   delete environment.ELECTRON_RUN_AS_NODE;
   app = await electron.launch({
-    args: ["--no-sandbox", root],
+    chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+    args: [root],
     env: environment,
   });
   page = await app.firstWindow();

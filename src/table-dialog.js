@@ -1,4 +1,4 @@
-import { locateTable, serializeTable } from "./tables.js";
+import { locateTable, serializeTable, escapeTableCell } from "./tables.js";
 import { $, $$, esc, modal, toast } from "./ui.js";
 import { getLocale, t as translate } from "./i18n.js";
 
@@ -328,11 +328,7 @@ export function editTable(editor, locale = getLocale()) {
       );
       return;
     }
-    const escaped = rows.map((r) =>
-      r.map((cell) =>
-        cell.replace(/(?<!\\)\|/g, "\\|").replace(/\r?\n/g, "<br>"),
-      ),
-    );
+    const escaped = rows.map((r) => r.map((cell) => escapeTableCell(cell)));
     const insert = serializeTable([
       escaped[0],
       alignments,

@@ -1,35 +1,25 @@
 /** Table edits return a single source-range replacement and never serialize the document. */
 export function splitTableRow(line) {
-  let text = line.trim();
-  if (text.startsWith("|")) text = text.slice(1);
-  if (/(?<!\\)\|$/.test(text)) text = text.slice(0, -1);
-  const cells = [];
-  let cell = "";
-  let codeRun = 0;
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === "\\" && i + 1 < text.length) {
-      cell += text[i] + text[++i];
-      continue;
-    }
-    if (text[i] === "`") {
-      let count = 1;
-      while (text[i + count] === "`") count++;
-      cell += "`".repeat(count);
-      i += count - 1;
-      if (!codeRun) codeRun = count;
-      else if (codeRun === count) codeRun = 0;
-      continue;
-    }
-    if (text[i] === "|" && !codeRun) {
-      cells.push(cell.trim());
-      cell = "";
-    } else cell += text[i];
-  }
-  cells.push(cell.trim());
-  return cells;
+  return tableCellRanges(line)[0].map((cell) => cell.text);
 }
-export const isTableDivider = (line) =>
-  /^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+export function escapeTableCell(value, prefix = "") {
+  let slashes = prefix.match(/\\*$/)[0].length,
+    escaped = "";
+  for (const character of value.replace(/\r\n|\r|\n/g, "<br>")) {
+    if (character === "|" && slashes % 2 === 0) escaped += "\\";
+    escaped += character;
+    slashes = character === "\\" ? slashes + 1 : 0;
+  }
+  return escaped;
+}
+export const isTableDivider = (line) => {
+  const cells = splitTableRow(line);
+  return (
+    line.includes("|") &&
+    cells.length > 0 &&
+    cells.every((cell) => /^:?-{3,}:?$/.test(cell))
+  );
+};
 export function locateTable(text, position) {
   const lines = text.split("\n");
   const offsets = [];
@@ -176,7 +166,7 @@ export function modifyTable(text, position, operation, value) {
           (table.row === 0 ? 0 : row) + i + (table.row === 0 && i > 0 ? 1 : 0);
         while (rows.length <= target) rows.push(Array(needed).fill(""));
         cells.forEach((cell, j) => {
-          rows[target][col + j] = cell.replace(/\|/g, "\\|");
+          rows[target][col + j] = escapeTableCell(cell);
         });
       });
       break;
@@ -234,16 +224,8 @@ export function nextTableCell(text, position, backward = false) {
     table.from +
     lines.slice(0, row).reduce((sum, line) => sum + line.length + 1, 0);
   const line = lines[row];
-  let index = line.indexOf("|") === 0 ? 1 : 0;
-  let cell = 0;
-  let code = false;
-  for (; index < line.length && cell < col; index++) {
-    if (line[index] === "\\") index++;
-    else if (line[index] === "`") code = !code;
-    else if (line[index] === "|" && !code) cell++;
-  }
-  while (line[index] === " ") index++;
-  return { change, position: offset + index };
+  const cell = tableCellRanges(line)[0][col];
+  return { change, position: offset + (cell?.from ?? line.length) };
 }
 
 /** Exact trimmed cell source spans, retaining every pipe and surrounding space outside a cell. */

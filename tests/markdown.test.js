@@ -103,6 +103,68 @@ test("relative paths preserve Unicode and parent traversal for backend authoriza
   assert.doesNotThrow(() => resolveAsset("100%.png", "/notes/doc.md"));
   assert.equal(resolveAsset("javascript:alert(1)", "/notes/doc.md"), "");
 });
+
+test("file URL assets retain Windows drives and UNC shares while excluding URL suffixes from the path", () => {
+  for (const [source, expected] of [
+    ["file:///C:/notes/a%20b.svg?cache=1#glyph", "C:/notes/a b.svg"],
+    ["FILE:///C:/notes/a.png", "C:/notes/a.png"],
+    ["file://server/share/a%20b.svg#glyph", "//server/share/a b.svg"],
+    ["file://localhost/C:/notes/a.png", "C:/notes/a.png"],
+    ["file:///notes/a%23b.png", "/notes/a#b.png"],
+    ["C:\\notes\\a%20b.svg?cache=1#glyph", "C:/notes/a b.svg"],
+  ]) {
+    const asset = new URL(resolveAsset(source, "D:\\copies\\copy.md"));
+    assert.equal(asset.protocol, "inkstone-asset:", source);
+    assert.equal(asset.searchParams.get("path"), expected, source);
+    assert.equal(asset.hash, source.includes("#glyph") ? "#glyph" : "", source);
+    if (source.includes("cache=1"))
+      assert.equal(asset.searchParams.get("cache"), "1");
+  }
+});
+
+test("file URL image roots decode drive and UNC folders without rebasing absolute assets", () => {
+  for (const [root, expected] of [
+    ["file:///C:/shared%20assets/", "C:/shared assets/plot.png"],
+    [
+      "file://server/share/shared%20assets/",
+      "//server/share/shared assets/plot.png",
+    ],
+  ]) {
+    const asset = new URL(resolveAsset("/plot.png", "D:/notes/doc.md", root));
+    assert.equal(asset.searchParams.get("path"), expected, root);
+    assert.equal(
+      new URL(
+        resolveAsset("file:///E:/original.png", "D:/notes/doc.md", root),
+      ).searchParams.get("path"),
+      "E:/original.png",
+    );
+  }
+});
+
+test("file URL Markdown images use authorized assets and only anchor hrefs retain file URLs", () => {
+  const host = document.createElement("div");
+  host.innerHTML = renderMarkdown(
+    "![plot](file:///C:/notes/a%20b.svg?cache=1#glyph)\n\n" +
+      "[document](file:///C:/notes/percent%25name.md)\n\n" +
+      '<a href="file://server/share/note.md">UNC</a>' +
+      '<iframe src="file:///C:/secret.html"></iframe>',
+    { basePath: "D:/copies/copy.md" },
+  );
+  const image = new URL(host.querySelector("img").getAttribute("src"));
+  assert.equal(image.protocol, "inkstone-asset:");
+  assert.equal(image.searchParams.get("path"), "C:/notes/a b.svg");
+  assert.equal(image.hash, "#glyph");
+  assert.equal(
+    host.querySelector("a").getAttribute("href"),
+    "file:///C:/notes/percent%25name.md",
+  );
+  assert.equal(
+    host.querySelectorAll("a")[1].getAttribute("href"),
+    "file://server/share/note.md",
+  );
+  assert.equal(host.querySelector("iframe").hasAttribute("src"), false);
+  assert.equal(parse("[bad](javascript:alert(1))").querySelector("a"), null);
+});
 test("block ranges preserve nested lists as a single editing region and retain raw source", () => {
   const text =
     "# Title\n\n- first\n  - nested\n\n<div>raw</div>\n\n```unknown\n<raw>\n```";

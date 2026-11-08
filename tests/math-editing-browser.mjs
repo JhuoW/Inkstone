@@ -1,34 +1,13 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 /** Standalone browser interaction checks. Run: node tests/editor-browser.mjs */
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import { createServer } from "vite";
 import { chromium } from "playwright";
-const artifacts = path.resolve("artifacts/math-editing-validation");
+const artifacts = artifactPath("math-editing-validation");
 await fs.mkdir(artifacts, { recursive: true });
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    const cache = path.join(os.homedir(), ".cache/ms-playwright");
-    for (const directory of (await fs.readdir(cache))
-      .filter((name) => /^chromium-/.test(name))
-      .sort()
-      .reverse()) {
-      for (const binary of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const candidate = path.join(cache, directory, binary);
-        try {
-          await fs.access(candidate);
-          executablePath = candidate;
-          break;
-        } catch {}
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const server = await createServer({
   configFile: false,
   root: process.cwd(),
@@ -97,29 +76,306 @@ async function text() {
 async function selection() {
   return page.evaluate(() => editor.getSelection());
 }
+async function clickGlyph(locator, glyph, side = 0.2, occurrence = 0) {
+  const point = await locator.evaluate(
+    (element, { glyph, side, occurrence }) => {
+      const root = element.querySelector(".katex-html") || element;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const boxes = [];
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        for (
+          let index = node.textContent.indexOf(glyph);
+          index >= 0;
+          index = node.textContent.indexOf(glyph, index + glyph.length)
+        ) {
+          const range = document.createRange();
+          range.setStart(node, index);
+          range.setEnd(node, index + glyph.length);
+          const box = range.getBoundingClientRect();
+          if (box.width && box.height)
+            boxes.push({
+              left: box.left,
+              width: box.width,
+              top: box.top,
+              height: box.height,
+            });
+        }
+      }
+      boxes.sort(
+        (a, b) =>
+          a.top + a.height / 2 - (b.top + b.height / 2) || a.left - b.left,
+      );
+      const box = boxes[occurrence];
+      if (box)
+        return { x: box.left + box.width * side, y: box.top + box.height / 2 };
+      throw Error(`Rendered glyph not found: ${glyph}`);
+    },
+    { glyph, side, occurrence },
+  );
+  await page.mouse.click(point.x, point.y);
+}
 try {
+  await check(
+    "Closing typed inline math renders once at the closing caret, with exact undo and source mode",
+    async () => {
+      const prefix = "\uFEFF前言\r\n\r\n";
+      await open(prefix);
+      await page.keyboard.type("$a = b+c$");
+      assert.equal(await text(), prefix + "$a = b+c$");
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      assert.equal(
+        await page.locator(".cm-math-source, .cm-inline-math-preview").count(),
+        0,
+      );
+      assert.equal((await selection()).head, "前言\n\n$a = b+c$".length);
+      const caretGeometry = await page.evaluate(async () => {
+        await document.fonts.ready;
+        await new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        );
+        const formula = document
+          .querySelector(".cm-inline-math")
+          .getBoundingClientRect();
+        const caret = document
+          .querySelector(".cm-cursor")
+          .getBoundingClientRect();
+        return { formulaRight: formula.right, caretLeft: caret.left };
+      });
+      assert.ok(
+        Math.abs(caretGeometry.formulaRight - caretGeometry.caretLeft) < 3,
+        JSON.stringify(caretGeometry),
+      );
+      await page.screenshot({
+        path: path.join(artifacts, "inline-closed.png"),
+        animations: "disabled",
+        caret: "initial",
+      });
+      await page.keyboard.press("Control+z");
+      assert.equal(await text(), prefix);
+      await page.keyboard.press("Control+Shift+Z");
+      assert.equal(await text(), prefix + "$a = b+c$");
+      await page.evaluate(() => editor.setMode("source"));
+      assert.equal(
+        await page.locator(".cm-inline-math, .cm-math-source").count(),
+        0,
+      );
+      assert.match(
+        await page.locator(".cm-content").textContent(),
+        /\$a = b\+c\$/,
+      );
+      await page.evaluate(() => editor.setMode("live"));
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      await page.keyboard.type(" after");
+      assert.equal(await text(), prefix + "$a = b+c$ after");
+      assert.equal(
+        await page.locator(".cm-math-source, .cm-inline-math-preview").count(),
+        0,
+      );
+    },
+  );
+  await check(
+    "Clicking internal linear glyphs positions source caret and source clicks remain native",
+    async () => {
+      const raw = "$a = b+c$";
+      await open(raw);
+      await clickGlyph(page.locator(".cm-inline-math"), "b");
+      assert.equal((await selection()).head, raw.indexOf("b"));
+      assert.equal(await page.locator(".cm-math-source").textContent(), raw);
+      assert.equal(
+        await page.locator(".cm-inline-math-preview, .cm-inline-math").count(),
+        0,
+      );
+      await page.screenshot({
+        path: path.join(artifacts, "inline-caret.png"),
+        animations: "disabled",
+        caret: "initial",
+      });
+      await page.keyboard.type("Q");
+      assert.equal(await text(), raw.replace("b", "Qb"));
+      await page.keyboard.press("Control+z");
+      assert.equal(await text(), raw);
+      const cursor = await page.evaluate((position) => {
+        const box = editor.view.coordsAtPos(position);
+        return { x: box.left + 1, y: (box.top + box.bottom) / 2 };
+      }, raw.indexOf("c"));
+      await page.mouse.click(cursor.x, cursor.y);
+      assert.equal((await selection()).head, raw.indexOf("c"));
+      await page.keyboard.type("R");
+      assert.equal(await text(), raw.replace("c", "Rc"));
+      await page.keyboard.press("Control+Enter");
+      assert.equal(
+        await page.locator(".cm-math-source, .cm-inline-math-preview").count(),
+        0,
+      );
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      assert.equal(await text(), raw.replace("c", "Rc"));
+    },
+  );
+  await check(
+    "Optional dollar pairing closes once and arrow boundaries reveal or render without changing text",
+    async () => {
+      await open("", { autoPairMarkdown: true });
+      await page.keyboard.type("$");
+      assert.equal(await text(), "$$");
+      assert.equal((await selection()).head, 1);
+      await page.keyboard.type("a=b+c");
+      assert.equal(await text(), "$a=b+c$");
+      assert.equal(await page.locator(".cm-math-source").count(), 1);
+      await page.keyboard.type("$");
+      assert.equal(await text(), "$a=b+c$");
+      assert.equal((await selection()).head, "$a=b+c$".length);
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      await page.keyboard.press("ArrowLeft");
+      assert.equal((await selection()).head, "$a=b+c".length);
+      assert.equal(await page.locator(".cm-math-source").count(), 1);
+      assert.equal(await page.locator(".cm-inline-math-preview").count(), 0);
+      await page.keyboard.press("ArrowRight");
+      assert.equal(await page.locator(".cm-math-source").count(), 0);
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      assert.equal(await text(), "$a=b+c$");
+      await page.evaluate(() => editor.setMode("source"));
+      await page.keyboard.type(" $x$");
+      assert.equal(await text(), "$a=b+c$ $x$");
+      assert.equal(await page.locator(".cm-inline-math").count(), 0);
+      await open("", { autoPairMarkdown: true });
+      await page.keyboard.type("$$");
+      assert.equal(await text(), "$$");
+      assert.equal((await selection()).head, 2);
+      await open("", { autoPairMarkdown: true });
+      await page.keyboard.type("\\$");
+      assert.equal(await text(), "\\$");
+      assert.equal(await page.locator(".cm-inline-math").count(), 0);
+      await open("```\n$$\n```", { autoPairMarkdown: true });
+      await page.evaluate(() => editor.setSelection({ anchor: 5 }));
+      await page.keyboard.type("$");
+      assert.equal(await text(), "```\n$$$\n```");
+    },
+  );
+  await check(
+    "Repeated formulas and fraction numerator or denominator retain their own click positions",
+    async () => {
+      const raw = "\uFEFFStart\r\n\r\n$a = b+c$ and $a = b+c$.\r\n\r\nEnd";
+      await open(raw);
+      await clickGlyph(page.locator(".cm-live-block .math-inline").nth(1), "b");
+      const normalized = raw.slice(1).replaceAll("\r\n", "\n");
+      assert.equal((await selection()).head, normalized.lastIndexOf("b+c"));
+      await page.keyboard.type("Q");
+      assert.equal(await text(), raw.replace(/b\+c(?=\$\.)/, "Qb+c"));
+      await page.keyboard.press("Control+z");
+      assert.equal(await text(), raw);
+      for (const glyph of ["x", "y"]) {
+        const fraction = "Start\n\nBefore $\\frac{x}{y}$ after.\n\nEnd";
+        await open(fraction);
+        await clickGlyph(page.locator(".cm-live-block .math-inline"), glyph);
+        assert.equal(
+          (await selection()).head,
+          fraction.indexOf("{" + glyph + "}") + 1,
+        );
+        assert.equal(await page.locator(".cm-inline-math-preview").count(), 0);
+      }
+    },
+  );
+  await check(
+    "Repeated fraction, nested fraction, root and scripted glyphs select their actual source symbols",
+    async () => {
+      for (const { formula, scope, offsets } of [
+        { formula: "\\frac{x}{x}", scope: ".mfrac", offsets: [6, 9] },
+        { formula: "x+\\frac{x}{x}", scope: ".mfrac", offsets: [8, 11] },
+        { formula: "\\frac{x}{xx}", scope: ".mfrac", offsets: [6, 9, 10] },
+        {
+          formula: "\\frac{\\frac{x}{x}}{x}",
+          scope: ".mfrac",
+          offsets: [12, 15, 19],
+        },
+        { formula: "x^x", scope: "", offsets: [2, 0] },
+        { formula: "x_x^x", scope: "", offsets: [4, 0, 2] },
+        { formula: "\\sqrt{x}+x", scope: "", offsets: [6, 9] },
+      ]) {
+        for (let occurrence = 0; occurrence < offsets.length; occurrence++) {
+          const raw = `Start\n\n$${formula}$\n\nEnd`;
+          await open(raw);
+          const root = page.locator(".cm-live-block .math-inline");
+          await clickGlyph(
+            scope ? root.locator(scope).first() : root,
+            "x",
+            0.2,
+            occurrence,
+          );
+          const expected = raw.indexOf("$") + 1 + offsets[occurrence];
+          assert.equal(
+            (await selection()).head,
+            expected,
+            `${formula} glyph ${occurrence}`,
+          );
+          await page.keyboard.type("Q");
+          assert.equal(
+            await text(),
+            raw.slice(0, expected) + "Q" + raw.slice(expected),
+            formula,
+          );
+          assert.equal(
+            await page.locator(".cm-inline-math-preview").count(),
+            0,
+          );
+          await page.keyboard.press("Control+z");
+          assert.equal(await text(), raw);
+        }
+      }
+    },
+  );
+  await check(
+    "Closed invalid inline math shows one error and can be corrected in place",
+    async () => {
+      const raw = "$\\notARealCommand$";
+      await open("");
+      await page.keyboard.type(raw);
+      assert.equal(
+        await page.locator(".cm-inline-math .math-error").count(),
+        1,
+      );
+      assert.equal(
+        await page.locator(".cm-math-source, .cm-inline-math-preview").count(),
+        0,
+      );
+      await page.locator(".cm-inline-math").click();
+      await page.evaluate(
+        (raw) => editor.setSelection({ anchor: 1, head: raw.length - 1 }),
+        raw,
+      );
+      await page.keyboard.type("x^2");
+      await page.keyboard.press("Control+Enter");
+      assert.equal(await text(), "$x^2$");
+      assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
+      assert.equal(
+        await page
+          .locator(".math-error, .cm-math-source, .cm-inline-math-preview")
+          .count(),
+        0,
+      );
+    },
+  );
   await check(
     "Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo",
     async () => {
       const raw = "\uFEFFStart\r\n\r\nBefore $\\frac{x}{y}$ after.\r\n\r\nEnd";
       await open(raw);
-      await page.locator(".cm-live-block .math-inline").click();
+      await clickGlyph(page.locator(".cm-live-block .math-inline"), "x");
       const normalized = raw.slice(1).replaceAll("\r\n", "\n");
-      assert.equal((await selection()).head, normalized.indexOf("\\frac"));
+      assert.equal((await selection()).head, normalized.indexOf("{x}") + 1);
       assert.equal(
         await page.locator(".cm-math-source").textContent(),
         "$\\frac{x}{y}$",
       );
       assert.equal(
         await page.locator(".cm-inline-math-preview .katex").count(),
-        1,
+        0,
       );
       await page.keyboard.type("Q");
-      assert.equal(await text(), raw.replace("\\frac", "Q\\frac"));
+      assert.equal(await text(), raw.replace("{x}", "{Qx}"));
       await page.keyboard.press("Control+z");
       assert.equal(await text(), raw);
       await page.keyboard.press("Control+Shift+z");
-      assert.equal(await text(), raw.replace("\\frac", "Q\\frac"));
+      assert.equal(await text(), raw.replace("{x}", "{Qx}"));
     },
   );
   await check(
@@ -128,16 +384,16 @@ try {
       const raw =
         "Start\n\nfirst $x^2$ second $x^2$ and \\(\\frac{a}{b}\\).\n\nEnd";
       await open(raw);
-      await page.locator(".cm-live-block .math-inline").nth(1).click();
+      await clickGlyph(page.locator(".cm-live-block .math-inline").nth(1), "x");
       assert.equal(
         (await selection()).head,
         raw.indexOf("$x^2$", raw.indexOf("$x^2$") + 1) + 1,
       );
       assert.equal(await page.locator(".cm-inline-math").count(), 2);
-      await page.locator(".cm-inline-math").last().click();
-      assert.equal((await selection()).head, raw.indexOf("\\frac"));
+      await clickGlyph(page.locator(".cm-inline-math").last(), "a");
+      assert.equal((await selection()).head, raw.indexOf("{a}") + 1);
       await page.keyboard.type("Q");
-      assert.equal(await text(), raw.replace("\\frac", "Q\\frac"));
+      assert.equal(await text(), raw.replace("{a}", "{Qa}"));
       await page.keyboard.press("Control+z");
       assert.equal(await text(), raw);
       // Move unrelated preceding source while reusing the later widget DOM.
@@ -145,7 +401,7 @@ try {
         editor.setSelection({ anchor: 0 });
         editor.insert("prefix ");
       });
-      await page.locator(".cm-live-block .math-inline").nth(1).click();
+      await clickGlyph(page.locator(".cm-live-block .math-inline").nth(1), "x");
       assert.equal(
         (await selection()).head,
         raw.indexOf("$x^2$", raw.indexOf("$x^2$") + 1) + 8,
@@ -260,11 +516,11 @@ try {
     },
   );
   await check(
-    "Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers",
+    "Code supports native word selection; Mermaid body editing and diagram preview recover",
     async () => {
       const code = "Start\n\n```javascript\nconst x = 1;\n```\n\nEnd";
       await open(code);
-      await page.locator(".code-block").dblclick();
+      await page.locator('.cm-code-line span:text-is("const")').dblclick();
       assert.equal(
         await page.evaluate(() =>
           editor.view.state.sliceDoc(
@@ -272,10 +528,10 @@ try {
             editor.view.state.selection.main.to,
           ),
         ),
-        "const x = 1;",
+        "const",
       );
-      await page.keyboard.type("const y = 2;");
-      assert.equal(await text(), code.replace("const x = 1;", "const y = 2;"));
+      await page.keyboard.type("let");
+      assert.equal(await text(), code.replace("const x = 1;", "let x = 1;"));
       await page.keyboard.press("Control+z");
       assert.equal(await text(), code);
       const raw =
@@ -308,7 +564,7 @@ try {
     async () => {
       const raw = "Start\n\nBefore $x^2$ after.\n\nEnd";
       await open(raw);
-      await page.locator(".cm-live-block .math-inline").click();
+      await clickGlyph(page.locator(".cm-live-block .math-inline"), "x");
       const cdp = await context.newCDPSession(page);
       await cdp.send("Input.imeSetComposition", {
         text: "zhong",
@@ -353,7 +609,8 @@ try {
         if (table) {
           await page.locator(".cm-live-block td").first().click();
           await page.keyboard.press("End");
-        } else await page.locator(".cm-live-block .math-inline").click();
+        } else
+          await clickGlyph(page.locator(".cm-live-block .math-inline"), "x");
         await cdp.send("Input.imeSetComposition", {
           text: "中文",
           selectionStart: 2,

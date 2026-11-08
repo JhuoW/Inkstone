@@ -1,3 +1,4 @@
+import { artifactPath } from "./artifact-path.mjs";
 // Offline (loopback only) source-renderer checks; no claim of installed-platform coverage.
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -10,7 +11,7 @@ const cases = JSON.parse(
   await fs.readFile("samples/mermaid-catalog.json", "utf8"),
 );
 
-const output = path.resolve("artifacts/mermaid-validation");
+const output = artifactPath("mermaid-validation");
 await fs.mkdir(output, { recursive: true });
 await fs.writeFile(
   path.join(output, "cases.json"),
@@ -29,34 +30,7 @@ const server = await createServer({
 });
 await server.listen();
 const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    for (const item of (
-      await fs.readdir(path.join(os.homedir(), ".cache/ms-playwright"))
-    )
-      .filter((n) => n.startsWith("chromium-"))
-      .sort()
-      .reverse()) {
-      for (const relative of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const candidate = path.join(
-          os.homedir(),
-          ".cache/ms-playwright",
-          item,
-          relative,
-        );
-        try {
-          await fs.access(candidate);
-          executablePath = candidate;
-          break;
-        } catch {}
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const browser = await chromium.launch({
   headless: true,
   executablePath,

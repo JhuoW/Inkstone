@@ -1,5 +1,7 @@
 "use strict";
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
+const { decodeHTMLStrict, decodeHTMLAttribute } = require("entities");
 
 // Save As rewrites only parsed destination spans. Markdown itself is never serialized.
 function rebaseLocalLinks(text, originalPath, targetPath) {
@@ -38,7 +40,9 @@ function rebaseLocalLinks(text, originalPath, targetPath) {
     } else if (/^(?:\t| {4})/.test(line[0]))
       mask.fill(1, line.index, line.index + line[0].length);
   }
-  for (const match of text.matchAll(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1\s*>/gi))
+  for (const match of text.matchAll(
+    /<!--[\s\S]*?(?:-->|$)|<(pre|code|script|style|textarea)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,
+  ))
     mask.fill(1, match.index, match.index + match[0].length);
   for (let i = 0; i < text.length; i++) {
     if (mask[i] || text[i] !== "`") continue;
@@ -54,13 +58,16 @@ function rebaseLocalLinks(text, originalPath, targetPath) {
       i = end + length - 1;
     } else i += length - 1;
   }
-  const rebase = (from, to) => {
+  const rebase = (from, to, html = false) => {
     const original = text.slice(from, to);
-    if (!original || /^(?:[a-z][a-z\d+.-]*:|[\/#?]|\\\\)/i.test(original))
+    const unescaped = html
+      ? decodeHTMLAttribute(original)
+      : decodeHTMLStrict(original);
+    if (!unescaped || /^(?:[a-z][a-z\d+.-]*:|[\/#?]|\\\\)/i.test(unescaped))
       return;
-    const split = original.search(/[?#]/);
-    const destination = split < 0 ? original : original.slice(0, split),
-      suffix = split < 0 ? "" : original.slice(split);
+    const split = unescaped.search(/[?#]/);
+    const destination = split < 0 ? unescaped : unescaped.slice(0, split),
+      suffix = split < 0 ? "" : unescaped.slice(split);
     let decoded;
     try {
       decoded = decodeURIComponent(destination.replace(/\\([ ()\\])/g, "$1"));
@@ -68,33 +75,54 @@ function rebaseLocalLinks(text, originalPath, targetPath) {
       return;
     }
     const absolute = path.resolve(path.dirname(originalPath), decoded);
-    let relative = path
-      .relative(path.dirname(targetPath), absolute)
-      .split(path.sep)
-      .join("/");
+    let relative = path.relative(path.dirname(targetPath), absolute);
     if (!relative) relative = path.basename(absolute);
+    const destinationURL = path.isAbsolute(relative)
+      ? pathToFileURL(absolute).href
+      : relative
+          .split(path.sep)
+          .join("/")
+          .replace(/%/g, "%25")
+          .replace(/ /g, "%20")
+          .replace(/#/g, "%23")
+          .replace(/\?/g, "%3F");
     const replacement =
-      relative
-        .replace(/%/g, "%25")
-        .replace(/ /g, "%20")
-        .replace(/\(/g, "%28")
-        .replace(/\)/g, "%29")
-        .replace(/#/g, "%23")
-        .replace(/\?/g, "%3F") + suffix;
+      destinationURL.replace(
+        /[&'"()<>]/g,
+        (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+      ) +
+      (html
+        ? suffix
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+        : suffix.replace(
+            /[ '"()<>]/g,
+            (character) =>
+              `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+          ));
     if (replacement !== original)
       changes.push({ from, to, insert: replacement });
   };
   // HTML media/link attributes are processed only outside code, then excluded from Markdown scanning.
-  for (const tag of text.matchAll(/<(?:img|a|audio|video|source)\b[^>]*>/gi)) {
+  for (const tag of text.matchAll(
+    /<(img|a|audio|video|source)\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi,
+  )) {
     if (mask[tag.index]) continue;
-    for (const attribute of tag[0].matchAll(
-      /\b(?:src|href|poster)\s*=\s*(["'])(.*?)\1/gi,
-    )) {
-      const offset = attribute[0].indexOf(attribute[1]) + 1;
-      rebase(
-        tag.index + attribute.index + offset,
-        tag.index + attribute.index + offset + attribute[2].length,
-      );
+    const attributesFrom = 1 + tag[1].length;
+    for (const attribute of tag[0]
+      .slice(attributesFrom)
+      .matchAll(/([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g)) {
+      if (!/^(?:src|href|poster)$/i.test(attribute[1])) continue;
+      const value = attribute[2] ?? attribute[3] ?? attribute[4];
+      if (value === undefined) continue;
+      let offset = attribute[0].indexOf("=") + 1;
+      while (/\s/.test(attribute[0][offset] || "")) offset++;
+      if (/['"]/.test(attribute[0][offset] || "")) offset++;
+      const from = tag.index + attributesFrom + attribute.index + offset;
+      rebase(from, from + value.length, true);
     }
     mask.fill(1, tag.index, tag.index + tag[0].length);
   }
@@ -134,7 +162,7 @@ function rebaseLocalLinks(text, originalPath, targetPath) {
       )
         cursor++;
       if (text[cursor] !== ">") continue;
-      to = cursor;
+      to = cursor++;
     } else {
       let nesting = 0;
       for (; cursor < text.length; cursor++) {
@@ -151,8 +179,22 @@ function rebaseLocalLinks(text, originalPath, targetPath) {
       }
       to = cursor;
     }
-    if (to > from) rebase(from, to);
-    i = Math.max(i, cursor - 1);
+    while (/\s/.test(text[cursor] || "") && cursor < text.length) cursor++;
+    if (["'", '"', "("].includes(text[cursor])) {
+      const delimiter = text[cursor++],
+        closing = delimiter === "(" ? ")" : delimiter;
+      while (cursor < text.length && text[cursor] !== closing) {
+        if (text[cursor] === "\\") cursor++;
+        cursor++;
+      }
+      if (text[cursor++] !== closing) continue;
+      while (/\s/.test(text[cursor] || "") && cursor < text.length) cursor++;
+    }
+    if (text[cursor] !== ")") continue;
+    if (to > from) {
+      rebase(from, to);
+      mask.fill(1, from, to);
+    }
   }
   changes.sort((a, b) => b.from - a.from);
   let output = text,

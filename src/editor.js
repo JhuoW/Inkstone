@@ -5,6 +5,7 @@ import {
   StateEffect,
   Compartment,
   Prec,
+  Transaction,
 } from "@codemirror/state";
 import {
   EditorView,
@@ -37,7 +38,6 @@ import {
   markdownLanguage,
   markdownKeymap,
 } from "@codemirror/lang-markdown";
-import { languages } from "@codemirror/language-data";
 import {
   syntaxHighlighting,
   HighlightStyle,
@@ -66,6 +66,7 @@ import {
 } from "./markdown.js";
 import { SourceDocument, captureSourceLayout } from "./source.js";
 import { structuralEdit } from "./structure-commands.js";
+import { normalizeShortcut } from "./shortcuts.js";
 import {
   createSourceHistory,
   sourceChangesFromTransaction,
@@ -75,6 +76,7 @@ import {
   createTable,
   nextTableCell,
   locateTable,
+  tableCellRanges,
 } from "./tables.js";
 import {
   installTableEditor,
@@ -84,6 +86,15 @@ import {
   bindTableCommands,
 } from "./table-editor.js";
 import { makeInlineDecorations } from "./inline-rendering.js";
+import { inlineMathOffsetAtPoint } from "./inline-math-caret.js";
+import {
+  decorateCodeFence,
+  isCodeFence,
+  fenceRange,
+  changeCodeLanguage,
+  codeFenceEditing,
+  resolveCodeLanguage,
+} from "./code-fences.js";
 import "./editor.css";
 
 // The same CSS palette colors source and rendered code. Resolving theme tokens
@@ -249,7 +260,21 @@ function widgetPositionAtPoint(view, element, x, y, target) {
   );
   if (math && element.contains(math)) {
     const range = inlineMathRanges(block)[Number(math.dataset.mathIndex)];
-    if (range) return currentFrom + range.contentFrom - block.from;
+    if (range)
+      return (
+        currentFrom +
+        range.contentFrom -
+        block.from +
+        inlineMathOffsetAtPoint(
+          math,
+          block.text.slice(
+            range.contentFrom - block.from,
+            range.contentTo - block.from,
+          ),
+          x,
+          y,
+        )
+      );
   }
   const content = blockContentRange(block);
   const caret = document.caretPositionFromPoint?.(x, y);
@@ -579,6 +604,13 @@ function activeBlockIds(blocks, selection) {
 function makeDecorations(blocks, state, options, onLink) {
   const ranges = [];
   for (const block of blocks) {
+    if (isCodeFence(block)) {
+      const code = decorateCodeFence(block, state, options);
+      if (code) {
+        ranges.push(...code);
+        continue;
+      }
+    }
     const active =
       !options.readOnly &&
       state.selection.ranges.some(
@@ -865,7 +897,7 @@ export function createEditor(
         recordRenderedEdit(view, range, event);
         beginWidgetSelection(
           view,
-          event.shiftKey ? view.state.selection.main.anchor : range.contentFrom,
+          event.shiftKey ? view.state.selection.main.anchor : range.head,
           event,
         );
       },
@@ -883,7 +915,24 @@ export function createEditor(
     const inline = inlineMathRanges(block).find(
       (range) => head >= range.from && head <= range.to,
     );
-    if (!inline && !isPreviewBlock(block)) return false;
+    if (!inline && !isPreviewBlock(block) && !isCodeFence(block)) return false;
+    if (inline) {
+      view.dispatch({ selection: { anchor: inline.to }, scrollIntoView: true });
+      return true;
+    }
+    const fence = fenceRange(block);
+    if (fence && fence.closingFrom == null) {
+      const indentation = block.text.match(/^ */)[0];
+      const insert = `\n${indentation}${fence.delimiter}\n\n`;
+      view.dispatch({
+        changes: { from: block.to, insert },
+        selection: { anchor: block.to + insert.length },
+        annotations: isolateHistory.of("full"),
+        userEvent: "input",
+        scrollIntoView: true,
+      });
+      return true;
+    }
     const end = inline?.to ?? block.to;
     if (end < view.state.doc.length) {
       view.dispatch({ selection: { anchor: end + 1 }, scrollIntoView: true });
@@ -930,6 +979,32 @@ export function createEditor(
       scrollIntoView: true,
       userEvent: "select",
     });
+    return true;
+  }
+
+  function protectCodeBoundary(backward) {
+    if (mode !== "live" || view.composing || view.state.readOnly) return false;
+    const selection = view.state.selection.main;
+    if (!selection.empty) return false;
+    const range = view.state
+      .field(liveField)
+      .blocks.filter(isCodeFence)
+      .map(fenceRange)
+      .find((range) =>
+        backward
+          ? selection.head === range.bodyFrom
+          : selection.head === range.bodyTo,
+      );
+    if (!range || range.empty) return false;
+    // Do not join the body to a hidden fence. Delete an empty block as one undoable edit.
+    if (range.bodyFrom === range.bodyTo) {
+      view.dispatch({
+        changes: { from: range.from, to: range.to, insert: "" },
+        selection: { anchor: range.from },
+        annotations: isolateHistory.of("full"),
+        userEvent: "delete",
+      });
+    }
     return true;
   }
 
@@ -994,6 +1069,7 @@ export function createEditor(
         }));
   }
   function tab(backward = false) {
+    if (view.state.readOnly) return false;
     if (
       !backward &&
       completionStatus(view.state) === "active" &&
@@ -1082,6 +1158,18 @@ export function createEditor(
       .field(liveField)
       .blocks.find((block) => from >= block.from && from <= block.to);
     if (
+      settings.autoPairMarkdown &&
+      inserted === "$" &&
+      from === to &&
+      before.endsWith("$") &&
+      after === "$" &&
+      line.text.trim() === "$$" &&
+      (!block || block.type === "math_block")
+    ) {
+      editor.dispatch({ selection: { anchor: to + 1 } });
+      return true;
+    }
+    if (
       block &&
       [
         "fence",
@@ -1094,7 +1182,7 @@ export function createEditor(
       return false;
     if (
       settings.autoPairMarkdown &&
-      ["*", "_", "~", "`"].includes(inserted) &&
+      ["*", "_", "~", "`", "$"].includes(inserted) &&
       !before.endsWith("\\")
     ) {
       if (
@@ -1216,12 +1304,17 @@ export function createEditor(
     return Prec.highest(
       keymap.of(
         Object.entries(settings.shortcuts || {})
-          .filter(([, key]) => typeof key === "string")
-          .map(([name, key]) => ({ key, run: () => api.command(name) })),
+          .map(([name, binding]) => ({
+            key: normalizeShortcut(binding),
+            run: () => api.command(name),
+          }))
+          .filter(({ key }) => key),
       ),
     );
   }
   const baseKeys = [
+    { key: "Backspace", run: () => protectCodeBoundary(true) },
+    { key: "Delete", run: () => protectCodeBoundary(false) },
     { key: "ArrowDown", run: () => enterRenderedBlock(1) },
     { key: "ArrowUp", run: () => enterRenderedBlock(-1) },
     { key: "Mod-Enter", run: finishRenderedEditing },
@@ -1231,6 +1324,7 @@ export function createEditor(
     { key: "Mod-k", run: () => api.command("link") },
     { key: "Mod-Shift-c", run: () => api.command("code") },
     { key: "Mod-Alt-t", run: () => api.command("table") },
+    { key: "Mod-Shift-z", run: redo, preventDefault: true },
     { key: "Tab", run: () => tab(), shift: () => tab(true) },
     ...[1, 2, 3, 4, 5, 6].map((level) => ({
       key: `Mod-${level}`,
@@ -1262,20 +1356,26 @@ export function createEditor(
         sourceLanguage.of(
           markdown({
             base: markdownLanguage,
-            codeLanguages: languages,
+            codeLanguages: resolveCodeLanguage,
             addKeymap: false,
           }),
         ),
         syntaxHighlighting(inkstoneHighlightStyle, { fallback: true }),
         EditorView.lineWrapping,
         search({ top: true }),
+        customKeys.of(customKeyExtensions()),
         autocompletion({ override: [completion] }),
         Prec.highest(EditorView.inputHandler.of(smartInput)),
-        customKeys.of(customKeyExtensions()),
         keymap.of(baseKeys),
         behavior.of(behaviorExtensions()),
         look.of(appearanceExtensions()),
         liveField,
+        codeFenceEditing(liveField),
+        EditorView.atomicRanges.of((view) =>
+          view.state.field(liveField).decorations.update({
+            filter: (_from, _to, value) => Boolean(value.spec.codeFenceMarker),
+          }),
+        ),
         inlineField,
         EditorView.domEventHandlers({
           mousedown(event) {
@@ -1368,6 +1468,19 @@ export function createEditor(
     });
   }
   view = new EditorView({ parent, state: createState(source.normalized) });
+  const fontSet = view.dom.ownerDocument.fonts;
+  const measureLoadedFonts = () => {
+    if (!view.dom.isConnected) return;
+    view.requestMeasure();
+    // A math font can widen a widget without changing the source line height.
+    // Reselect without a history event so the drawn caret follows the new edge.
+    if (!view.composing && !composingInputs.size)
+      view.dispatch({
+        selection: view.state.selection,
+        annotations: Transaction.addToHistory.of(false),
+      });
+  };
+  fontSet?.addEventListener("loadingdone", measureLoadedFonts);
   view.dom.addEventListener(
     "mousedown",
     (event) => {
@@ -1479,7 +1592,9 @@ export function createEditor(
   ) {
     const selection = view.state.selection.main;
     const first = view.state.doc.lineAt(selection.from);
-    const last = view.state.doc.lineAt(selection.to);
+    const last = view.state.doc.lineAt(
+      selection.to > selection.from ? selection.to - 1 : selection.to,
+    );
     const changes = [];
     for (let number = first.number; number <= last.number; number++) {
       const line = view.state.doc.line(number);
@@ -1511,6 +1626,19 @@ export function createEditor(
   }
   api = {
     view,
+    isInCodeBlock() {
+      const selection = view.state.selection.main;
+      return parseBlocks(view.state.doc.toString()).some((block) => {
+        if (block.type === "code_block")
+          return selection.from >= block.from && selection.to <= block.to;
+        const range = fenceRange(block);
+        return (
+          range &&
+          selection.from >= range.bodyFrom &&
+          selection.to <= range.bodyTo
+        );
+      });
+    },
     getText: () => source.raw,
     getSelection: () => ({
       anchor: view.state.selection.main.anchor,
@@ -1521,7 +1649,89 @@ export function createEditor(
       })),
       mainIndex: view.state.selection.mainIndex,
     }),
-    setSelection(selection) {
+    prepareContextMenu({
+      x,
+      y,
+      target,
+      preserveSelection = true,
+      previousSelection,
+    } = {}) {
+      const document = view.dom.ownerDocument;
+      const hit = target?.isConnected
+        ? target
+        : document.elementFromPoint(x, y);
+      if (!hit || (!view.dom.contains(hit) && hit !== view.dom.parentElement))
+        return null;
+      if (
+        hit.closest("input,select,textarea") &&
+        !hit.closest(".inkstone-table-cell-editor")
+      )
+        return null;
+      const element = hit.closest(".cm-live-block");
+      const renderedBlock = element && widgetSources.get(element);
+      let position;
+      if (renderedBlock?.type === "table_open") {
+        const cellElement = hit.closest("td,th");
+        if (cellElement) {
+          const rowElement = cellElement.parentElement;
+          const displayedRow = [...element.querySelectorAll("tr")].indexOf(
+            rowElement,
+          );
+          const row = displayedRow === 0 ? 0 : displayedRow + 1;
+          const column = [...rowElement.children].indexOf(cellElement);
+          const cell = tableCellRanges(renderedBlock.text)[row]?.[column];
+          if (cell) {
+            const input = hit.closest(".inkstone-table-cell-editor");
+            position =
+              view.posAtDOM(element) +
+              cell.from +
+              Math.min(cell.text.length, input?.selectionStart || 0);
+          }
+        }
+      }
+      if (position == null && element && renderedBlock)
+        position = widgetPositionAtPoint(view, element, x, y, hit);
+      if (position == null) position = view.posAtCoords({ x, y }, false);
+      if (position == null) {
+        const content = view.contentDOM.getBoundingClientRect();
+        position = y >= content.bottom ? view.state.doc.length : 0;
+      }
+      position = Math.max(0, Math.min(view.state.doc.length, position));
+      const saved = previousSelection || api.getSelection();
+      const ranges = saved.ranges || [saved];
+      const selected = ranges.some(({ anchor, head = anchor }) => {
+        const from = Math.min(anchor, head),
+          to = Math.max(anchor, head);
+        return from < to && position >= from && position <= to;
+      });
+      if (preserveSelection && selected)
+        api.setSelection(saved, { scrollIntoView: false });
+      else
+        view.dispatch({
+          selection: { anchor: position },
+          userEvent: "select.pointer",
+        });
+      const live = view.state.field(liveField);
+      const parsed = live.stale
+        ? parseBlocks(view.state.doc.toString(), settings)
+        : live.blocks;
+      const block = parsed.find(
+        (block) => position >= block.from && position <= block.to,
+      );
+      const table =
+        block?.type === "table_open"
+          ? locateTable(view.state.doc.toString(), position)
+          : null;
+      return {
+        position,
+        block: block
+          ? { from: block.from, to: block.to, type: block.type }
+          : null,
+        table,
+        selection: api.getSelection(),
+      };
+    },
+    setSelection(selection, { scrollIntoView = true } = {}) {
       const max = view.state.doc.length;
       const ranges = (selection.ranges || [selection]).map((range) =>
         EditorSelection.range(
@@ -1534,7 +1744,7 @@ export function createEditor(
           ranges,
           Math.min(selection.mainIndex || 0, ranges.length - 1),
         ),
-        scrollIntoView: true,
+        scrollIntoView,
       });
     },
     setDocument(nextText, selection) {
@@ -1703,11 +1913,21 @@ export function createEditor(
             view.state.sliceDoc(selection.from, selection.to).includes("\n")
             ? wrap("```\n", "\n```")
             : wrap("`");
-        case "codeBlock":
-          return wrap(
-            `\n\n\`\`\`${argument ?? settings.defaultCodeLanguage ?? ""}\n`,
-            "\n```\n",
+        case "codeBlock": {
+          const selected = view.state.sliceDoc(selection.from, selection.to);
+          const delimiter = "`".repeat(
+            Math.max(
+              3,
+              ...[...selected.matchAll(/`+/g)].map(
+                (match) => match[0].length + 1,
+              ),
+            ),
           );
+          return wrap(
+            `\n\n${delimiter}${argument ?? settings.defaultCodeLanguage ?? ""}\n`,
+            `\n${delimiter}\n`,
+          );
+        }
         case "math":
           return wrap("$");
         case "mathBlock":
@@ -1787,16 +2007,11 @@ export function createEditor(
               selection.head <= item.to,
           );
           if (!block) return false;
-          const line = view.state.doc.lineAt(block.from);
-          const fence = line.text.match(/^(\s*[`~]{3,})/);
-          view.dispatch({
-            changes: {
-              from: line.from + fence[0].length,
-              to: line.to,
-              insert: String(argument || ""),
-            },
-          });
-          return true;
+          return changeCodeLanguage(
+            view,
+            fenceRange(block),
+            String(argument || ""),
+          );
         }
         case "tableAction": {
           const value =
@@ -1897,6 +2112,7 @@ export function createEditor(
     },
     focus: () => view.focus(),
     destroy: () => {
+      fontSet?.removeEventListener("loadingdone", measureLoadedFonts);
       mouseSelections.get(view)?.();
       bindTableCommands(view, null);
       view.destroy();

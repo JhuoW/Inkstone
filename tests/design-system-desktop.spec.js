@@ -1,3 +1,4 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 import { test, expect, _electron as electron } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -8,7 +9,7 @@ const root = process.cwd();
 // namespaces and the local Electron helper is not installed setuid root.
 // Keep Chromium sandboxing enabled by default and record the actual argv.
 const sandboxBypass = process.env.INKSTONE_TEST_NO_SANDBOX === "1";
-const evidence = path.join(root, "artifacts/ui-redesign/desktop-interactions");
+const evidence = artifactPath("ui-redesign/desktop-interactions");
 const original =
   "# Desk\r\n\r\nKeep steady text and 中文 here.\r\n\r\n## Notes\r\n\r\n- A nested idea\r\n  - A detail\r\n\r\nFormula $x^2 + y$ stays editable.\r\n";
 const results = [],

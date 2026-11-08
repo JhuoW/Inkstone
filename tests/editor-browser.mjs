@@ -1,34 +1,13 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 /** Standalone browser interaction checks. Run: node tests/editor-browser.mjs */
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import { createServer } from "vite";
 import { chromium } from "playwright";
-const artifacts = path.resolve("artifacts/editor-validation");
+const artifacts = artifactPath("editor-validation");
 await fs.mkdir(artifacts, { recursive: true });
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    const cache = path.join(os.homedir(), ".cache/ms-playwright");
-    for (const directory of (await fs.readdir(cache))
-      .filter((name) => /^chromium-/.test(name))
-      .sort()
-      .reverse()) {
-      for (const binary of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const candidate = path.join(cache, directory, binary);
-        try {
-          await fs.access(candidate);
-          executablePath = candidate;
-          break;
-        } catch {}
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const server = await createServer({
   configFile: false,
   root: process.cwd(),
@@ -81,6 +60,128 @@ async function check(name, fn) {
   console.log("PASS", name, result.ms + "ms");
 }
 try {
+  await check(
+    "Custom shortcut aliases accepted by native menus invoke editor commands",
+    async () => {
+      for (const [binding, key] of [
+        ["Mod--", "Control+-"],
+        ["Mod-Minus", "Control+-"],
+        ["mod-space", "Control+Space"],
+        ["Mod-Return", "Control+Enter"],
+        ["Mod-Esc", "Control+Escape"],
+        ["Mod-Plus", "Control+Shift+Equal"],
+        ["Mod-+", "Control++"],
+        ["mod-shift-B", "Control+Shift+b"],
+      ]) {
+        await page.evaluate((binding) => {
+          newEditor("text", { shortcuts: { bold: binding } });
+          editor.setMode("source");
+          editor.setSelection({ anchor: 0, head: 4 });
+          editor.focus();
+        }, binding);
+        await page.keyboard.press(key);
+        assert.equal(
+          await page.evaluate(() => editor.getText()),
+          "**text**",
+          binding,
+        );
+      }
+    },
+  );
+  await check(
+    "Table dialog Apply keeps pipes and backslash runs inside the edited cell",
+    async () => {
+      const raw =
+        "Before\r\n\r\n| A | B |\r\n| --- | --- |\r\n| original | unchanged |\r\n\r\nAfter";
+      for (const [value, escaped] of [
+        ["raw|pipe", "raw\\|pipe"],
+        ["kept\\|pipe", "kept\\|pipe"],
+        [
+          "folder" + "\\".repeat(2) + "|file",
+          "folder" + "\\".repeat(3) + "|file",
+        ],
+      ]) {
+        await page.evaluate(async (raw) => {
+          const { editTable } = await import("/src/table-dialog.js");
+          newEditor(raw);
+          editor.setMode("source");
+          editor.setSelection({
+            anchor: editor.view.state.doc.toString().indexOf("original"),
+          });
+          editTable(editor, "en");
+        }, raw);
+        await page.locator('dialog [data-row="1"][data-col="0"]').fill(value);
+        await page.locator("#table-apply").click();
+        assert.equal(
+          await page.evaluate(() => editor.getText()),
+          raw.replace("original", escaped),
+        );
+        const parsed = await page.evaluate(async () => {
+          const { locateTable } = await import("/src/tables.js");
+          return locateTable(
+            editor.view.state.doc.toString(),
+            editor.view.state.doc.toString().indexOf("| A"),
+          );
+        });
+        assert.equal(parsed.rows[2].length, 2);
+        assert.deepEqual(parsed.rows[2], [escaped, "unchanged"]);
+        await page.keyboard.press("Control+z");
+        assert.equal(await page.evaluate(() => editor.getText()), raw);
+      }
+    },
+  );
+  await check(
+    "Line formatting excludes the unselected line at a selection boundary",
+    async () => {
+      const raw = "\uFEFFfirst\r\nsecond\r\n";
+      for (const selection of [
+        { anchor: 0, head: 6 },
+        { anchor: 6, head: 0 },
+      ]) {
+        const result = await page.evaluate(
+          ({ raw, selection }) => {
+            newEditor(raw);
+            editor.setMode("source");
+            editor.setSelection(selection);
+            editor.command("heading", 1);
+            const formatted = editor.getText();
+            editor.command("undo");
+            return { formatted, undone: editor.getText() };
+          },
+          { raw, selection },
+        );
+        assert.deepEqual(result, {
+          formatted: "\uFEFF# first\r\nsecond\r\n",
+          undone: raw,
+        });
+      }
+    },
+  );
+  await check(
+    "Read-only tables cannot grow through Tab and resume editing when unlocked",
+    async () => {
+      const text = "| A | B |\n| --- | --- |\n| x | y |";
+      await page.evaluate((text) => {
+        newEditor(text, { readOnly: true });
+        editor.setMode("source");
+        editor.setSelection({ anchor: text.indexOf("y") });
+        editor.focus();
+      }, text);
+      await page.keyboard.press("Tab");
+      assert.equal(await page.evaluate(() => editor.getText()), text);
+      await page.evaluate(() => {
+        editor.setSettings({ readOnly: false });
+        editor.focus();
+      });
+      await page.keyboard.press("Tab");
+      assert.equal(
+        await page.evaluate(() => editor.getText()),
+        text + "\n|  |  |",
+      );
+      await page.keyboard.press("Control+z");
+      assert.equal(await page.evaluate(() => editor.getText()), text);
+    },
+  );
   await check(
     "Mode switches preserve original text, selection and undo history",
     async () => {
@@ -1076,14 +1177,14 @@ try {
       }, text);
       assert.equal(
         await page
-          .locator(".code-block pre")
+          .locator(".cm-code-line")
           .evaluate((element) => getComputedStyle(element).whiteSpace),
-        "pre-wrap",
+        "break-spaces",
       );
       await page.evaluate(() => editor.setSettings({ codeWrap: false }));
       assert.equal(
         await page
-          .locator(".code-no-wrap pre")
+          .locator(".cm-code-nowrap")
           .evaluate((element) => getComputedStyle(element).whiteSpace),
         "pre",
       );

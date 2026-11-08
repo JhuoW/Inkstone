@@ -32,6 +32,18 @@ DOMPurify.addHook("uponSanitizeAttribute", (node, attribute) => {
   if (!activeAssetOptions) return;
   const tag = node.tagName?.toLowerCase();
   if (
+    tag === "a" &&
+    attribute.attrName === "href" &&
+    /^file:/i.test(attribute.attrValue)
+  ) {
+    try {
+      localFileURLPath(attribute.attrValue);
+      // Editor links are intercepted and authorized in the main process.
+      // Other tags keep the sanitizer's normal protocol restrictions.
+      attribute.forceKeepAttr = true;
+    } catch {}
+  }
+  if (
     (attribute.attrName === "src" &&
       ["img", "video", "audio", "source", "track"].includes(tag)) ||
     (attribute.attrName === "poster" && tag === "video")
@@ -327,6 +339,15 @@ const md = new MarkdownIt({
   .use(taskLists, { enabled: true, label: true })
   .use(mathPlugin)
   .use(extensions);
+const validateLink = md.validateLink;
+md.validateLink = (destination) => {
+  if (!/^file:/i.test(destination)) return validateLink(destination);
+  try {
+    return !!localFileURLPath(destination);
+  } catch {
+    return false;
+  }
+};
 const footnoteReference = md.renderer.rules.footnote_ref;
 md.renderer.rules.footnote_ref = (tokens, index, options, env, self) => {
   const token = tokens[index];
@@ -338,23 +359,42 @@ md.renderer.rules.footnote_ref = (tokens, index, options, env, self) => {
   );
 };
 
+function localFileURLPath(source) {
+  const url = new URL(source);
+  let pathname = decodeURIComponent(url.pathname);
+  if (url.hostname) return `//${url.hostname}${pathname}`;
+  if (/^\/[a-z]:\//i.test(pathname)) pathname = pathname.slice(1);
+  return pathname;
+}
+
 export function resolveAsset(src, basePath, imageRoot) {
   if (!src || /^(?:https?:|data:|blob:|inkstone-asset:|#)/i.test(src))
     return src;
   if (
     /^[a-z][a-z\d+.-]*:/i.test(src) &&
     !/^[a-z]:[\\/]/i.test(src) &&
-    !src.startsWith("file:")
+    !/^file:/i.test(src)
   )
     return "";
-  let path = src.replace(/^file:\/\//, "");
-  try {
-    path = decodeURIComponent(path);
-  } catch {}
-  if (imageRoot && !/^file:|^[a-z]:[\\/]/i.test(src)) {
+  const suffixFrom = src.search(/[?#]/);
+  const sourcePath = suffixFrom < 0 ? src : src.slice(0, suffixFrom);
+  const suffix = suffixFrom < 0 ? "" : src.slice(suffixFrom);
+  let path = sourcePath;
+  if (/^file:/i.test(src)) {
+    try {
+      path = localFileURLPath(sourcePath);
+    } catch {
+      return "";
+    }
+  } else {
+    try {
+      path = decodeURIComponent(path);
+    } catch {}
+  }
+  if (imageRoot && !/^(?:file:|[a-z]:[\\/]|\\\\|\/\/)/i.test(src)) {
     if (/^https?:\/\//i.test(imageRoot)) {
       try {
-        return new URL(path.replace(/^\/+/, ""), imageRoot.replace(/\/?$/, "/"))
+        return new URL(src.replace(/^\/+/, ""), imageRoot.replace(/\/?$/, "/"))
           .href;
       } catch {
         return "";
@@ -365,21 +405,29 @@ export function resolveAsset(src, basePath, imageRoot) {
       !/^(?:file:|[a-z]:[\\/])/i.test(imageRoot)
     )
       return "";
-    const root = imageRoot.replace(/^file:\/\//, "").replace(/\\/g, "/");
+    let root = imageRoot;
+    if (/^file:/i.test(root)) {
+      try {
+        root = localFileURLPath(root);
+      } catch {
+        return "";
+      }
+    }
+    root = root.replace(/\\/g, "/");
     path = root.replace(/\/$/, "") + "/" + path.replace(/^\/+/, "");
   }
+  path = path.replace(/\\/g, "/");
   if (!path.startsWith("/") && !/^[a-z]:[\\/]/i.test(path)) {
     if (!basePath) return src;
     const directory = basePath.replace(/\\/g, "/").replace(/\/[^/]*$/, "");
     path = `${directory}/${path}`;
   }
-  path = path.replace(/\\/g, "/");
   const parts = [];
   for (const part of path.split("/")) {
     if (part === "..") parts.pop();
     else if (part !== ".") parts.push(part);
   }
-  return `inkstone-asset://local/?path=${encodeURIComponent(parts.join("/"))}`;
+  return `inkstone-asset://local/?path=${encodeURIComponent(parts.join("/"))}${suffix.startsWith("?") ? "&" + suffix.slice(1) : suffix}`;
 }
 
 export function getOutline(text, options = {}) {

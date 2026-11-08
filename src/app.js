@@ -1,10 +1,13 @@
 import { createEditor } from "./editor.js";
 import { brandIdentity } from "./branding.js";
+import { showAbout } from "./about-dialog.js";
+import { offerDefaultApp } from "./default-app-dialog.js";
 import {
   renderMarkdown,
   hydrateDiagrams,
   getOutline,
   countWords,
+  parseBlocks,
 } from "./markdown.js";
 import {
   $,
@@ -26,12 +29,25 @@ import "katex/dist/katex.min.css";
 import "highlight.js/styles/github.css";
 import { showExport, repeatExport } from "./export.js";
 import { editTable } from "./table-dialog.js";
-import { locateTable } from "./tables.js";
-import { installClipboard, writeRichClipboard } from "./clipboard.js";
+import {
+  locateTable,
+  serializeTable,
+  tableCellRanges,
+  modifyTable,
+  escapeTableCell,
+} from "./tables.js";
+import {
+  installClipboard,
+  writeRichClipboard,
+  htmlToMarkdown,
+} from "./clipboard.js";
+import { installEditorContextMenu } from "./editor-context-menu.js";
+import { isolateHistory } from "@codemirror/commands";
 import { readDocumentConfig } from "./document-config.js";
 import { normalizeSource } from "./source.js";
 import { manageResources } from "./resource-manager.js";
 import { installFileTreeKeyboard } from "./file-tree-keyboard.js";
+import { shortcutMatches } from "./shortcuts.js";
 
 const native = window.inkstone;
 const invoke = async (method, payload = {}) => {
@@ -98,6 +114,11 @@ const imageReference = (file) =>
     file.relativePath.split("/").map(encodeURIComponent).join("/")) +
   ")";
 const dirname = (path) => path?.replace(/[\\/][^\\/]+$/, "") || null;
+const affectsPath = (path, candidate) =>
+  !!candidate &&
+  (candidate === path ||
+    candidate.startsWith(path + "/") ||
+    candidate.startsWith(path + "\\"));
 const dirty = () => (editor ? editor.getText() !== savedText : false);
 const mutationBlocked = () =>
   bootstrapLoading ||
@@ -482,6 +503,7 @@ function renderLanguageChoice() {
     needsLanguageChoice = false;
     renderLanguageChoice();
     editor.focus();
+    await offerDefaultApp(invoke, settings.locale);
   });
 }
 
@@ -648,7 +670,27 @@ function makeEditor(text) {
     },
     true,
   );
-  installClipboard($("#editor-host"), editor, () => current);
+  installClipboard(
+    $("#editor-host"),
+    editor,
+    () => current,
+    (error) => {
+      toast(error.message, true);
+      console.error(error);
+    },
+  );
+  installEditorContextMenu({
+    host: $("#editor-host"),
+    editor,
+    getSettings: () => settings,
+    isLocked: mutationBlocked,
+    getRevision: () => ({ generation, path: current.path }),
+    execute: executeContextAction,
+    onError: (error) => {
+      toast(error.message, true);
+      console.error(error);
+    },
+  });
   $("#editor-host").addEventListener("dragover", (e) => {
     if (e.dataTransfer?.types.includes("Files")) e.preventDefault();
   });
@@ -1807,11 +1849,7 @@ async function fileOperation(arg) {
 }
 async function performFileOperation(arg) {
   let target;
-  const activeAffected =
-    current.path &&
-    (current.path === arg.path ||
-      current.path.startsWith(arg.path + "/") ||
-      current.path.startsWith(arg.path + "\\"));
+  const activeAffected = affectsPath(arg.path, current.path);
   if (activeAffected && !(await mayLeave())) return;
   if (arg.operation === "rename") {
     const name = await promptText(
@@ -1852,9 +1890,9 @@ async function performFileOperation(arg) {
   if (operationResult.warnings?.length)
     toast(operationResult.warnings.join("\n"), true);
   if (["rename", "move"].includes(arg.operation))
-    fileUndoStack.push({ path: arg.path, target });
+    fileUndoStack.push({ path: arg.path, target: operationResult.path });
   if (activeAffected && ["rename", "move"].includes(arg.operation)) {
-    const path = target + current.path.slice(arg.path.length);
+    const path = operationResult.path + current.path.slice(arg.path.length);
     await loadDocument(
       await invoke("openFile", { path, encoding: current.encoding }),
     );
@@ -2146,6 +2184,8 @@ function commandList() {
     ["copyMathML", "复制当前公式 MathML", "Copy current formula as MathML"],
     ["statistics", "文档统计", "Document statistics"],
     ["settings", "偏好设置", "Preferences"],
+    ["defaultApps", "Markdown 默认打开方式", "Default Markdown app"],
+    ["about", "关于墨石", "About Inkstone"],
   ];
   for (let i = 1; i <= 6; i++)
     list.push(["heading" + i, "标题 " + i, "Heading " + i]);
@@ -2324,6 +2364,354 @@ async function recoveryDialog({ startup = false } = {}) {
       })),
   );
 }
+async function executeContextAction(name, argument, context) {
+  const copyOnly = [
+    "contextCopy",
+    "contextCopyMarkdown",
+    "copyPlain",
+    "copyHTML",
+    "copyRich",
+    "contextCopyTable",
+    "contextAddDictionaryWord",
+  ].includes(name);
+  if (!copyOnly) assertAsyncMutation();
+  const pending = mutationSnapshot();
+  const selection = editor.view.state.selection.main;
+  const text = editor.view.state.doc.toString();
+  const commit = (changes, nextSelection) => {
+    assertAsyncMutation(pending);
+    editor.view.dispatch({
+      changes,
+      selection: nextSelection,
+      annotations: isolateHistory.of("full"),
+      userEvent: "input.context",
+    });
+    editor.focus();
+  };
+  const table =
+    editor.getMode() === "live" &&
+    context.table &&
+    locateTable(text, context.position);
+  const cell =
+    table &&
+    tableCellRanges(text.slice(table.from, table.to))[table.row]?.[table.col];
+  const cellFrom = cell && table.from + cell.from,
+    cellTo = cell && table.from + cell.to;
+  const insideCell =
+    cell && selection.from >= cellFrom && selection.to <= cellTo;
+  const commitSelection = (insert) => {
+    insert = insert.replace(/\r\n|\r/g, "\n");
+    if (insideCell) {
+      const prefix = text.slice(cellFrom, selection.from);
+      return commit(
+        {
+          from: cellFrom,
+          to: cellTo,
+          insert: escapeTableCell(
+            prefix + insert + text.slice(selection.to, cellTo),
+          ),
+        },
+        { anchor: cellFrom + escapeTableCell(prefix + insert).length },
+      );
+    }
+    return commit(
+      { from: selection.from, to: selection.to, insert },
+      { anchor: selection.from + insert.length },
+    );
+  };
+  if (name === "contextAddDictionaryWord")
+    return invoke("addDictionaryWord", { word: argument });
+  if (name === "contextReplaceSpelling") {
+    const word = argument?.word,
+      replacement = argument?.replacement;
+    if (!word || typeof replacement !== "string") return;
+    const at = context.position;
+    const from = text.lastIndexOf(word, at);
+    if (
+      from < 0 ||
+      at > from + word.length ||
+      text.slice(from, from + word.length) !== word
+    )
+      throw Error(
+        t(
+          "单词已变化，请重新打开菜单。",
+          "The word changed. Open the menu again.",
+        ),
+      );
+    return commit(
+      { from, to: from + word.length, insert: replacement },
+      { anchor: from + replacement.length },
+    );
+  }
+  if (
+    [
+      "contextCopy",
+      "contextCopyMarkdown",
+      "contextCut",
+      "contextCopyTable",
+    ].includes(name)
+  ) {
+    const table =
+      name === "contextCopyTable" && locateTable(text, context.position);
+    const copied = table
+      ? text.slice(table.from, table.to)
+      : text.slice(selection.from, selection.to);
+    if (!copied) return;
+    await invoke("writeClipboard", {
+      text: copied,
+      markdown: copied,
+      ...(name !== "contextCopyMarkdown"
+        ? { html: renderMarkdown(copied, { basePath: current.path }) }
+        : {}),
+    });
+    if (name === "contextCut") commitSelection("");
+    return;
+  }
+  if (name.startsWith("contextPaste")) {
+    let clipboard;
+    if (native) clipboard = await invoke("readClipboard");
+    else {
+      clipboard = { text: "", html: "" };
+      for (const item of await navigator.clipboard.read()) {
+        if (item.types.includes("text/plain"))
+          clipboard.text = await (await item.getType("text/plain")).text();
+        if (item.types.includes("text/html"))
+          clipboard.html = await (await item.getType("text/html")).text();
+      }
+    }
+    assertAsyncMutation(pending);
+    const tableTSV =
+      insideCell &&
+      ["contextPaste", "contextPastePlain"].includes(name) &&
+      clipboard.text.includes("\t");
+    let insertion = clipboard.text || "";
+    if (name === "contextPaste" && typeof clipboard.markdown === "string")
+      insertion = clipboard.markdown;
+    if (
+      (name === "contextPasteHTML" ||
+        (name === "contextPaste" &&
+          editor.getMode() !== "source" &&
+          !editor.isInCodeBlock() &&
+          typeof clipboard.markdown !== "string")) &&
+      clipboard.html &&
+      !tableTSV
+    )
+      insertion = htmlToMarkdown(clipboard.html);
+    if (insertion) {
+      insertion = insertion.replace(/\r\n|\r/g, "\n");
+      if (insideCell) {
+        if (insertion.includes("\t")) {
+          const change = modifyTable(
+            text,
+            context.position,
+            "paste",
+            insertion,
+          );
+          return commit(change, { anchor: change.anchor });
+        }
+      }
+      return commitSelection(insertion);
+    } else if (native && name === "contextPaste" && clipboard.hasImage) {
+      if (!current.path && !(await saveDocument())) return;
+      const imageSnapshot = mutationSnapshot();
+      const images = await invoke("clipboardImage", {
+        documentPath: current.path,
+        imageFolder: readDocumentConfig(editor.getText()).imageFolder,
+        imageRoot: readDocumentConfig(editor.getText()).imageRoot,
+      });
+      assertAsyncMutation(imageSnapshot);
+      if (images.length) editor.insert(images.map(imageReference).join("\n"));
+    }
+    return;
+  }
+  if (name === "contextDelete") {
+    if (!selection.empty) commitSelection("");
+    return;
+  }
+  if (name === "contextInlineMath") {
+    editor.view.dispatch({ annotations: isolateHistory.of("full") });
+    editor.command("math");
+    editor.view.dispatch({ annotations: isolateHistory.of("full") });
+    return;
+  }
+  if (name === "footnote") {
+    let suggested = "note",
+      suffix = 1;
+    while (new RegExp(`^ {0,3}\\[\\^${suggested}\\]:`, "mi").test(text))
+      suggested = `note-${++suffix}`;
+    const id = await promptText(
+      t("脚注", "Footnote"),
+      t("脚注标识", "Footnote identifier"),
+      suggested,
+    );
+    if (!id) return;
+    if (!/^[\p{L}\p{N}_-]+$/u.test(id))
+      throw Error(
+        t(
+          "脚注标识只能包含文字、数字、下划线和连字符。",
+          "Use letters, numbers, underscores or hyphens for the footnote identifier.",
+        ),
+      );
+    assertAsyncMutation(pending);
+    const reference = `[^${id}]`;
+    const exists = new RegExp(`^ {0,3}\\[\\^${id}\\]:`, "mi").test(text);
+    const separator = text.endsWith("\n\n")
+      ? ""
+      : text.endsWith("\n")
+        ? "\n"
+        : "\n\n";
+    const definition = exists ? "" : `${separator}[^${id}]: `;
+    return commit(
+      [
+        { from: selection.to, insert: reference },
+        ...(definition ? [{ from: text.length, insert: definition }] : []),
+      ],
+      {
+        anchor: definition
+          ? text.length + reference.length + definition.length
+          : selection.to + reference.length,
+      },
+    );
+  }
+  if (name === "contextYAML") {
+    const existing = parseBlocks(text, settings).find(
+      (block) => block.from === 0 && block.type === "frontmatter",
+    );
+    if (existing) {
+      editor.setSelection({ anchor: 4, head: Math.max(4, existing.to - 4) });
+      editor.focus();
+      return;
+    }
+    return commit({ from: 0, insert: "---\ntitle: \n---\n\n" }, { anchor: 11 });
+  }
+  if (name === "contextLinkReference") {
+    let id = "ref",
+      index = 1;
+    while (new RegExp(`^ {0,3}\\[${id}\\]:`, "mi").test(text))
+      id = `ref-${++index}`;
+    const label =
+      text.slice(selection.from, selection.to) || t("链接文字", "link text");
+    const reference = `[${label}][${id}]`;
+    const separator = text.endsWith("\n\n")
+      ? ""
+      : text.endsWith("\n")
+        ? "\n"
+        : "\n\n";
+    const definition = `${separator}[${id}]: https://`;
+    const url =
+      text.length +
+      reference.length -
+      (selection.to - selection.from) +
+      separator.length +
+      id.length +
+      4;
+    return commit(
+      [
+        { from: selection.from, to: selection.to, insert: reference },
+        { from: text.length, insert: definition },
+      ],
+      { anchor: url, head: url + 8 },
+    );
+  }
+  if (name === "contextParagraphBefore" || name === "contextParagraphAfter") {
+    const block =
+      context.table ||
+      context.block ||
+      parseBlocks(text, settings).find(
+        (block) =>
+          context.position >= block.from && context.position <= block.to,
+      );
+    const at = block
+      ? name === "contextParagraphBefore"
+        ? block.from
+        : block.to
+      : context.position;
+    return commit(
+      { from: at, insert: "\n\n" },
+      { anchor: at + (name === "contextParagraphAfter" ? 2 : 0) },
+    );
+  }
+  if (
+    [
+      "contextTableRowBefore",
+      "contextTableRowAfter",
+      "contextTableColumnBefore",
+      "contextTableColumnAfter",
+      "contextPrettyTable",
+      "contextDeleteTable",
+    ].includes(name)
+  ) {
+    const table = locateTable(text, context.position);
+    if (!table) return;
+    if (name === "contextDeleteTable")
+      return commit(
+        { from: table.from, to: table.to, insert: "" },
+        { anchor: table.from },
+      );
+    const rows = table.rows.map((row) => [...row]);
+    let row = table.row,
+      column = table.col;
+    if (name.startsWith("contextTableRow")) {
+      if (name === "contextTableRowBefore" && row < 2) return;
+      row = row < 2 ? 2 : row + (name === "contextTableRowAfter" ? 1 : 0);
+      rows.splice(row, 0, Array(table.width).fill(""));
+    }
+    if (name.startsWith("contextTableColumn")) {
+      column += name === "contextTableColumnAfter" ? 1 : 0;
+      rows.forEach((cells, index) =>
+        cells.splice(column, 0, index === 1 ? "---" : ""),
+      );
+    }
+    let insertion = serializeTable(rows);
+    if (name === "contextPrettyTable") {
+      const widths = rows[0].map((_, col) =>
+        Math.max(
+          3,
+          ...rows
+            .filter((_, index) => index !== 1)
+            .map((cells) => cells[col].trim().length),
+        ),
+      );
+      insertion = rows
+        .map(
+          (cells, index) =>
+            "| " +
+            cells
+              .map((cell, col) => {
+                if (index !== 1) return cell.trim().padEnd(widths[col]);
+                const left = cell.startsWith(":"),
+                  right = cell.endsWith(":");
+                return (
+                  (left ? ":" : "") +
+                  "-".repeat(
+                    Math.max(3, widths[col] - Number(left) - Number(right)),
+                  ) +
+                  (right ? ":" : "")
+                );
+              })
+              .join(" | ") +
+            " |",
+        )
+        .join("\n");
+    }
+    const ranges = tableCellRanges(insertion);
+    const cell =
+      ranges[Math.min(row, ranges.length - 1)]?.[
+        Math.min(column, rows[0].length - 1)
+      ];
+    return commit(
+      { from: table.from, to: table.to, insert: insertion },
+      { anchor: table.from + (cell?.from ?? 0) },
+    );
+  }
+  if (name === "tableAction") editor.setSelection({ anchor: context.position });
+  if (!copyOnly)
+    editor.view.dispatch({ annotations: isolateHistory.of("full") });
+  await execute(name, argument);
+  if (!copyOnly && editor.view.dom.isConnected)
+    editor.view.dispatch({ annotations: isolateHistory.of("full") });
+}
+
 async function execute(name, arg) {
   if (bootstrapLoading || lifecycleLocked || navigationLocked || closeRequest)
     return;
@@ -2469,6 +2857,14 @@ async function execute(name, arg) {
       return;
     case "settings":
       return showPreferences(settings, updateSettings, invoke);
+    case "defaultApps":
+      return showPreferences(settings, updateSettings, invoke, {
+        section: "files",
+      });
+    case "about":
+      return showAbout(await invoke("getAboutInfo"), invoke, {
+        locale: settings.locale,
+      });
     case "reopenClosed": {
       const path = closedDocuments.pop();
       if (path) await openDocument(path);
@@ -2482,27 +2878,17 @@ async function execute(name, arg) {
           toast(t("没有可撤销的文件移动", "No file move to undo"));
           return;
         }
-        if (
-          current.path &&
-          (current.path === op.target ||
-            current.path.startsWith(op.target + "/")) &&
-          !(await mayLeave())
-        )
-          return;
-        await invoke("fileOperation", {
+        if (affectsPath(op.target, current.path) && !(await mayLeave())) return;
+        const restored = await invoke("fileOperation", {
           operation: "move",
           path: op.target,
           target: op.path,
         });
         fileUndoStack.pop();
-        if (
-          current.path &&
-          (current.path === op.target ||
-            current.path.startsWith(op.target + "/"))
-        )
+        if (affectsPath(op.target, current.path))
           await loadDocument(
             await invoke("openFile", {
-              path: op.path + current.path.slice(op.target.length),
+              path: restored.path + current.path.slice(op.target.length),
               encoding: current.encoding,
             }),
           );
@@ -2869,10 +3255,7 @@ async function execute(name, arg) {
     case "tableAction":
       return editor.command("tableAction", arg);
     case "codeFence":
-      editor.insert(
-        "\n```" + (settings.defaultCodeLanguage || "") + "\n\n```\n",
-      );
-      return;
+      return editor.command("codeBlock");
     case "copyPath":
       if (!current.path)
         throw Error(t("请先保存文档", "Save this document first"));
@@ -3104,7 +3487,7 @@ async function execute(name, arg) {
       if (current.path) {
         const doc = await invoke("resolveLink", {
           documentPath: current.path,
-          href: decodeURIComponent(path),
+          href: /^file:/i.test(path) ? path : decodeURIComponent(path),
         });
         if (doc?.path) {
           await openDocument(doc.path);
@@ -3116,18 +3499,6 @@ async function execute(name, arg) {
     default:
       editor.command(name, name === "heading" ? Number(arg) : arg);
   }
-}
-function shortcutMatches(event, key) {
-  const parts = key.toLowerCase().split("-"),
-    last = parts.pop();
-  const mod = parts.includes("mod");
-  return (
-    event.key.toLowerCase() === last &&
-    event.shiftKey === parts.includes("shift") &&
-    event.altKey === parts.includes("alt") &&
-    event.ctrlKey === (parts.includes("ctrl") || mod) &&
-    event.metaKey === parts.includes("meta")
-  );
 }
 document.addEventListener(
   "keydown",
@@ -3264,5 +3635,6 @@ async function init() {
   if (bootstrapData.warnings?.length)
     toast(bootstrapData.warnings.join("\n"), true);
   editor.focus();
+  if (!needsLanguageChoice) await offerDefaultApp(invoke, settings.locale);
 }
 guarded(init)();

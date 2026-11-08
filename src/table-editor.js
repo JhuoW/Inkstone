@@ -1,5 +1,5 @@
 import { undo, redo, isolateHistory } from "@codemirror/commands";
-import { tableCellRanges, modifyTable } from "./tables.js";
+import { tableCellRanges, modifyTable, escapeTableCell } from "./tables.js";
 import { t, getLocale } from "./i18n.js";
 
 const controllers = new WeakMap();
@@ -7,16 +7,6 @@ const editorCommands = new WeakMap();
 export function bindTableCommands(view, command) {
   if (command) editorCommands.set(view, command);
   else editorCommands.delete(view);
-}
-function escapeCell(value, prefix = "") {
-  let slashes = prefix.match(/\\*$/)[0].length,
-    escaped = "";
-  for (const character of value.replace(/\r\n|\r|\n/g, "<br>")) {
-    if (character === "|" && slashes % 2 === 0) escaped += "\\";
-    escaped += character;
-    slashes = character === "\\" ? slashes + 1 : 0;
-  }
-  return escaped;
 }
 function minimumChange(before, after) {
   let from = 0,
@@ -65,22 +55,14 @@ export function installTableEditor(element, view, block, options, render) {
     if (!active || active.composing || view.state.readOnly) return;
     const cell = currentCell();
     if (!cell) return;
-    const input = active.input,
-      typed = minimumChange(cell.text, input.value);
-    const prefix = cell.text.slice(0, typed.from);
-    const insertion = escapeCell(typed.insert, prefix);
-    const value = prefix + insertion + cell.text.slice(typed.to);
+    const input = active.input;
+    const beforeEscaping = input.value;
+    const value = escapeTableCell(beforeEscaping);
     let start = input.selectionStart,
       end = input.selectionEnd;
     if (value !== input.value) {
       const map = (position) =>
-        position <= typed.from
-          ? position
-          : position <= typed.from + typed.insert.length
-            ? typed.from +
-              escapeCell(typed.insert.slice(0, position - typed.from), prefix)
-                .length
-            : position + insertion.length - typed.insert.length;
+        escapeTableCell(beforeEscaping.slice(0, position)).length;
       start = map(start);
       end = map(end);
       input.value = value;

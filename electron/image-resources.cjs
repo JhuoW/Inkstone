@@ -295,8 +295,11 @@ async function atomicCreate(file, bytes) {
     await fs.link(temporary, file);
     try {
       const dir = await fs.open(path.dirname(file), "r");
-      await dir.sync();
-      await dir.close();
+      try {
+        await dir.sync();
+      } finally {
+        await dir.close();
+      }
     } catch {}
   } finally {
     if (handle) await handle.close().catch(() => {});

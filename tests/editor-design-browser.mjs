@@ -1,35 +1,14 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 /** Visual and interaction checks for document typography, using production CSS. */
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import { createServer } from "vite";
 import { chromium } from "playwright";
 
-const artifacts = path.resolve("artifacts/ui-redesign/editor");
+const artifacts = artifactPath("ui-redesign/editor");
 await fs.mkdir(artifacts, { recursive: true });
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    const cache = path.join(os.homedir(), ".cache/ms-playwright");
-    for (const directory of (await fs.readdir(cache))
-      .filter((name) => /^chromium-/.test(name))
-      .sort()
-      .reverse()) {
-      for (const binary of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const candidate = path.join(cache, directory, binary);
-        try {
-          await fs.access(candidate);
-          executablePath = candidate;
-          break;
-        } catch {}
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const server = await createServer({
   configFile: false,
   root: process.cwd(),
@@ -189,10 +168,7 @@ try {
           .evaluate((element) => getComputedStyle(element).fontSize),
         "20px",
       );
-      for (const selector of [
-        ".cm-live-block p code",
-        ".cm-live-block pre code",
-      ]) {
+      for (const selector of [".cm-live-block p code", ".cm-code-line"]) {
         assert.match(
           await page
             .locator(selector)
@@ -233,11 +209,11 @@ try {
       for (const theme of ["light", "dark"]) {
         await open(fixture + "\n\n$$\\unknowncommand{bad}$$\n\nEnd", theme);
         for (const selector of [
-          "pre code",
-          ".hljs-comment",
-          ".hljs-keyword",
-          ".hljs-string",
-          ".hljs-title",
+          ".cm-code-line",
+          '.cm-code-line span:text-is("// Keep source readable in both themes.")',
+          '.cm-code-line span:text-is("const")',
+          '.cm-code-line span:text-is("\\"中文笔记\\"")',
+          '.cm-code-line span:text-is("save")',
           ".math-error",
         ]) {
           const colors = await page
@@ -393,12 +369,24 @@ try {
           "inline-block",
         );
         await math.dblclick();
+        assert.equal(
+          await page.locator(".cm-math-source").textContent(),
+          "$\\frac{x}{y}$",
+        );
+        assert.equal(await page.locator(".cm-inline-math-preview").count(), 0);
         await page.keyboard.type("z^2");
         assert.equal(
           await page.evaluate(() => editor.getText()),
           text.replace("\\frac{x}{y}", "z^2"),
         );
         await page.keyboard.press("Control+Enter");
+        assert.equal(
+          await page
+            .locator(".cm-math-source, .cm-inline-math-preview")
+            .count(),
+          0,
+        );
+        assert.equal(await page.locator(".cm-inline-math .katex").count(), 1);
         await page.keyboard.press("Control+z");
         assert.equal(await page.evaluate(() => editor.getText()), text);
         await page.evaluate(() =>

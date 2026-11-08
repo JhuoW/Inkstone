@@ -1,3 +1,4 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 import { test, expect, _electron as electron } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -31,7 +32,8 @@ test.beforeAll(async () => {
     JSON.stringify({ locale: "zh-CN", firstRunComplete: true }),
   );
   app = await electron.launch({
-    args: ["--no-sandbox", process.cwd(), file],
+    chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+    args: [process.cwd(), file],
     env,
   });
   page = await app.firstWindow();
@@ -280,9 +282,7 @@ test("production desktop exports all 25 Mermaid types offline including ZenUML a
       ),
     diagramFile,
   );
-  const output = path.resolve(
-    "artifacts/desktop-validation/diagram-catalog.html",
-  );
+  const output = artifactPath("desktop-validation/diagram-catalog.html");
   await fs.mkdir(path.dirname(output), { recursive: true });
   await app.evaluate(({ dialog }, file) => {
     dialog.showSaveDialog = async () => ({ canceled: false, filePath: file });

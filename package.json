@@ -1,10 +1,13 @@
 {
   "name": "inkstone-editor",
   "productName": "Inkstone",
-  "version": "0.4.0",
+  "version": "0.6.4",
   "description": "Inkstone 墨石 — a local-first, source-preserving Markdown editor for Windows and Linux",
-  "author": "Inkstone contributors",
-  "license": "MIT",
+  "author": {
+    "name": "Wei Zhuo",
+    "url": "https://wei2hu0.github.io/"
+  },
+  "license": "AGPL-3.0-only",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -15,19 +18,21 @@
     "test:e2e": "playwright test",
     "pack": "npm run build && electron-builder --dir",
     "dist:linux": "npm run build && electron-builder --linux AppImage deb tar.gz --x64 --publish never",
-    "dist:win": "npm run build && electron-builder --win nsis zip --x64 --publish never",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
     "test:editor": "node tests/editor-browser.mjs",
     "licenses": "node scripts/licenses.mjs",
     "test:all": "npm test && npm run test:editor && npm run test:math && npm run test:ui && npm run test:editor-design && npm run test:e2e",
     "verify:packages": "node scripts/verify-packages.mjs",
     "format": "prettier --write src electron tests scripts/*.mjs *.js index.html package.json",
     "test:native": "node scripts/verify-native.mjs",
+    "test:interactive-native": "node scripts/verify-editor-interactions.mjs",
     "package:source": "node scripts/package-source.mjs",
     "checksums": "node scripts/write-checksums.mjs",
     "verify:windows": "node scripts/verify-windows-package.mjs",
     "test:ui": "node tests/ui-polish-browser.mjs",
     "test:math": "node tests/math-editing-browser.mjs",
     "verify:installer-language": "node scripts/verify-installer-language.mjs",
+    "verify:installer-associations": "node scripts/verify-installer-associations.mjs",
     "test:editor-design": "node tests/editor-design-browser.mjs",
     "test:design-baseline": "node scripts/capture-design-baseline.mjs --stage after",
     "verify:source": "node scripts/verify-release-source.mjs"
@@ -57,7 +62,8 @@
           "mdown",
           "mkd"
         ],
-        "name": "Markdown document",
+        "name": "Inkstone.Markdown",
+        "description": "Markdown document",
         "role": "Editor",
         "mimeType": "text/markdown"
       }
@@ -73,12 +79,6 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "zip",
           "arch": [
             "x64"
           ]
@@ -112,6 +112,7 @@
     "@codemirror/search": "^6.7.2",
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.15",
+    "@electron-internal/extract-zip": "1.0.8",
     "@lezer/highlight": "^1.2.5",
     "@mermaid-js/mermaid-zenuml": "1.0.1",
     "@playwright/test": "^1.65.0",
@@ -148,6 +149,7 @@
     }
   },
   "dependencies": {
+    "entities": "^8.1.0",
     "iconv-lite": "^0.7.2",
     "markdown-it": "^15.0.3"
   },
@@ -158,5 +160,10 @@
   ],
   "engines": {
     "node": ">=22.12.0"
+  },
+  "homepage": "https://github.com/JhuoW/Inkstone",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JhuoW/Inkstone.git"
   }
 }

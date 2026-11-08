@@ -1,35 +1,14 @@
+import { artifactPath } from "../scripts/artifact-path.mjs";
 /** Verify supplied artwork in the real renderer. Desktop IPC is stubbed for this visual-only check. */
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import { createServer } from "vite";
 import { chromium } from "playwright";
 
-const artifacts = path.resolve("artifacts/branding-validation");
+const artifacts = artifactPath("branding-validation");
 await fs.mkdir(artifacts, { recursive: true });
-let executablePath = process.env.INKSTONE_CHROMIUM;
-if (!executablePath) {
-  try {
-    await fs.access(chromium.executablePath());
-  } catch {
-    const cache = path.join(os.homedir(), ".cache/ms-playwright");
-    for (const directory of (await fs.readdir(cache))
-      .filter((name) => /^chromium-/.test(name))
-      .sort()
-      .reverse()) {
-      for (const binary of ["chrome-linux64/chrome", "chrome-linux/chrome"]) {
-        const candidate = path.join(cache, directory, binary);
-        try {
-          await fs.access(candidate);
-          executablePath = candidate;
-          break;
-        } catch {}
-      }
-      if (executablePath) break;
-    }
-  }
-}
+const executablePath = process.env.INKSTONE_CHROMIUM || undefined;
 const server = await createServer({
   configFile: false,
   root: process.cwd(),
@@ -117,7 +96,10 @@ try {
         state.text,
         locale === "en" ? "A place for your thoughts" : "让想法落在纸上",
       );
-      assert.ok(state.width >= 120);
+      assert.ok(
+        state.width >= 180,
+        `Expanded logo should be at least 180px, got ${state.width}`,
+      );
       assert.equal(state.color, theme === "dark" ? "#f4f0e6" : "#1c1a21");
       assert.equal(
         await page.evaluate(() => __inkstone.editor.getText()),

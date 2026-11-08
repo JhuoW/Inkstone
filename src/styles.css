@@ -251,10 +251,10 @@ button > svg,
 }
 .brand-lockup {
   display: block;
-  width: 142px;
+  width: 190px;
   max-width: 100%;
   min-width: 120px;
-  height: 32px;
+  height: 42px;
 }
 .brand-artwork {
   display: block;
@@ -1496,4 +1496,12 @@ kbd {
   .command-launcher span {
     display: none;
   }
+}
+.default-app-welcome > .brand-mark {
+  width: 48px;
+  height: 48px;
+  margin: 2px 0 12px;
+}
+.default-app-welcome > p {
+  line-height: 1.65;
 }

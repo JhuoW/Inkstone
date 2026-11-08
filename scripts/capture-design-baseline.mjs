@@ -1,3 +1,4 @@
+import { artifactPath } from "./artifact-path.mjs";
 /** Real Electron visual/function baseline. Run after npm run build; never writes user documents. */
 import { _electron as electron } from "playwright";
 import fs from "node:fs/promises";
@@ -10,7 +11,7 @@ const args = process.argv.slice(2);
 const stage = args[args.indexOf("--stage") + 1] || "before";
 assert.ok(["before", "after"].includes(stage), "Use --stage before or after");
 const root = process.cwd();
-const output = path.join(root, "artifacts/ui-redesign", stage);
+const output = artifactPath("ui-redesign", stage);
 await fs.mkdir(output, { recursive: true });
 const temp = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-design-"));
 const folder = path.join(temp, "Field notes");
@@ -116,7 +117,7 @@ const baseline =
   stage === "after"
     ? JSON.parse(
         await fs.readFile(
-          path.join(root, "artifacts/ui-redesign/before/inventory.json"),
+          artifactPath("ui-redesign/before/inventory.json"),
           "utf8",
         ),
       )

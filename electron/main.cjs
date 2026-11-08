@@ -27,7 +27,8 @@ const { rebaseLocalLinks } = require("./links.cjs");
 const { embedExportDiagrams } = require("./export-diagrams.cjs");
 const { removeRetiredSettings } = require("./settings-migration.cjs");
 const { CloseCoordinator } = require("./close-coordinator.cjs");
-const { initialLanguage } = require("./language.cjs");
+const { initialLanguage, resolveSystemLanguage } = require("./language.cjs");
+const { createDefaultApps } = require("./default-apps.cjs");
 const {
   restrictDictionarySource,
   installDictionaryCache,
@@ -67,6 +68,7 @@ const defaults = {
   theme: "system",
   locale: "en",
   firstRunComplete: false,
+  defaultAppPrompted: false,
   fontFamily:
     '"Segoe UI", "Noto Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
   fontSize: 17,
@@ -125,6 +127,8 @@ const folderWatchers = new Map();
 let resourceManager, offlineSpellcheck;
 let settingsPersistenceBlocked = false;
 let languageConfigured = false;
+let defaultAppPromptClaimed = false;
+const defaultApps = createDefaultApps({ app, shell });
 let quitApproved = false;
 const activeSearches = new Map();
 let store,
@@ -279,7 +283,11 @@ function nativeAccelerator(binding) {
     shift: "Shift",
     meta: "Super",
   };
-  const converted = parts.map((part) => modifiers[part.toLowerCase()]);
+  const converted = parts.map((part) =>
+    Object.hasOwn(modifiers, part.toLowerCase())
+      ? modifiers[part.toLowerCase()]
+      : null,
+  );
   if (
     converted.some((part) => !part) ||
     new Set(converted).size !== converted.length
@@ -306,7 +314,9 @@ function nativeAccelerator(binding) {
     plus: "Plus",
     minus: "-",
   };
-  let nativeKey = named[key.toLowerCase()];
+  let nativeKey = Object.hasOwn(named, key.toLowerCase())
+    ? named[key.toLowerCase()]
+    : null;
   if (!nativeKey && /^f(?:[1-9]|1[0-9]|2[0-4])$/i.test(key))
     nativeKey = key.toUpperCase();
   if (
@@ -348,6 +358,7 @@ function validateSettings(patch) {
     "recordRecent",
     "wheelZoom",
     "firstRunComplete",
+    "defaultAppPrompted",
   ];
   const strings = [
     "fontFamily",
@@ -965,9 +976,22 @@ async function runPandoc(payload, win) {
             const mime = mimeTypes[path.extname(file).toLowerCase()];
             if (mime && mime.startsWith("image/")) {
               const data = `data:${mime};base64,${(await fs.readFile(file)).toString("base64")}`;
-              text = text
-                .replaceAll(file.split(path.sep).join("/"), data)
-                .replaceAll(encodeURI(file.split(path.sep).join("/")), data);
+              const forwardPath = file.split(path.sep).join("/");
+              const references = new Set([
+                file,
+                forwardPath,
+                encodeURI(file),
+                encodeURI(forwardPath),
+                pathToFileURL(file).href,
+                file.replaceAll("\\", "\\\\"),
+              ]);
+              // Pandoc versions emit native Windows paths, URI paths, or escaped
+              // Markdown paths. Embed every form before deleting extracted media.
+              // Longest first prevents matching a path inside its file: URL.
+              for (const reference of [...references].sort(
+                (a, b) => b.length - a.length,
+              ))
+                text = text.replaceAll(reference, data);
             }
           }
         }
@@ -1562,8 +1586,30 @@ async function fileOperation(payload) {
     case "rename":
     case "move": {
       if (!target) throw Error("PATH: Destination is required.");
-      if (await exists(target))
-        throw Error("EXISTS: Destination already exists.");
+      if (await exists(target)) {
+        const requestedTarget = path.resolve(payload.target);
+        const caseOnlyRename =
+          process.platform === "win32" &&
+          target === file &&
+          requestedTarget.toLowerCase() === file.toLowerCase() &&
+          path.basename(requestedTarget) !== path.basename(file);
+        if (!caseOnlyRename) throw Error("EXISTS: Destination already exists.");
+        const [sourceStat, targetStat] = await Promise.all([
+          fs.stat(file, { bigint: true }),
+          fs.stat(requestedTarget, { bigint: true }),
+        ]);
+        if (
+          sourceStat.dev !== targetStat.dev ||
+          sourceStat.ino !== targetStat.ino
+        )
+          throw Error("EXISTS: Destination already exists.");
+        // realpath restores the old casing of an existing Windows entry.
+        // Retain only the requested basename after authorizing its real parent.
+        target = path.join(
+          await authorized(path.dirname(requestedTarget)),
+          path.basename(requestedTarget),
+        );
+      }
       await fs.rename(file, target);
       break;
     }
@@ -1737,24 +1783,15 @@ function menu() {
       label: label("工具", "Tools"),
       submenu: [
         action(label("偏好设置…", "Preferences…"), "settings", "Ctrl+,"),
+        action(
+          label("Markdown 默认打开方式…", "Default Markdown app…"),
+          "defaultApps",
+        ),
         action(label("版本历史…", "Version history…"), "history"),
         action(label("格式整理", "Format Markdown"), "format"),
         action(label("字数统计", "Statistics"), "statistics"),
         { type: "separator" },
-        {
-          label: label("关于墨石", "About Inkstone"),
-          click: () =>
-            dialog.showMessageBox({
-              type: "info",
-              title: localize("Inkstone", "Inkstone 墨石"),
-              message: `Inkstone ${app.getVersion()}`,
-              detail: localize(
-                "Offline Markdown writing. Independent open-source software.\nMIT License",
-                "离线 Markdown 写作。独立开源软件。\nMIT 许可证",
-              ),
-              buttons: [localize("OK", "确定")],
-            }),
-        },
+        action(label("关于墨石", "About Inkstone"), "about"),
       ],
     },
   ];
@@ -1800,6 +1837,16 @@ function contextMenu(win, params = {}) {
     { role: "selectAll", label: localize("Select all", "全选") },
   );
   Menu.buildFromTemplate(template).popup({ window: win });
+}
+async function usesEditorContextMenu(win, params) {
+  const x = Number.isFinite(params.x) ? params.x : 0;
+  const y = Number.isFinite(params.y) ? params.y : 0;
+  return win.webContents.executeJavaScript(`(() => {
+    if (document.querySelector('[data-inkstone-context-menu="true"][role="menu"]:not([hidden])')) return true;
+    const target = document.elementFromPoint(${x}, ${y});
+    if (!target?.closest('[data-inkstone-context-menu="true"]')) return false;
+    return !target.closest('input,select,textarea') || !!target.closest('.inkstone-table-cell-editor');
+  })()`);
 }
 function createWindow(file) {
   if (closeCoordinator.busy || quitApproved)
@@ -1852,9 +1899,27 @@ function createWindow(file) {
     for (const [key, search] of activeSearches)
       if (key.startsWith(`${win.id}:`)) search.cancel();
   });
-  win.webContents.on("context-menu", (_event, params) =>
-    contextMenu(win, params),
-  );
+  win.webContents.on("context-menu", (_event, params) => {
+    void (async () => {
+      let custom = false;
+      try {
+        custom = await usesEditorContextMenu(win, params);
+      } catch {}
+      if (win.isDestroyed()) return;
+      if (custom)
+        send(win, "context-menu-details", {
+          x: params.x,
+          y: params.y,
+          misspelledWord: params.misspelledWord || "",
+          dictionarySuggestions: (params.dictionarySuggestions || []).slice(
+            0,
+            5,
+          ),
+          editFlags: params.editFlags,
+        });
+      else contextMenu(win, params);
+    })();
+  });
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//i.test(url)) shell.openExternal(url);
     return { action: "deny" };
@@ -1896,7 +1961,47 @@ function createWindow(file) {
   // user's first edits and replace them after the document is already visible.
   return win;
 }
+let pendingClipboardWrite = Promise.resolve();
 const handlers = {
+  async getAboutInfo() {
+    return {
+      name: "Inkstone",
+      version: app.getVersion(),
+      repository: "https://github.com/JhuoW/Inkstone",
+      contributors: ["Wei Zhuo"],
+      contributorURL: "https://wei2hu0.github.io/",
+      license: "AGPL-3.0-only",
+      copyright: "Copyright © 2026 Inkstone contributors",
+      licenseText: await fs.readFile(
+        path.join(__dirname, "../LICENSE"),
+        "utf8",
+      ),
+    };
+  },
+  getDefaultAppInfo: () => defaultApps.info(),
+  openDefaultApps: () => defaultApps.openSettings(),
+  async claimDefaultAppPrompt() {
+    if (
+      process.platform !== "win32" ||
+      !app.isPackaged ||
+      settings.defaultAppPrompted ||
+      defaultAppPromptClaimed
+    )
+      return { offered: false };
+    defaultAppPromptClaimed = true;
+    try {
+      const info = await defaultApps.info();
+      if (!info.registered) {
+        defaultAppPromptClaimed = false;
+        return { offered: false };
+      }
+      await handlers.updateSettings({ defaultAppPrompted: true });
+      return { offered: true, currentDefault: info.currentDefault };
+    } catch (error) {
+      defaultAppPromptClaimed = false;
+      throw error;
+    }
+  },
   spellcheckStatus: () => offlineSpellcheck.status(),
   async bootstrap(payload, win) {
     const state = states.get(win.id);
@@ -2002,26 +2107,117 @@ const handlers = {
     return !!entry;
   },
   downloadImage,
-  async writeClipboard(payload) {
+  addDictionaryWord(payload, win) {
     if (
-      !boundedString(payload.text, 10 * 1024 * 1024) ||
-      ("html" in payload && !boundedString(payload.html, 10 * 1024 * 1024))
+      !boundedString(payload.word, 256) ||
+      !payload.word ||
+      /[\s\x00-\x1f\x7f]/.test(payload.word)
     )
       throw Error(
-        "CLIPBOARD: Text and HTML must be strings smaller than 10 MB.",
+        "SPELLCHECK: A single word of at most 256 characters is required.",
       );
-    if (ClipboardItem)
-      await clipboard.write([
-        new ClipboardItem({
-          "text/plain": payload.text,
-          ...(payload.html ? { "text/html": payload.html } : {}),
-        }),
+    if (!win.webContents.session.addWordToSpellCheckerDictionary(payload.word))
+      throw Error(
+        "SPELLCHECK: This word could not be added to the local dictionary.",
+      );
+    return true;
+  },
+  async readClipboard() {
+    await pendingClipboardWrite.catch(() => {});
+    const limit = 10 * 1024 * 1024;
+    let text = "",
+      html = "",
+      markdown = null,
+      hasImage = false;
+    if (ClipboardItem && typeof clipboard.read === "function") {
+      const items = await clipboard.read();
+      hasImage = items.some((item) =>
+        item.types.some((type) => type.startsWith("image/")),
+      );
+      const read = async (types, missing = "") => {
+        if (typeof types === "string") types = [types];
+        const item = items.find((item) =>
+          item.types.some((type) => types.includes(type)),
+        );
+        if (!item) return missing;
+        const type = item.types.find((type) => types.includes(type));
+        const blob = await item.getType(type);
+        if (blob.size > limit)
+          throw Error("CLIPBOARD: Text and HTML must be smaller than 10 MB.");
+        return blob.text();
+      };
+      [text, html, markdown] = await Promise.all([
+        read("text/plain"),
+        read("text/html"),
+        read(
+          [
+            "text/x-inkstone-markdown",
+            "web text/x-inkstone-markdown",
+            'electron application/osclipboard;format="text/x-inkstone-markdown"',
+          ],
+          null,
+        ),
       ]);
-    else
-      clipboard.write({
-        text: payload.text,
-        ...(payload.html ? { html: payload.html } : {}),
+    } else {
+      text = await clipboard.readText();
+      html =
+        typeof clipboard.readHTML === "function"
+          ? await clipboard.readHTML()
+          : "";
+      hasImage =
+        typeof clipboard.readImage === "function" &&
+        !clipboard.readImage().isEmpty();
+    }
+    if (
+      Buffer.byteLength(text, "utf8") > limit ||
+      Buffer.byteLength(html, "utf8") > limit ||
+      (markdown !== null && Buffer.byteLength(markdown, "utf8") > limit)
+    )
+      throw Error("CLIPBOARD: Text and HTML must be smaller than 10 MB.");
+    if (
+      markdown !== null &&
+      markdown.replace(/\r\n|\r/g, "\n") !== text.replace(/\r\n|\r/g, "\n")
+    )
+      markdown = null;
+    return { text, html, markdown, hasImage };
+  },
+  async writeClipboard(payload) {
+    const limit = 10 * 1024 * 1024;
+    if (
+      !boundedString(payload.text, limit) ||
+      Buffer.byteLength(payload.text, "utf8") > limit ||
+      ("html" in payload &&
+        (!boundedString(payload.html, limit) ||
+          Buffer.byteLength(payload.html, "utf8") > limit)) ||
+      ("markdown" in payload &&
+        (!boundedString(payload.markdown, limit) ||
+          Buffer.byteLength(payload.markdown, "utf8") > limit ||
+          payload.markdown !== payload.text))
+    )
+      throw Error(
+        "CLIPBOARD: Text, HTML and Markdown must be strings smaller than 10 MB; Markdown must match plain text.",
+      );
+    const operation = pendingClipboardWrite
+      .catch(() => {})
+      .then(async () => {
+        if (ClipboardItem)
+          await clipboard.write([
+            new ClipboardItem({
+              "text/plain": payload.text,
+              ...(payload.html ? { "text/html": payload.html } : {}),
+              ...("markdown" in payload
+                ? { "text/x-inkstone-markdown": payload.markdown }
+                : {}),
+            }),
+          ]);
+        else
+          clipboard.write({
+            text: payload.text,
+            ...(payload.html ? { html: payload.html } : {}),
+          });
       });
+    pendingClipboardWrite = operation;
+    await operation;
     return true;
   },
   async clipboardImage(payload, win) {
@@ -2242,13 +2438,27 @@ const handlers = {
   },
   async resolveLink(payload) {
     const doc = await authorized(payload.documentPath);
-    if (
-      !boundedString(payload.href, 8192) ||
-      /^[a-z][a-z\d+.-]*:/i.test(payload.href)
-    )
-      throw Error("LINK: Expected a relative local file path.");
+    if (!boundedString(payload.href, 8192))
+      throw Error("LINK: Expected a local file path.");
+    let destination;
+    if (/^file:/i.test(payload.href)) {
+      try {
+        const url = new URL(payload.href);
+        if (url.protocol !== "file:" || url.username || url.password)
+          throw Error("Invalid file URL");
+        url.search = "";
+        url.hash = "";
+        destination = fileURLToPath(url);
+      } catch {
+        throw Error("LINK: Invalid local file URL.");
+      }
+    } else {
+      if (/^[a-z][a-z\d+.-]*:/i.test(payload.href))
+        throw Error("LINK: Expected a relative local file path or file URL.");
+      destination = path.resolve(path.dirname(doc), payload.href);
+    }
     return {
-      path: await authorized(path.resolve(path.dirname(doc), payload.href)),
+      path: await authorized(destination),
     };
   },
   async openExternal(payload) {
@@ -2361,6 +2571,7 @@ app
     const language = await initialLanguage(
       loadedSettings,
       process.resourcesPath,
+      () => resolveSystemLanguage(app.getPreferredSystemLanguages()),
     );
     settings.locale = language.locale;
     languageConfigured = language.configured;

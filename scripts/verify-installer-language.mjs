@@ -1,58 +1,84 @@
+import { findNsisCompiler } from "./nsis-compiler.mjs";
+import { artifactPath } from "./artifact-path.mjs";
 /** Compile and execute only the NSIS locale hooks. Wine success is not native Windows installation proof. */
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 const root = process.cwd();
-const output = path.join(root, "artifacts", "installer-language-validation");
+const output = artifactPath("installer-language-validation");
 await fs.mkdir(output, { recursive: true });
 await fs.mkdir(path.join(root, ".tools"), { recursive: true });
 const work = await fs.mkdtemp(path.join(root, ".tools", "installer-locale-"));
-let makensis = process.env.INKSTONE_MAKENSIS;
-if (!makensis) {
-  const folder = path.join(
-    os.homedir(),
-    ".cache/electron-builder/nsis-3.0.4.1",
-  );
-  for (const name of await fs.readdir(folder).catch(() => [])) {
-    const candidate = path.join(
-      folder,
-      name,
-      process.platform === "win32" ? "Bin/makensis.exe" : "linux/makensis",
-    );
-    if (await fs.stat(candidate).catch(() => null)) {
-      makensis = candidate;
-      break;
-    }
-  }
-}
-if (!makensis)
-  throw Error(
-    "Set INKSTONE_MAKENSIS to a local NSIS compiler. This script does not download build tools.",
-  );
+const compiler = await findNsisCompiler();
+const makensis = compiler.executablePath;
 const executable = path.join(work, "locale-hook.exe");
 const defineFlag = process.platform === "win32" ? "/D" : "-D";
-const compile = execFileSync(
-  makensis,
-  [
-    `${defineFlag}INKSTONE_REPO=${root}`,
-    `${defineFlag}OUTPUT_EXE=${executable}`,
-    path.join(root, "tests/fixtures/installer-language.nsi"),
-  ],
-  {
-    encoding: "utf8",
-    env: {
-      ...process.env,
-      NSISDIR: process.env.NSISDIR || path.dirname(path.dirname(makensis)),
+const queue = [
+  { directory: path.dirname(path.dirname(compiler.nsisDir)), depth: 0 },
+];
+let uacPluginDir;
+while (queue.length && !uacPluginDir) {
+  const { directory, depth } = queue.shift();
+  for (const entry of await fs
+    .readdir(directory, { withFileTypes: true })
+    .catch(() => [])) {
+    const candidate = path.join(directory, entry.name);
+    if (
+      entry.isFile() &&
+      entry.name.toLowerCase() === "uac.dll" &&
+      path.basename(directory) === "x86-unicode"
+    ) {
+      uacPluginDir = directory;
+      break;
+    }
+    if (entry.isDirectory() && depth < 5)
+      queue.push({ directory: candidate, depth: depth + 1 });
+  }
+}
+if (!uacPluginDir)
+  throw Error("Cannot locate the builder's x86-unicode UAC plugin.");
+const defines = [
+  `${defineFlag}INKSTONE_REPO=${root}`,
+  `${defineFlag}INKSTONE_INSTALLER_INCLUDE=${path.join(root, "build/installer.nsh")}`,
+  `${defineFlag}BUILD_RESOURCES_DIR=${path.join(root, "build")}`,
+  `${defineFlag}BUILDER_NSIS_INCLUDE=${path.join(root, "node_modules/app-builder-lib/templates/nsis/include")}`,
+  `${defineFlag}UAC_PLUGIN_DIR=${uacPluginDir}`,
+];
+const executables = [
+  executable,
+  path.join(work, "uninstaller-generation-hook.exe"),
+];
+for (const [index, file] of executables.entries()) {
+  const compile = execFileSync(
+    makensis,
+    [
+      ...defines,
+      `${defineFlag}OUTPUT_EXE=${file}`,
+      ...(index ? [`${defineFlag}BUILD_UNINSTALLER`] : []),
+      path.join(root, "tests/fixtures/installer-language.nsi"),
+    ],
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        NSISDIR: compiler.nsisDir,
+      },
     },
-  },
-);
-await fs.writeFile(path.join(output, "compile.log"), compile);
+  );
+  await fs.writeFile(
+    path.join(
+      output,
+      index ? "compile-uninstaller-generation.log" : "compile.log",
+    ),
+    compile,
+  );
+}
 const env = { ...process.env };
 let runtime;
 if (process.platform === "win32") {
-  execFileSync(executable, [], { env, timeout: 60000 });
+  for (const file of executables)
+    execFileSync(file, [], { env, timeout: 60000, windowsHide: true });
   runtime = "native Windows";
 } else if (process.platform === "linux") {
   const wine = process.env.INKSTONE_WINE;
@@ -65,7 +91,8 @@ if (process.platform === "win32") {
     : path.join(work, "wine-profile");
   env.WINEDEBUG = "-all";
   env.WINEDLLOVERRIDES = process.env.WINEDLLOVERRIDES || "mscoree,mshtml=";
-  execFileSync(wine, [executable], { env, timeout: 60000, stdio: "ignore" });
+  for (const file of executables)
+    execFileSync(wine, [file], { env, timeout: 60000, stdio: "ignore" });
   runtime = "Linux Wine/WoW64";
 } else throw Error("Windows and Linux only");
 const results = [];
@@ -81,7 +108,7 @@ for (const [folder, expected] of [
   );
   const bytes = await fs.readFile(filename);
   const data = JSON.parse(bytes.toString("utf8"));
-  assert.deepEqual(data, { locale: expected });
+  assert.deepEqual(data, { locale: expected, configured: true });
   assert.equal(await fs.stat(filename + ".tmp").catch(() => null), null);
   await fs.copyFile(filename, path.join(output, `${expected}.json`));
   results.push({
@@ -96,7 +123,15 @@ const result = {
   runtime,
   scope:
     "Real NSIS hook execution only; no application installation or language-selector UI claim.",
-  englishDefault: true,
+  windowsUILanguageDefault: true,
+  chineseUIVariantsUseSimplifiedChinese: true,
+  otherUILanguagesUseEnglish: true,
+  outerInteractiveProcessOnly: true,
+  elevatedProcessInheritsSelection: true,
+  silentProcessHasNoSelector: true,
+  uninstallerGenerationHasNoSelector: true,
+  policyCases: 12,
+  installerChoiceCompletesOnboarding: true,
   results,
 };
 await fs.writeFile(

@@ -1,3 +1,7 @@
+import { withPreservedClipboard } from "./helpers/clipboard.mjs";
+import { artifactPath } from "../scripts/artifact-path.mjs";
+import { findPandoc } from "./helpers/tools.mjs";
+import { extract } from "@electron-internal/extract-zip";
 import { test, expect, _electron as electron } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -6,6 +10,7 @@ import { execFileSync } from "node:child_process";
 import katex from "katex";
 import http from "node:http";
 import iconv from "iconv-lite";
+import { resolveSystemLanguage } from "../electron/language.cjs";
 
 test.describe("desktop persistence, resource and export integration", () => {
   test.describe.configure({ mode: "serial" });
@@ -18,7 +23,7 @@ test.describe("desktop persistence, resource and export integration", () => {
   test.beforeAll(async () => {
     directory = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-desktop-"));
     note = path.join(directory, "中文测试.md");
-    outputDir = path.resolve("artifacts/backend-validation");
+    outputDir = artifactPath("backend-validation");
     await fs.mkdir(outputDir, { recursive: true });
     await fs.writeFile(note, "\ufeff# 中文文稿\r\n\r\n第一段。\r\n");
     await fs.writeFile(path.join(directory, "linked.md"), "# Linked\n");
@@ -30,7 +35,8 @@ test.describe("desktop persistence, resource and export integration", () => {
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     application = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", path.resolve("."), note],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: [path.resolve("."), "--disable-gpu", note],
       env: environment,
     });
     page = await application.firstWindow();
@@ -43,7 +49,12 @@ test.describe("desktop persistence, resource and export integration", () => {
   });
   test("native menus and file dialogs follow the persisted English or Chinese choice", async () => {
     const initial = await invoke("bootstrap");
-    expect(initial.settings.locale).toBe("en");
+    const systemLocale = await resolveSystemLanguage(
+      await application.evaluate(({ app }) =>
+        app.getPreferredSystemLanguages(),
+      ),
+    );
+    expect(initial.settings.locale).toBe(systemLocale);
     expect(initial.languageConfigured).toBe(false);
     const evidence = [];
     for (const locale of ["en", "zh-CN"]) {
@@ -266,7 +277,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", hook],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: ["--disable-gpu", hook],
       env: environment,
     });
     try {
@@ -412,7 +424,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", hook],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: ["--disable-gpu", hook],
       env: environment,
     });
     const observations = [];
@@ -541,11 +554,31 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
       invoke("openExternal", { url: "file:///etc/passwd" }),
     ).rejects.toThrow(/HTTP/);
     await expect(invoke("not-a-method")).rejects.toThrow(/Unsupported/);
-    if (process.platform !== "win32") {
-      await fs.symlink("/etc", path.join(directory, "escape"));
+    const outside = await fs.mkdtemp(
+      path.join(os.tmpdir(), "inkstone-ungranted-"),
+    );
+    const escape = path.join(directory, "escape");
+    try {
+      await fs.writeFile(
+        path.join(outside, "private.md"),
+        "Must remain outside the document grant",
+      );
+      await fs.symlink(
+        outside,
+        escape,
+        process.platform === "win32" ? "junction" : "dir",
+      );
       await expect(
-        invoke("openFile", { path: path.join(directory, "escape", "passwd") }),
+        invoke("openFile", { path: path.join(escape, "private.md") }),
       ).rejects.toThrow(/ACCESS/);
+      expect(await fs.readFile(path.join(outside, "private.md"), "utf8")).toBe(
+        "Must remain outside the document grant",
+      );
+    } finally {
+      await fs.unlink(escape).catch((error) => {
+        if (error.code !== "ENOENT") throw error;
+      });
+      await fs.rm(outside, { recursive: true, force: true });
     }
     expect(
       (await invoke("resolveLink", { documentPath: note, href: "linked.md" }))
@@ -707,7 +740,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
       };
       delete environment.ELECTRON_RUN_AS_NODE;
       const isolated = await electron.launch({
-        args: ["--no-sandbox", "--disable-gpu", path.resolve(".")],
+        chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+        args: ["--disable-gpu", path.resolve(".")],
         env: environment,
       });
       try {
@@ -844,11 +878,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     ]);
   });
   test("real Pandoc detection, DOCX export/import, formatting and missing-tool error", async () => {
-    const pandoc = path.resolve(".tools/pandoc/bin/pandoc");
-    test.skip(
-      !(await fs.stat(pandoc).catch(() => null)),
-      "Pandoc executable not installed in this environment",
-    );
+    const pandoc = await findPandoc();
+    test.skip(!pandoc, "Pandoc executable not installed in this environment");
     await invoke("updateSettings", { pandocPath: pandoc });
     expect((await invoke("detectTools")).pandoc.available).toBe(true);
     const target = path.join(directory, "roundtrip.docx");
@@ -878,20 +909,20 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
       path.join(outputDir, "roundtrip-import.md"),
       imported.text,
     );
-    await invoke("updateSettings", { pandocPath: "/nonexistent/pandoc" });
+    await invoke("updateSettings", {
+      pandocPath: path.join(directory, "nonexistent-pandoc.exe"),
+    });
     expect((await invoke("detectTools")).pandoc.available).toBe(false);
     await expect(
       invoke("runPandoc", { direction: "format", text: "x" }),
     ).rejects.toThrow(/DEPENDENCY/);
     await invoke("updateSettings", { pandocPath: pandoc });
   });
-  test("each advertised Pandoc family produces a readable output; archive images survive import", async () => {
-    const pandoc = path.resolve(".tools/pandoc/bin/pandoc");
-    test.skip(
-      !(await fs.stat(pandoc).catch(() => null)),
-      "Pandoc not installed",
-    );
+  test("Pandoc output families contain the document and available readers reimport them; archive images survive import", async () => {
+    const pandoc = await findPandoc();
+    test.skip(!pandoc, "Pandoc not installed");
     await invoke("updateSettings", { pandocPath: pandoc });
+    const capabilities = (await invoke("detectTools")).pandoc;
     const text =
       "# 中文格式验收\n\nInkstone offline writing. 中文段落。\n\n## 第二节\n\n- 第一项\n- Second item\n";
     const formats = [
@@ -942,15 +973,56 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
       });
       expect((await fs.stat(output)).size).toBeGreaterThan(10);
       const reader = { beamer: "latex", revealjs: "html" }[format] || format;
-      const readback = execFileSync(
-        pandoc,
-        ["--from", reader, "--to", "plain", output],
-        { encoding: "utf8" },
-      );
-      expect(readback, `${format} re-opened output`).toContain("中文格式验收");
+      const hasReader = capabilities.inputFormats.includes(reader);
+      let readbackChinese = null;
+      if (hasReader) {
+        const readback = execFileSync(
+          pandoc,
+          ["--from", reader, "--to", "plain", output],
+          { encoding: "utf8" },
+        );
+        expect(readback, `${format} re-opened output`).toContain(
+          "中文格式验收",
+        );
+        readbackChinese = true;
+      } else {
+        // Pandoc versions differ in reader support. Check the actual output
+        // format and content instead of pretending an unavailable reader ran.
+        if (format === "rtf") {
+          const rtf = await fs.readFile(output, "utf8");
+          expect(rtf).toMatch(/^\{\\rtf/);
+          const decoded = rtf.replace(/\\u(-?\d+)\??/g, (_, value) =>
+            String.fromCharCode(Number(value) & 0xffff),
+          );
+          expect(decoded).toContain("中文格式验收");
+        } else if (format === "pptx") {
+          const extracted = path.join(directory, "format-pptx-contents");
+          await extract(output, { dir: extracted });
+          const slides = path.join(extracted, "ppt", "slides");
+          const xml = await Promise.all(
+            (await fs.readdir(slides))
+              .filter((name) => /^slide\d+\.xml$/.test(name))
+              .map((name) => fs.readFile(path.join(slides, name), "utf8")),
+          );
+          expect(xml.join("\n")).toContain("中文格式验收");
+        } else if (format === "asciidoc") {
+          expect(await fs.readFile(output, "utf8")).toContain("中文格式验收");
+        } else
+          throw new Error(
+            `No output validation for missing Pandoc reader: ${format}`,
+          );
+        await expect(
+          invoke("runPandoc", {
+            direction: "import",
+            path: output,
+            format: reader,
+          }),
+        ).rejects.toThrow(/unknown input format|unsupported.*format/i);
+      }
       await fs.copyFile(output, path.join(formatDir, path.basename(output)));
       let appImportChinese = null;
       if (
+        hasReader &&
         ![
           "markdown",
           "gfm",
@@ -974,7 +1046,9 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
         extension: ext,
         reader,
         bytes: (await fs.stat(output)).size,
-        readbackChinese: true,
+        outputChinese: true,
+        readbackChinese,
+        inputReaderAvailable: hasReader,
         appImportChinese,
         warnings: result.warnings,
       });
@@ -1010,87 +1084,90 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     );
   });
 
-  test("explicit URL download and native clipboard remain while retired service IPC is unavailable", async () => {
-    const svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="green"/></svg>';
-    const requests = [];
-    const server = http.createServer((request, response) => {
-      requests.push({ url: request.url, method: request.method });
-      if (request.url === "/image.svg") {
-        response.writeHead(200, { "Content-Type": "image/svg+xml" });
-        response.end(svg);
-        return;
-      }
-      if (request.url === "/huge.png") {
-        response.writeHead(200, {
-          "Content-Type": "image/png",
-          "Content-Length": String(30 * 1024 * 1024),
-        });
+  test("explicit URL download and native clipboard remain while retired service IPC is unavailable", async () =>
+    withPreservedClipboard(application, async () => {
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="green"/></svg>';
+      const requests = [];
+      const server = http.createServer((request, response) => {
+        requests.push({ url: request.url, method: request.method });
+        if (request.url === "/image.svg") {
+          response.writeHead(200, { "Content-Type": "image/svg+xml" });
+          response.end(svg);
+          return;
+        }
+        if (request.url === "/huge.png") {
+          response.writeHead(200, {
+            "Content-Type": "image/png",
+            "Content-Length": String(30 * 1024 * 1024),
+          });
+          response.end();
+          return;
+        }
+        response.writeHead(404);
         response.end();
-        return;
-      }
-      response.writeHead(404);
-      response.end();
-    });
-    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-    try {
-      const origin = `http://127.0.0.1:${server.address().port}`;
-      const downloaded = await invoke("downloadImage", {
-        documentPath: note,
-        url: origin + "/image.svg",
       });
-      expect(await fs.readFile(downloaded[0].path, "utf8")).toBe(svg);
-      await expect(
-        invoke("downloadImage", {
+      await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+      try {
+        const origin = `http://127.0.0.1:${server.address().port}`;
+        const downloaded = await invoke("downloadImage", {
           documentPath: note,
-          url: origin + "/huge.png",
-        }),
-      ).rejects.toThrow(/25 MB/);
-      await expect(
-        invoke("uploadImages", { paths: [downloaded[0].path] }),
-      ).rejects.toThrow(/Unsupported desktop operation/);
-      expect(
-        await application.evaluate(async ({ ipcMain, BrowserWindow }) => {
-          const window = BrowserWindow.getAllWindows().find((window) =>
-            window.webContents.getURL().endsWith("/index.html"),
-          );
-          try {
-            await ipcMain._invokeHandlers.get("inkstone:invoke")(
-              {
-                sender: window.webContents,
-                senderFrame: window.webContents.mainFrame,
-              },
-              "uploadImages",
-              {},
+          url: origin + "/image.svg",
+        });
+        expect(await fs.readFile(downloaded[0].path, "utf8")).toBe(svg);
+        await expect(
+          invoke("downloadImage", {
+            documentPath: note,
+            url: origin + "/huge.png",
+          }),
+        ).rejects.toThrow(/25 MB/);
+        await expect(
+          invoke("uploadImages", { paths: [downloaded[0].path] }),
+        ).rejects.toThrow(/Unsupported desktop operation/);
+        expect(
+          await application.evaluate(async ({ ipcMain, BrowserWindow }) => {
+            const window = BrowserWindow.getAllWindows().find((window) =>
+              window.webContents.getURL().endsWith("/index.html"),
             );
-            return "unexpected success";
-          } catch (error) {
-            return error.message;
-          }
-        }),
-      ).toContain("Unsupported desktop method");
-      expect(Object.keys(await invoke("detectTools"))).toEqual(["pandoc"]);
-      expect(requests.every((request) => request.method === "GET")).toBe(true);
-      expect(requests).toHaveLength(2);
-      await invoke("writeClipboard", {
-        text: "中文剪贴板",
-        html: "<strong>中文剪贴板</strong>",
-      });
-      expect(
-        await application.evaluate(({ clipboard }) => clipboard.readText()),
-      ).toBe("中文剪贴板");
-      expect(
-        await application.evaluate(async ({ clipboard }) => {
-          const item = (await clipboard.read()).find((item) =>
-            item.types.includes("text/html"),
-          );
-          return (await item.getType("text/html")).text();
-        }),
-      ).toContain("<strong>中文剪贴板</strong>");
-    } finally {
-      await new Promise((resolve) => server.close(resolve));
-    }
-  });
+            try {
+              await ipcMain._invokeHandlers.get("inkstone:invoke")(
+                {
+                  sender: window.webContents,
+                  senderFrame: window.webContents.mainFrame,
+                },
+                "uploadImages",
+                {},
+              );
+              return "unexpected success";
+            } catch (error) {
+              return error.message;
+            }
+          }),
+        ).toContain("Unsupported desktop method");
+        expect(Object.keys(await invoke("detectTools"))).toEqual(["pandoc"]);
+        expect(requests.every((request) => request.method === "GET")).toBe(
+          true,
+        );
+        expect(requests).toHaveLength(2);
+        await invoke("writeClipboard", {
+          text: "中文剪贴板",
+          html: "<strong>中文剪贴板</strong>",
+        });
+        expect(
+          await application.evaluate(({ clipboard }) => clipboard.readText()),
+        ).toBe("中文剪贴板");
+        expect(
+          await application.evaluate(async ({ clipboard }) => {
+            const item = (await clipboard.read()).find((item) =>
+              item.types.includes("text/html"),
+            );
+            return (await item.getType("text/html")).text();
+          }),
+        ).toContain("<strong>中文剪贴板</strong>");
+      } finally {
+        await new Promise((resolve) => server.close(resolve));
+      }
+    }));
   test("legacy service settings are removed on startup and updates without touching local documents or assets", async () => {
     const profile = path.join(directory, "retired-profile"),
       source = path.join(directory, "migration-local.md"),
@@ -1139,7 +1216,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", path.resolve(".")],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: ["--disable-gpu", path.resolve(".")],
       env: environment,
     });
     try {
@@ -1215,7 +1293,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", hook],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: ["--disable-gpu", hook],
       env: environment,
     });
     try {
@@ -1291,7 +1370,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: ["--no-sandbox", "--disable-gpu", hook],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: ["--disable-gpu", hook],
       env: environment,
     });
     try {
@@ -1679,11 +1759,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     ).toBe(0);
   });
   test("Pandoc embeds supplied diagram PNGs in DOCX while keeping Markdown source intact", async () => {
-    const pandoc = path.resolve(".tools/pandoc/bin/pandoc");
-    test.skip(
-      !(await fs.stat(pandoc).catch(() => null)),
-      "Pandoc not installed",
-    );
+    const pandoc = await findPandoc();
+    test.skip(!pandoc, "Pandoc not installed");
     await invoke("updateSettings", { pandocPath: pandoc });
     const png =
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aPioAAAAASUVORK5CYII=";
@@ -2180,12 +2257,8 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
     };
     delete environment.ELECTRON_RUN_AS_NODE;
     const isolated = await electron.launch({
-      args: [
-        "--no-sandbox",
-        "--disable-gpu",
-        `--log-net-log=${netlog}`,
-        path.resolve("."),
-      ],
+      chromiumSandbox: process.env.INKSTONE_TEST_NO_SANDBOX !== "1",
+      args: [path.resolve("."), "--disable-gpu", `--log-net-log=${netlog}`],
       env: environment,
     });
     let status, spelling;
@@ -2246,7 +2319,13 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
         document.body.append(area);
       });
       const input = localPage.locator("#offline-spelling-test");
-      await input.fill("mispelled ");
+      // Native spelling ranges need real key input; fill() can leave the
+      // correct text without activating Chromium's word/suggestion marking.
+      await isolated.evaluate(({ BrowserWindow }) =>
+        BrowserWindow.getAllWindows()[0].focus(),
+      );
+      await input.focus();
+      await input.pressSequentially("mispelled ", { delay: 20 });
       await input.press("End");
       await localPage.waitForTimeout(400);
       await expect
