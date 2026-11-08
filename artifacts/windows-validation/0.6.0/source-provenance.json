@@ -1,0 +1,104 @@
+{
+  "Version": "0.6.0",
+  "Candidate": "index-CnNg5GrK.js",
+  "Branch": "windows-validation",
+  "BaseCommit": "a8e3e0a4e05c9634d619d2ca0cb6d097876cbc64",
+  "Host": "win32",
+  "Architecture": "x64",
+  "Node": "v22.23.4",
+  "SandboxBypass": false,
+  "ExpectedTests": 105,
+  "TimeUtc": "2026-11-08T13:53:37.4125915Z",
+  "Files": [
+    {
+      "Path": "package.json",
+      "Sha256": "C748271BEC6DCC9D65D2193D2F309FD210B2E9EA010C6AB283D89D8761C97497"
+    },
+    {
+      "Path": "src/app.js",
+      "Sha256": "7BD1327075304F207F9B70C60E50A9E9B7865A3F41CF85618F308F39F651B629"
+    },
+    {
+      "Path": "src/editor.js",
+      "Sha256": "A6CA51FC12DB90D8454287C24620E58653667560E5C07CC12FDDD088E2DCEBE7"
+    },
+    {
+      "Path": "src/editor.css",
+      "Sha256": "7A39809277E9C45E2AAC8D50E2C696C9510A053EF47F3C9C877EC4C94B444453"
+    },
+    {
+      "Path": "src/editor-context-menu.js",
+      "Sha256": "29F96771019DFE4F207E2AA2540CA8A1DF137A0C286CE3D31278ABBA9115C6AA"
+    },
+    {
+      "Path": "src/editor-context-menu.css",
+      "Sha256": "B7DEDCC64909EFB3CFC9F65358B899FDE6575270FE614E1BB11A2415193AF7D5"
+    },
+    {
+      "Path": "src/inline-rendering.js",
+      "Sha256": "FF56C198262351257B72A9190E914978981BFD9DA060C3D33823140A8B50CB8E"
+    },
+    {
+      "Path": "src/markdown.js",
+      "Sha256": "751C11810622B6F67D47C82141651BB22583C14E54A411EC27BCB7831CB1F00A"
+    },
+    {
+      "Path": "src/clipboard.js",
+      "Sha256": "8B66503EDEA72B70AE26D929B28C5389AD886B0B25386F51DEE3668A9AF2EF92"
+    },
+    {
+      "Path": "src/table-editor.js",
+      "Sha256": "B082223A8F369BE4B7B1C20170E29403DFFBE1C2A1FECBDC265CAFE8759327C1"
+    },
+    {
+      "Path": "src/tables.js",
+      "Sha256": "0637D5633F2AE64C3783787E7D9A97F9613EB1877D6B85A902B985BA77A3E9EC"
+    },
+    {
+      "Path": "src/source-history.js",
+      "Sha256": "11F0A3E48AB165653EC120B725594FE7A36F09E9B85D9CEC84357030D45935A2"
+    },
+    {
+      "Path": "electron/main.cjs",
+      "Sha256": "81EC6537BC25572BE8EBD5FBB9ADAAC47DBD65C9118BFB5BA2D27CCB3B708FC5"
+    },
+    {
+      "Path": "electron/preload.cjs",
+      "Sha256": "A25B9053D1462B63A1B0F5BC23EA85CA34A6FF676CB9A7950F55603937B3BF86"
+    },
+    {
+      "Path": "electron/links.cjs",
+      "Sha256": "EE13F1BA94033ED7DFE383166D6A0AD3F8B971C4C74956EEAC5F733AD05E518B"
+    },
+    {
+      "Path": "electron/image-resources.cjs",
+      "Sha256": "351C83F895AE49D1A1E0E13F74FB41831520664955CCA84885CB6DF18419134C"
+    },
+    {
+      "Path": "electron/storage.cjs",
+      "Sha256": "3B55982E838B7B9E6265324F71FAE7FE84DCC0E98E3C44F3BB4549CE4369B0AC"
+    },
+    {
+      "Path": "playwright.config.js",
+      "Sha256": "C965643CCBFDDD7310BDF17746E5F43EE6C615E0EE3A83FBED208B2BB89E96C6"
+    },
+    {
+      "Path": "dist/index.html",
+      "Sha256": "1E7E0AFCCBCF0FBB393981FEDE8FDFC219EE9447A3508D27052641C7BA3B23D3"
+    },
+    {
+      "Path": "dist/assets/index-CnNg5GrK.js",
+      "Sha256": "2CA867B113E0FE39547C07F8F54805D207B926ADB0334E313CD466258AE7C500"
+    }
+  ],
+  "VerifiedUnchangedAfterTests": true,
+  "TestStats": {
+    "startTime": "2026-11-08T13:53:37.833Z",
+    "duration": 122627.56,
+    "expected": 105,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "VerifiedAfterTestsUtc": "2026-11-08T13:58:32.7389689Z"
+}

@@ -1,0 +1,25 @@
+{
+  "suite": "tests/system-integration.spec.js",
+  "platform": "Windows",
+  "version": "0.6.1",
+  "bundle": "index-CL3Yu7sK.js",
+  "systemIntegrationCases": 8,
+  "verifiedWithinFullSuite": 113,
+  "fullReport": "../electron-final/playwright-results.json",
+  "sourceHashManifest": "../electron-final/hashes-after.json",
+  "skipped": 0,
+  "unexpected": 0,
+  "flaky": 0,
+  "systemSettingsOpened": false,
+  "registryWrites": false,
+  "hashes": [
+    {
+      "file": "LICENSE",
+      "sha256": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee"
+    },
+    {
+      "file": "package.json",
+      "sha256": "8ca7d5220d6757b8a216fc76da3c7de64c1a985f09c78ea3289ff2e10d5afa60"
+    }
+  ]
+}

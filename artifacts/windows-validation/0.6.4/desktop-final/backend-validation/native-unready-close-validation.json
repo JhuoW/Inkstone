@@ -1,0 +1,21 @@
+{
+  "dialog": {
+    "type": "warning",
+    "title": "Editor is not responding",
+    "message": "The editor could not start or respond to the close request.",
+    "detail": "You can keep waiting or cancel closing. Closing without saving may lose unsaved edits. Recovery drafts already written to disk will be kept.",
+    "buttons": [
+      "Wait",
+      "Close without saving",
+      "Cancel"
+    ],
+    "defaultId": 0,
+    "cancelId": 2,
+    "noLink": true
+  },
+  "canceledWindowPreserved": true,
+  "uncheckedNewWindowRejected": true,
+  "forcedCloseRequiredExplicitChoice": true,
+  "originalDiskPreserved": true,
+  "emergencyRecoveryPreserved": true
+}

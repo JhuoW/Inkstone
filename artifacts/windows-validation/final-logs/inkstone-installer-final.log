@@ -1,0 +1,6 @@
+  • electron-builder  version=26.18.0 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • building        target=nsis file=release\Inkstone-0.4.0-windows-x64.exe archs=x64 oneClick=false perMachine=false
+  • no code signing certificate configured, signing is skipped  path=C:\Users\wei\AppData\Local\Temp\t-9WOpTK\elevate-staging-0\resources\elevate.exe
+  • no code signing certificate configured, signing is skipped  path=release\Inkstone-0.4.0-windows-x64.__uninstaller.exe
+  • no code signing certificate configured, signing is skipped  path=release\Inkstone-0.4.0-windows-x64.exe

@@ -1,0 +1,108 @@
+[
+  {
+    "source": "CLI",
+    "openCount": 1,
+    "firstResponseDelayMs": 120,
+    "editSurvivedDelayedPreferences": true,
+    "closePromptVerified": true,
+    "savedText": "即时输入 1。\n# 启动文稿\n\n原始内容。\n",
+    "trace": [
+      {
+        "id": 1,
+        "method": "bootstrap",
+        "returned": true
+      },
+      {
+        "id": 1,
+        "method": "openFile",
+        "ordinal": 1,
+        "path": "C:\\Users\\wei\\AppData\\Local\\Temp\\inkstone-desktop-CkC7wX\\startup-race.md"
+      },
+      {
+        "id": 1,
+        "method": "openFile",
+        "returned": true
+      },
+      {
+        "id": 1,
+        "method": "setDirty",
+        "returned": true,
+        "dirty": true
+      },
+      {
+        "id": 1,
+        "method": "updateSettings",
+        "returned": true
+      },
+      {
+        "id": 1,
+        "method": "setDirty",
+        "returned": true,
+        "dirty": true
+      },
+      {
+        "id": 1,
+        "method": "saveSession",
+        "returned": true
+      },
+      {
+        "id": 1,
+        "method": "windowAction",
+        "returned": true
+      }
+    ]
+  },
+  {
+    "source": "newWindow",
+    "openCount": 1,
+    "firstResponseDelayMs": 120,
+    "editSurvivedDelayedPreferences": true,
+    "closePromptVerified": true,
+    "savedText": "即时输入 2。\n# 启动文稿\n\n原始内容。\n",
+    "trace": [
+      {
+        "id": 2,
+        "method": "bootstrap",
+        "returned": true
+      },
+      {
+        "id": 2,
+        "method": "openFile",
+        "ordinal": 1,
+        "path": "C:\\Users\\wei\\AppData\\Local\\Temp\\inkstone-desktop-CkC7wX\\new-window-race.md"
+      },
+      {
+        "id": 2,
+        "method": "openFile",
+        "returned": true
+      },
+      {
+        "id": 2,
+        "method": "setDirty",
+        "returned": true,
+        "dirty": true
+      },
+      {
+        "id": 2,
+        "method": "updateSettings",
+        "returned": true
+      },
+      {
+        "id": 2,
+        "method": "setDirty",
+        "returned": true,
+        "dirty": true
+      },
+      {
+        "id": 2,
+        "method": "saveSession",
+        "returned": true
+      },
+      {
+        "id": 2,
+        "method": "windowAction",
+        "returned": true
+      }
+    ]
+  }
+]

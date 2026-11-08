@@ -1,0 +1,21 @@
+{
+  "timeUtc": "2026-11-08T15:15:13.928Z",
+  "info": {
+    "supported": true,
+    "packaged": true,
+    "registered": true,
+    "registrationScope": "user",
+    "currentDefault": {
+      "progId": "Inkstone.Markdown",
+      "name": "Inkstone",
+      "isInkstone": true
+    },
+    "extensions": [
+      ".md",
+      ".markdown",
+      ".mdown",
+      ".mkd"
+    ],
+    "requiresInstallation": false
+  }
+}

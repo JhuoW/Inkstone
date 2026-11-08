@@ -1,0 +1,10 @@
+PASS Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo 149ms
+PASS Repeated formulas, backslash delimiters and active-paragraph widgets map independently 138ms
+PASS Double-click selects only formula content in the same editor 164ms
+PASS Block math and math fences reopen inside delimiters, update preview and recover errors 496ms
+PASS Arrow navigation enters inline math source; repeated mode switches keep exact text and selection 108ms
+PASS Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers 1156ms
+PASS Composition near math survives preview updates and explicit finish without duplicate Chinese 139ms
+PASS Finishing an active IME composition commits prose and visual table cells before locking 224ms
+PASS Dragging from inline math across blocks copies source once and paste/undo preserves it 316ms
+PASS Settings no-op preserves widgets, selection and history; read-only math stays non-editable 282ms

@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: About uses runtime version, project identity and accessible modal labels
+ok 1 - About uses runtime version, project identity and accessible modal labels
+  ---
+  duration_ms: 54.557
+  type: 'test'
+  ...
+# Subtest: bundled license opens offline as literal exact text and Back restores focus
+ok 2 - bundled license opens offline as literal exact text and Back restores focus
+  ---
+  duration_ms: 12.1955
+  type: 'test'
+  ...
+# Subtest: project, Wei Zhuo homepage and official AGPL links use their fixed external destinations
+ok 3 - project, Wei Zhuo homepage and official AGPL links use their fixed external destinations
+  ---
+  duration_ms: 7.9185
+  type: 'test'
+  ...
+# Subtest: Chinese labels are consistent even when locale is supplied explicitly
+ok 4 - Chinese labels are consistent even when locale is supplied explicitly
+  ---
+  duration_ms: 6.2604
+  type: 'test'
+  ...
+# Subtest: closing and Escape restore writing focus without changing document text or selection
+ok 5 - closing and Escape restore writing focus without changing document text or selection
+  ---
+  duration_ms: 12.9415
+  type: 'test'
+  ...
+# Subtest: repeated About requests focus the existing dialog instead of stacking copies
+ok 6 - repeated About requests focus the existing dialog instead of stacking copies
+  ---
+  duration_ms: 4.8398
+  type: 'test'
+  ...
+# Subtest: runtime strings are escaped and missing bundled metadata has an explicit state
+ok 7 - runtime strings are escaped and missing bundled metadata has an explicit state
+  ---
+  duration_ms: 7.7263
+  type: 'test'
+  ...
+# Subtest: external-link failures keep the dialog open and announce a useful retry message
+ok 8 - external-link failures keep the dialog open and announce a useful retry message
+  ---
+  duration_ms: 5.3777
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1021.0907

@@ -1,0 +1,19 @@
+{
+  "version": "0.4.0",
+  "passed": true,
+  "runtime": "native Windows",
+  "scope": "Real NSIS hook execution only; no application installation or language-selector UI claim.",
+  "englishDefault": true,
+  "results": [
+    {
+      "selectedLanguage": "en",
+      "validUTF8JSON": true,
+      "temporaryFileRemoved": true
+    },
+    {
+      "selectedLanguage": "zh-CN",
+      "validUTF8JSON": true,
+      "temporaryFileRemoved": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+Command line defined: "INKSTONE_REPO=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone"
+Command line defined: "FILE_ASSOCIATIONS_INCLUDE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\templates\nsis\include\FileAssociation.nsh"
+Command line defined: "INKSTONE_INSTALLER_INCLUDE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\build\installer.nsh"
+Command line defined: "BUILD_RESOURCES_DIR=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\build"
+Command line defined: "OUTPUT_EXE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\association-hook-9DwdnS\association-hook.exe"
+Command line defined: "TEST_INSTALL_DIR=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\association-hook-9DwdnS\Program Files\Inkstone ????"
+Command line defined: "TEST_TOKEN=f666be0ae9f0451fac4ed71d4c2103fb"
+Processing config: C:\Users\wei\AppData\Local\electron-builder\Cache\nsis-3.0.4.1\nsis-3.0.4.1-1mx3n\nsisconf.nsh
+Processing script file: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\fixtures\installer-associations.nsi" (ACP)
+
+Processed 1 file, writing output (x86-unicode):
+
+Output: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\association-hook-9DwdnS\association-hook.exe"
+Install: 0 pages (0 bytes), 1 section (16408 bytes), 161 instructions (4508 bytes), 278 strings (3488 bytes), 1 language table (158 bytes).
+Datablock optimizer saved 12 bytes (~0.0%).
+
+Using zlib compression.
+
+EXE header size:               37888 / 39424 bytes
+Install code:                   1611 / 24890 bytes
+Install data:                      4 / 16 bytes
+CRC (0x0124DC8A):                  4 / 4 bytes
+
+Total size:                    39507 / 64334 bytes (61.4%)

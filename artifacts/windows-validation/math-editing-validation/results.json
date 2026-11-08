@@ -1,0 +1,82 @@
+{
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "name": "Closing typed inline math renders once at the closing caret, with exact undo and source mode",
+      "result": "passed",
+      "ms": 200
+    },
+    {
+      "name": "Clicking internal linear glyphs positions source caret and source clicks remain native",
+      "result": "passed",
+      "ms": 99
+    },
+    {
+      "name": "Optional dollar pairing closes once and arrow boundaries reveal or render without changing text",
+      "result": "passed",
+      "ms": 70
+    },
+    {
+      "name": "Repeated formulas and fraction numerator or denominator retain their own click positions",
+      "result": "passed",
+      "ms": 54
+    },
+    {
+      "name": "Closed invalid inline math shows one error and can be corrected in place",
+      "result": "passed",
+      "ms": 86
+    },
+    {
+      "name": "Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo",
+      "result": "passed",
+      "ms": 32
+    },
+    {
+      "name": "Repeated formulas, backslash delimiters and active-paragraph widgets map independently",
+      "result": "passed",
+      "ms": 67
+    },
+    {
+      "name": "Double-click selects only formula content in the same editor",
+      "result": "passed",
+      "ms": 132
+    },
+    {
+      "name": "Block math and math fences reopen inside delimiters, update preview and recover errors",
+      "result": "passed",
+      "ms": 459
+    },
+    {
+      "name": "Arrow navigation enters inline math source; repeated mode switches keep exact text and selection",
+      "result": "passed",
+      "ms": 75
+    },
+    {
+      "name": "Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers",
+      "result": "passed",
+      "ms": 1137
+    },
+    {
+      "name": "Composition near math survives preview updates and explicit finish without duplicate Chinese",
+      "result": "passed",
+      "ms": 129
+    },
+    {
+      "name": "Finishing an active IME composition commits prose and visual table cells before locking",
+      "result": "passed",
+      "ms": 219
+    },
+    {
+      "name": "Dragging from inline math across blocks copies source once and paste/undo preserves it",
+      "result": "passed",
+      "ms": 283
+    },
+    {
+      "name": "Settings no-op preserves widgets, selection and history; read-only math stays non-editable",
+      "result": "passed",
+      "ms": 316
+    }
+  ],
+  "browserErrors": [],
+  "scope": "Actual Chromium mouse/keyboard and CDP composition. Native Windows OS IME remains platform validation."
+}

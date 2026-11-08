@@ -1,0 +1,26 @@
+PASS Custom shortcut aliases accepted by native menus invoke editor commands 88ms
+PASS Table dialog Apply keeps pipes and backslash runs inside the edited cell 251ms
+PASS Line formatting excludes the unselected line at a selection boundary 8ms
+PASS Read-only tables cannot grow through Tab and resume editing when unlocked 14ms
+PASS Mode switches preserve original text, selection and undo history 74ms
+PASS Continuous keyboard typing and nested-list Enter/Tab retain all text 18ms
+PASS Chromium IME composition commits Chinese without dropped or duplicate text 107ms
+PASS Cross-block selection, clipboard copy/paste and undo preserve Markdown 33ms
+PASS Real mouse dragging from rendered blocks selects across paragraphs and copies complete Markdown 1142ms
+PASS Table keyboard navigation, TSV paste, alignment and reordering change source 26ms
+PASS Active paragraphs and headings reveal only the selected inline syntax 119ms
+PASS Direct visual table cells edit exact source spans with IME, undo, Tab and row growth 135ms
+PASS Live blocks preserve global links, footnotes, math labels and duplicate heading anchors 33ms
+PASS Mermaid and legacy diagrams retain Chinese SVG labels, errors are visible 910ms
+PASS Native legacy grammars render conditional flow styles, notes, aliases and all arrow types 359ms
+PASS Offline sequence hand theme retains CJK labels and hand-drawn SVG geometry 178ms
+PASS Incremental paragraph edits keep following block clicks and references correct 51ms
+PASS Optional Markdown pairing and input typography preserve source-mode text 95ms
+PASS Offline MathJax physics fallback and SVG glyphs survive browser rendering and export 310ms
+PASS Read-only mode blocks edits and retains copy, find, links, and explicit refresh 74ms
+PASS Grouped undo/redo restores every intermediate BOM and mixed LF/CRLF/CR layout 11ms
+PASS Source structural commands preserve mixed EOL, nested blocks and one-step undo 85ms
+PASS Code wrapping preference changes layout without modifying code source 40ms
+PASS Strict heading and CJK punctuation settings agree between active and inactive rendering 43ms
+PASS Visual cells support formatting shortcuts and safe plain-text or TSV clipboard paste 90ms
+PERFORMANCE {"characters":888890,"bytes":1158890,"lines":10001,"openMs":158.80000000074506,"liveEditSamplesMs":[35.600000001490116,29.800000000745058,26.199999999254942,26.899999998509884,29,25.400000002235174,15.699999999254942,16.100000001490116,14.599999997764826,11.5],"modeRoundTripMs":31.600000001490116,"sourceSwitchAndEditMs":11.699999999254942}

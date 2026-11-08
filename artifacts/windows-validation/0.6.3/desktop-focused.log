@@ -1,0 +1,18 @@
+
+Running 11 tests using 1 worker
+
+(node:2976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\code-fences.spec.js:78:1 › Insert code block focuses typing, language selection highlights Python, and save preserves CRLF (1.0s)
+  ok  2 tests\code-fences.spec.js:100:1 › Native and context paste keep code text, indentation and literal fences with undo (1.0s)
+  ok  3 tests\code-fences.spec.js:140:1 › The context Insert menu creates an immediately editable code block (1.1s)
+  ok  4 tests\code-fences.spec.js:168:3 › Branding and persistent code are readable in zh-CN/light (1.0s)
+  ok  5 tests\code-fences.spec.js:168:3 › Branding and persistent code are readable in zh-CN/dark (1.0s)
+  ok  6 tests\code-fences.spec.js:168:3 › Branding and persistent code are readable in en/light (1.0s)
+  ok  7 tests\code-fences.spec.js:168:3 › Branding and persistent code are readable in en/dark (1.0s)
+  ok  8 tests\system-integration.spec.js:122:1 › About IPC reads the runtime version and the exact bundled AGPL license (756ms)
+  ok  9 tests\system-integration.spec.js:146:1 › native Tools About opens one renderer dialog and preserves selection and undo (884ms)
+  ok 10 tests\system-integration.spec.js:182:3 › About en/light shows local branding and offline license with trusted links (1.2s)
+  ok 11 tests\system-integration.spec.js:182:3 › About zh-CN/dark shows local branding and offline license with trusted links (1.2s)
+
+  11 passed (12.1s)

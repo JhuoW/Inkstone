@@ -1,0 +1,45 @@
+{
+  "version": "0.4.0",
+  "platform": "win32",
+  "architecture": "x64",
+  "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+  "passed": true,
+  "normalSandbox": true,
+  "nodeIsolation": true,
+  "spellcheck": {
+    "requested": true,
+    "enabled": true,
+    "available": true,
+    "initializing": false,
+    "languages": [
+      "en-US"
+    ],
+    "initializedLanguages": [
+      "en-US"
+    ],
+    "bundledLanguages": [
+      "en-US"
+    ],
+    "cachedLanguages": [],
+    "source": "Bundled: en-US; local cache: none",
+    "dictionaryURL": "inkstone-dictionary://local/",
+    "externalDownloads": false,
+    "error": ""
+  },
+  "noEditByteAndMtime": true,
+  "chinesePath": true,
+  "localEditAndUndo": true,
+  "selectionAcrossModes": true,
+  "mathAndDiagram": true,
+  "exports": [
+    "html",
+    "pdf"
+  ],
+  "htmlReopened": true,
+  "pageErrors": [],
+  "limitations": [
+    "This is not installer/association/uninstall verification.",
+    "insertText does not validate native OS IME.",
+    "PDF signature checked; typography needs visual inspection."
+  ]
+}

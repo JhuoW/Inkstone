@@ -1,0 +1,18 @@
+[
+  {
+    "invalidKey": "theme",
+    "booted": true,
+    "backupExact": true,
+    "warnings": [
+      "Invalid preferences (Invalid theme). Defaults restored. Original settings are preserved at: C:\\Users\\wei\\AppData\\Local\\Temp\\inkstone-desktop-dfsq0W\\invalid-profile-theme\\settings.invalid-1794149983674-9187bb35-072f-44d1-adb5-177ccb1b3c4d.json"
+    ]
+  },
+  {
+    "invalidKey": "recentFiles",
+    "booted": true,
+    "backupExact": true,
+    "warnings": [
+      "Invalid preferences (Invalid setting: recentFiles). Defaults restored. Original settings are preserved at: C:\\Users\\wei\\AppData\\Local\\Temp\\inkstone-desktop-dfsq0W\\invalid-profile-recentFiles\\settings.invalid-1794149985320-8e27683f-5d30-4c0f-89a1-164e8b539336.json"
+    ]
+  }
+]

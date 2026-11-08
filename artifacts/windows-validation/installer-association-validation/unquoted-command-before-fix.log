@@ -1,0 +1,20 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-NimGgL\\Program Files\\Inkstone 安装测试\\Inkstone.exe "%1"'
+- '"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-NimGgL\\Program Files\\Inkstone 安装测试\\Inkstone.exe" "%1"'
+
+    at file:///C:/Users/wei/OneDrive%20-%20Nanyang%20Technological%20University/Desktop/inkstone/Inkstone/scripts/verify-installer-associations.mjs:140:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-NimGgL\\Program Files\\Inkstone 安装测试\\Inkstone.exe "%1"',
+  expected: '"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-NimGgL\\Program Files\\Inkstone 安装测试\\Inkstone.exe" "%1"',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.4

@@ -1,0 +1,15 @@
+  • electron-builder  version=26.18.0 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=45.2.3 arch=x64 buildFromSource=false workspaceRoot=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=45.2.3 appOutDir=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\win-unpacked
+  • downloaded      label=electron progress=100%
+  • downloaded electron zip extracted successfully  output=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\win-unpacked
+  • searching for node modules  pm=npm searchDir=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone
+  • updating asar integrity executable resource  executablePath=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\win-unpacked\Inkstone.exe
+  • no code signing certificate configured, signing is skipped  path=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\win-unpacked\Inkstone.exe
+  • building        target=nsis file=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\Inkstone-0.6.4-windows-x64.exe archs=x64 oneClick=false perMachine=false
+  • no code signing certificate configured, signing is skipped  path=C:\Users\wei\AppData\Local\Temp\t-cgG2Si\elevate-staging-1\resources\elevate.exe
+  • no code signing certificate configured, signing is skipped  path=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\Inkstone-0.6.4-windows-x64.__uninstaller.exe
+  • no code signing certificate configured, signing is skipped  path=C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\Inkstone-0.6.4-windows-x64.exe

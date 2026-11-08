@@ -1,0 +1,62 @@
+{
+  "version": "0.6.1",
+  "variant": "portablefinal",
+  "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\Inkstone.exe",
+  "passed": true,
+  "normalSandbox": true,
+  "installerSeed": false,
+  "freshPrivateProfile": true,
+  "settingsLaunchStubbed": true,
+  "clipboardUntouched": true,
+  "screenshots": [
+    "first-language-choice.png",
+    "about-en.png",
+    "license-en.png",
+    "about-zh-CN.png",
+    "license-zh-CN.png",
+    "preferences-files.png"
+  ],
+  "errors": [],
+  "initialLocale": "en",
+  "windowsSystemLocale": "en",
+  "registration": {
+    "supported": true,
+    "packaged": true,
+    "registered": false,
+    "registrationScope": null,
+    "currentDefault": {
+      "progId": "Typora.md",
+      "name": "Typora",
+      "isInkstone": false
+    },
+    "extensions": [
+      ".md",
+      ".markdown",
+      ".mdown",
+      ".mkd"
+    ],
+    "requiresInstallation": true
+  },
+  "defaultBefore": {
+    "progId": "Typora.md",
+    "name": "Typora",
+    "isInkstone": false
+  },
+  "unregisteredDoesNotOfferDefault": true,
+  "aboutVersionAndBundledLicenseExact": true,
+  "toolsAboutRendererBothLanguages": true,
+  "aboutClosePreservesDocumentAndSelection": true,
+  "fixedSettingsURI": "ms-settings:defaultapps",
+  "preferencesEffectiveDefaultReadOnly": true,
+  "newWindowHasNoRepeatedPrompt": true,
+  "sameProfileRelaunchHasNoRepeatedPrompt": true,
+  "defaultAfter": {
+    "progId": "Typora.md",
+    "name": "Typora",
+    "isInkstone": false
+  },
+  "defaultUnchanged": true,
+  "syntheticBOMCRLFDocumentUnchanged": true,
+  "privateProfileRemoved": true,
+  "allTestAppsClosed": true
+}

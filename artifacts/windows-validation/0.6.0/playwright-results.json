@@ -1,0 +1,4389 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\wei\\AppData\\Local\\Programs\\nodejs\\node.exe",
+      "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--workers=1"
+    ],
+    "configFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\playwright.config.js",
+    "rootDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/artifacts/windows-validation/0.6.0/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.0\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "snapshotDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js"
+        ],
+        "timeout": 90000,
+        "use": {
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "open": "never",
+          "outputFolder": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.0\\playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.0\\playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "backend-e2e.spec.js",
+      "file": "backend-e2e.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "desktop persistence, resource and export integration",
+          "file": "backend-e2e.spec.js",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "native menus and file dialogs follow the persisted English or Chinese choice",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 476,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:38.614Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-de32d52cf181cbf30bbb",
+              "file": "backend-e2e.spec.js",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "discarding one document's recoveries excludes other live windows and rejects late resurrection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 563,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:39.355Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-cc3416dbba47b7c9cba7",
+              "file": "backend-e2e.spec.js",
+              "line": 180,
+              "column": 3
+            },
+            {
+              "title": "unready renderer close waits for an explicit native choice and blocks unchecked new windows",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 839,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:39.925Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-85c908fed3f38cad9e43",
+              "file": "backend-e2e.spec.js",
+              "line": 242,
+              "column": 3
+            },
+            {
+              "title": "startup and new-window files load once and retain edits made before preferences finish",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3026,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:40.771Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-3450a0c11d73f34e56e2",
+              "file": "backend-e2e.spec.js",
+              "line": 355,
+              "column": 3
+            },
+            {
+              "title": "isolated bridge rejects ungranted files and symlink escapes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 33,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:43.806Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-c9f5c8aaa2435eb5c78b",
+              "file": "backend-e2e.spec.js",
+              "line": 542,
+              "column": 3
+            },
+            {
+              "title": "native save preserves untouched bytes, detects external change, stores history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 79,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:43.851Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-84b19c2cbd2fc38b307e",
+              "file": "backend-e2e.spec.js",
+              "line": 582,
+              "column": 3
+            },
+            {
+              "title": "file operations, search and hidden filtering reach real filesystem",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 192,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:43.946Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-2633ad3849e711112a28",
+              "file": "backend-e2e.spec.js",
+              "line": 606,
+              "column": 3
+            },
+            {
+              "title": "preferences, sessions and recovery roundtrip persist to disk",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 75,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:44.154Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-7fd50c5b99d42f12a0e0",
+              "file": "backend-e2e.spec.js",
+              "line": 656,
+              "column": 3
+            },
+            {
+              "title": "native menu shortcuts replace default accelerators and reject invalid bindings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 58,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:44.243Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-72e9b1991ad22620aac2",
+              "file": "backend-e2e.spec.js",
+              "line": 700,
+              "column": 3
+            },
+            {
+              "title": "invalid settings types preserve original bytes and boot with defaults plus a warning",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1645,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:44.316Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-c01d604c7649374af898",
+              "file": "backend-e2e.spec.js",
+              "line": 720,
+              "column": 3
+            },
+            {
+              "title": "clipboard-style image input deduplicates and exports self-contained HTML, paginated PDF and PNG",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3090,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": ""
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:45.975Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-194e9928d640835f2b5e",
+              "file": "backend-e2e.spec.js",
+              "line": 781,
+              "column": 3
+            },
+            {
+              "title": "real Pandoc detection, DOCX export/import, formatting and missing-tool error",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 598,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:49.077Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-2bb9182d14dd0789248c",
+              "file": "backend-e2e.spec.js",
+              "line": 874,
+              "column": 3
+            },
+            {
+              "title": "Pandoc output families contain the document and available readers reimport them; archive images survive import",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3075,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:49.686Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-41ceedba762f2b448506",
+              "file": "backend-e2e.spec.js",
+              "line": 915,
+              "column": 3
+            },
+            {
+              "title": "explicit URL download and native clipboard remain while retired service IPC is unavailable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 137,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:52.773Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-7b647d50688f6aa733af",
+              "file": "backend-e2e.spec.js",
+              "line": 1081,
+              "column": 3
+            },
+            {
+              "title": "legacy service settings are removed on startup and updates without touching local documents or assets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 817,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:52.922Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-af89c0faf8e4d2bca128",
+              "file": "backend-e2e.spec.js",
+              "line": 1165,
+              "column": 3
+            },
+            {
+              "title": "invalid JSON remains untouched when startup backup fails and a later explicit retry recovers it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 660,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:53.751Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-608a0618a9e92d07640b",
+              "file": "backend-e2e.spec.js",
+              "line": 1265,
+              "column": 3
+            },
+            {
+              "title": "failed invalid-settings backup cannot be bypassed by service migration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 733,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:54.422Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-065236ce284dc92f6c1f",
+              "file": "backend-e2e.spec.js",
+              "line": 1339,
+              "column": 3
+            },
+            {
+              "title": "include and exclude globs filter tree and global search consistently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 124,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:55.168Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-3ef4ddea66177c9f3a92",
+              "file": "backend-e2e.spec.js",
+              "line": 1441,
+              "column": 3
+            },
+            {
+              "title": "export sanitizes direct bridge HTML and preserves SVG/MathML without executable content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 311,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:55.303Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-ed9df995a607a1a75fc1",
+              "file": "backend-e2e.spec.js",
+              "line": 1461,
+              "column": 3
+            },
+            {
+              "title": "Save As preserves BOM and rebases local image/link spans through the native save flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 43,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:55.625Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-0792dfd9afbd189137b0",
+              "file": "backend-e2e.spec.js",
+              "line": 1522,
+              "column": 3
+            },
+            {
+              "title": "polling detects external atomic replacement and deletion without inotify",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1289,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:55.678Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-12844c73d84dba30f525",
+              "file": "backend-e2e.spec.js",
+              "line": 1561,
+              "column": 3
+            },
+            {
+              "title": "explicit encoding retry reuses the chosen file and legacy saves keep byte fidelity",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 132,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:56.978Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-49fee5ffcab73de013c1",
+              "file": "backend-e2e.spec.js",
+              "line": 1603,
+              "column": 3
+            },
+            {
+              "title": "opening an export calls the OS opener only for an authorized document path",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 19,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:57.121Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-721541c633845b8a3703",
+              "file": "backend-e2e.spec.js",
+              "line": 1647,
+              "column": 3
+            },
+            {
+              "title": "export eagerly loads an image below the initial viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 204,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:57.151Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-96401cd4d7b3f4b08b98",
+              "file": "backend-e2e.spec.js",
+              "line": 1682,
+              "column": 3
+            },
+            {
+              "title": "inactive file watchers are released and active folders notice external new files",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3945,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:53:57.365Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-1e416eb5ae7fff77b8e3",
+              "file": "backend-e2e.spec.js",
+              "line": 1701,
+              "column": 3
+            },
+            {
+              "title": "Pandoc embeds supplied diagram PNGs in DOCX while keeping Markdown source intact",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 145,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:01.321Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-0ca338b6c4aace9f4de0",
+              "file": "backend-e2e.spec.js",
+              "line": 1755,
+              "column": 3
+            },
+            {
+              "title": "custom CSS local font resources are embedded into exported HTML",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 87,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:01.476Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-3b071060437bc953a870",
+              "file": "backend-e2e.spec.js",
+              "line": 1818,
+              "column": 3
+            },
+            {
+              "title": "unstyled HTML contains one native MathML formula and retains diagram SVG",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 217,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:01.577Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-3ad7dac14db3ead18e8b",
+              "file": "backend-e2e.spec.js",
+              "line": 1838,
+              "column": 3
+            },
+            {
+              "title": "image resource transactions copy, rename, unlink and trash with exact source patches",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 361,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:01.804Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-34f64a4c444843d463fa",
+              "file": "backend-e2e.spec.js",
+              "line": 1885,
+              "column": 3
+            },
+            {
+              "title": "image resource downloads batch atomically and refuse failed fetch or stale document commit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 330,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:02.180Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-aa503164d6567b46dc1f",
+              "file": "backend-e2e.spec.js",
+              "line": 1978,
+              "column": 3
+            },
+            {
+              "title": "new appearance settings and file sort controls persist with type checks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 86,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:02.522Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-92a00c91ed8492d3e784",
+              "file": "backend-e2e.spec.js",
+              "line": 2056,
+              "column": 3
+            },
+            {
+              "title": "global search supports Unicode whole words and cancels an expensive worker",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 258,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:02.631Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-3344b4f5f16537222914",
+              "file": "backend-e2e.spec.js",
+              "line": 2133,
+              "column": 3
+            },
+            {
+              "title": "image insertion honors document image roots and escapes spaces, parentheses and Chinese paths",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 140,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:02.937Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-16124b099c7d2a5cdb13",
+              "file": "backend-e2e.spec.js",
+              "line": 2178,
+              "column": 3
+            },
+            {
+              "title": "bundled spelling works on a fresh profile with only local dictionary requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 14,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4432,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T13:54:03.123Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 14,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-ac6a000f92c09acbe224",
+              "file": "backend-e2e.spec.js",
+              "line": 2244,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "context-menu.spec.js",
+      "file": "context-menu.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "context Copy and Cut preserve source Markdown through default live and source Paste",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1649,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:08.040Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-dbf3ccf1dff48c1a58ce",
+          "file": "context-menu.spec.js",
+          "line": 138,
+          "column": 1
+        },
+        {
+          "title": "keyboard and context copying share native Markdown fidelity in both editor modes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1492,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:09.703Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-6a00e08956576409fcca",
+          "file": "context-menu.spec.js",
+          "line": 168,
+          "column": 1
+        },
+        {
+          "title": "Copy table and default live Paste retain escaped pipes and neighboring cells",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1098,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:11.208Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-486b34adb6b9aa1f3bdb",
+          "file": "context-menu.spec.js",
+          "line": 257,
+          "column": 1
+        },
+        {
+          "title": "external native HTML table pipes remain inside their original cells",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:12.318Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-f888e247c49c3bbc4ebe",
+          "file": "context-menu.spec.js",
+          "line": 282,
+          "column": 1
+        },
+        {
+          "title": "live table native Paste handles literal multiline text, Excel TSV HTML and source-mode raw text",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1224,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:13.214Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-17c9667505aaa76102a8",
+          "file": "context-menu.spec.js",
+          "line": 305,
+          "column": 1
+        },
+        {
+          "title": "context and native textarea edits repair escaping across a retained pipe boundary",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1042,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:14.451Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-6da6608b1912b12ff03e",
+          "file": "context-menu.spec.js",
+          "line": 363,
+          "column": 1
+        },
+        {
+          "title": "native Markdown clipboard representation rejects invalid sizes and mismatched source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 747,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:15.505Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-8179ce0df7c67cf6eab6",
+          "file": "context-menu.spec.js",
+          "line": 391,
+          "column": 1
+        },
+        {
+          "title": "live cell Cut and Delete repair retained pipe escaping while source mode stays raw",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1247,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:16.265Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-e8fd3e8167119348572b",
+          "file": "context-menu.spec.js",
+          "line": 422,
+          "column": 1
+        },
+        {
+          "title": "selected text gets the compact document menu and formatting preserves selection and one-step undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 865,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:17.524Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-a7f0a110854a5a201325",
+          "file": "context-menu.spec.js",
+          "line": 487,
+          "column": 1
+        },
+        {
+          "title": "blank insertion moves the caret to the right-clicked line and exposes every document insertion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 18059,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:18.402Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-d5d7fdc1db6fdadd1078",
+          "file": "context-menu.spec.js",
+          "line": 529,
+          "column": 1
+        },
+        {
+          "title": "table context has structural actions and only image and outside paragraphs in Insert",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1264,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:36.474Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-0037076f08815659ec20",
+          "file": "context-menu.spec.js",
+          "line": 579,
+          "column": 1
+        },
+        {
+          "title": "right-clicking a selected middle word in a live table textarea keeps precisely that source selection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 935,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:37.752Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-b5d951f809c89febfba2",
+          "file": "context-menu.spec.js",
+          "line": 617,
+          "column": 1
+        },
+        {
+          "title": "copy and paste formats use the native clipboard, retain the insertion range and undo once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1044,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:38.701Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-99e71cdf5ba18518549c",
+          "file": "context-menu.spec.js",
+          "line": 669,
+          "column": 1
+        },
+        {
+          "title": "YAML, reference links and table copy, prettify and delete are real undoable commands",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1551,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:39.757Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-267c9e873db7e663ebba",
+          "file": "context-menu.spec.js",
+          "line": 696,
+          "column": 1
+        },
+        {
+          "title": "keyboard submenus and Escape work at the viewport edge; read-only keeps copying but disables edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 909,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:41.322Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-b4d1db7cc9d577eab702",
+          "file": "context-menu.spec.js",
+          "line": 737,
+          "column": 1
+        },
+        {
+          "title": "Chinese and dark menus retain local labels and stay inside a short window",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1588,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:42.243Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-652d7b9359e92ee444e3",
+          "file": "context-menu.spec.js",
+          "line": 794,
+          "column": 1
+        },
+        {
+          "title": "pipe syntax inside a code fence keeps the ordinary document menu",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 880,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:43.845Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-edbd8b5f4843680790a7",
+          "file": "context-menu.spec.js",
+          "line": 829,
+          "column": 1
+        },
+        {
+          "title": "inserting a footnote preserves selected prose and keeps the definition in one undo step",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 926,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:44.738Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-9fe892ac8a77865b7256",
+          "file": "context-menu.spec.js",
+          "line": 851,
+          "column": 1
+        },
+        {
+          "title": "empty clipboard Paste on a new document finishes without Save As or image work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 963,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:45.676Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-d385007c759b489b3eec",
+          "file": "context-menu.spec.js",
+          "line": 869,
+          "column": 1
+        },
+        {
+          "title": "right-clicking the visible end of a long selection and Escape never jump to its distant head",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 832,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:46.652Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-d88100594c03115de497",
+          "file": "context-menu.spec.js",
+          "line": 906,
+          "column": 1
+        },
+        {
+          "title": "inline math wrapping and immediate replacement typing undo as separate edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:47.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-4755e601481d57ea9209",
+          "file": "context-menu.spec.js",
+          "line": 950,
+          "column": 1
+        },
+        {
+          "title": "forwarded spelling suggestions replace only the verified clicked source word and undo once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 810,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:48.478Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-35739a649c2bc8f1970f",
+          "file": "context-menu.spec.js",
+          "line": 969,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "design-system-desktop.spec.js",
+      "file": "design-system-desktop.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 981,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:49.325Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-c806fb570f88d337d021",
+          "file": "design-system-desktop.spec.js",
+          "line": 214,
+          "column": 1
+        },
+        {
+          "title": "Insert menu toggles, navigates with keys, restores focus on Escape, and applies a selected format in place",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 983,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:50.319Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-68817412789c7707bc9d",
+          "file": "design-system-desktop.spec.js",
+          "line": 255,
+          "column": 1
+        },
+        {
+          "title": "sidebar tabs use arrow, Home and End navigation with one selected keyboard stop",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 783,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:51.313Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-86c3f28391f862e5cf66",
+          "file": "design-system-desktop.spec.js",
+          "line": 300,
+          "column": 1
+        },
+        {
+          "title": "command palette advertises shortcuts, maintains combobox selection, executes the keyboard choice and honors customization",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:52.109Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-516265f41d210d48c23b",
+          "file": "design-system-desktop.spec.js",
+          "line": 329,
+          "column": 1
+        },
+        {
+          "title": "800px and 150% UI zoom retain reachable commands, status and preference actions without outer document scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4048,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:53.002Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-e318eab061e0ef78e071",
+          "file": "design-system-desktop.spec.js",
+          "line": 374,
+          "column": 1
+        },
+        {
+          "title": "light and dark chrome provide readable text contrast while preserving source and settings actions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1102,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:57.063Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2821d77b0a4acc395cb9-5f9df0b88e1b0239969f",
+          "file": "design-system-desktop.spec.js",
+          "line": 459,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "desktop.spec.js",
+      "file": "desktop.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "launches real offline desktop with rendered Markdown, math, diagram, and isolated Node",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 100,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:58.216Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-3a6f364a669cd8f55838",
+          "file": "desktop.spec.js",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "untouched save preserves bytes and mtime; local edit and undo preserve source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 102,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:59.088Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-4cedeaaed80269306d38",
+          "file": "desktop.spec.js",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "continuous Chinese editing, cross-block selection, undo and source switch retain state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 139,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:59.200Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-1c1fc446019e338d18ec",
+          "file": "desktop.spec.js",
+          "line": 99,
+          "column": 1
+        },
+        {
+          "title": "formatting toolbar, table edits, snippets, regex find, and persistent preferences work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 477,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:59.350Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-1a804fa697b30ce28a69",
+          "file": "desktop.spec.js",
+          "line": 131,
+          "column": 1
+        },
+        {
+          "title": "visual table grid edits, pastes TSV, reorders cells, and cancels without changing source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 170,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:54:59.839Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-187de20b584ef8732588",
+          "file": "desktop.spec.js",
+          "line": 171,
+          "column": 1
+        },
+        {
+          "title": "HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 87,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:00.021Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-ea031152a4d4ab798fbc",
+          "file": "desktop.spec.js",
+          "line": 215,
+          "column": 1
+        },
+        {
+          "title": "read-only, math copy, theme import, sidebar persistence, and export presets have real effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:00.120Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-71fa50c6c1edc0ce6a95",
+          "file": "desktop.spec.js",
+          "line": 251,
+          "column": 1
+        },
+        {
+          "title": "external edit conflict keeps unsaved text and disk contents",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1027,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:00.587Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-f2c340402ba0880af2bc",
+          "file": "desktop.spec.js",
+          "line": 325,
+          "column": 1
+        },
+        {
+          "title": "real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated math and Mermaid",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2710,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:01.625Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-e135ff366b415a0e8fde",
+          "file": "desktop.spec.js",
+          "line": 355,
+          "column": 1
+        },
+        {
+          "title": "Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:04.345Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-2c55385f15778534c050",
+          "file": "desktop.spec.js",
+          "line": 413,
+          "column": 1
+        },
+        {
+          "title": "complete offline acceptance sample renders native legacy diagrams and advanced math in the desktop CSP",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 719,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:04.843Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-bcb8bf085887ccbd98b5",
+          "file": "desktop.spec.js",
+          "line": 448,
+          "column": 1
+        },
+        {
+          "title": "one-megabyte document editing and switching produce measured performance evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 319,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Document performance: {\n  characters: \u001b[33m564000\u001b[39m,\n  utf8Bytes: \u001b[33m1188000\u001b[39m,\n  openMs: \u001b[33m184.80000000074506\u001b[39m,\n  editMs: \u001b[33m25.199999999254942\u001b[39m,\n  switchMs: \u001b[33m79.30000000074506\u001b[39m\n}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:05.576Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-14a3ad3c0cbbfbe8ea67",
+          "file": "desktop.spec.js",
+          "line": 484,
+          "column": 1
+        },
+        {
+          "title": "Save As rebases relative resources and keeps live content synchronized with the new file",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 86,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:05.905Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-de25b5b3e582d1ec8403",
+          "file": "desktop.spec.js",
+          "line": 521,
+          "column": 1
+        },
+        {
+          "title": "process termination recovers the unsaved draft on restart without modifying the source file",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2210,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:06.002Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92d768488867b588a7cc-7e10a5afc24d4c5af609",
+          "file": "desktop.spec.js",
+          "line": 547,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "enhancements.spec.js",
+      "file": "enhancements.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "file tree supports roving keyboard navigation, collapse, parent, filename search and rename",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 246,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:08.328Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-215e591827353ff99414",
+          "file": "enhancements.spec.js",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "strict parsing, CJK emphasis, code defaults, outline numbering and saved CSS themes apply and persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 593,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:09.300Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-43b30f6a66871f9fb679",
+          "file": "enhancements.spec.js",
+          "line": 104,
+          "column": 1
+        },
+        {
+          "title": "resource manager copies all Markdown, reference and HTML image occurrences without altering fenced examples or mixed EOL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 183,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:09.903Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-7c766f2f6c8a0aecd00b",
+          "file": "enhancements.spec.js",
+          "line": 161,
+          "column": 1
+        },
+        {
+          "title": "local-only preferences and commands omit cloud services while URL images render and preserve their URLs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 329,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:10.097Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-c3a6c10e6c3491d7eece",
+          "file": "enhancements.spec.js",
+          "line": 181,
+          "column": 1
+        },
+        {
+          "title": "real clipboard image paste saves only a local asset and never sends file contents to a service",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 179,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:10.437Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-11876147bd6b439d4ec4",
+          "file": "enhancements.spec.js",
+          "line": 227,
+          "column": 1
+        },
+        {
+          "title": "production desktop exports all 25 Mermaid types offline including ZenUML and Chinese Sankey",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3904,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:10.626Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c5cf86bb1878733414b1-b5db5105f04b360bca89",
+          "file": "enhancements.spec.js",
+          "line": 264,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "native-context.spec.js",
+      "file": "native-context.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "custom editor context menu does not open a second native menu and outside inputs retain native editing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:14.725Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05b193a8a87d0b891390-ffe56e1a5de0e12d274a",
+          "file": "native-context.spec.js",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "source-mode context hit testing reparses edited offsets and excludes fenced table examples",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 726,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:15.689Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05b193a8a87d0b891390-97577e45110d21a7620a",
+          "file": "native-context.spec.js",
+          "line": 69,
+          "column": 1
+        },
+        {
+          "title": "native context dispatch uses the custom editor menu at 150 percent zoom",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:16.428Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05b193a8a87d0b891390-b7e6f2afc2c44b10c3c7",
+          "file": "native-context.spec.js",
+          "line": 104,
+          "column": 1
+        },
+        {
+          "title": "native dictionary additions reject empty, multiword and oversized input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 718,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:17.254Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05b193a8a87d0b891390-c6d008c420e89b9dc0c2",
+          "file": "native-context.spec.js",
+          "line": 141,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ux.spec.js",
+      "file": "ux.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "startup folder scanning keeps the welcome editor locked until the initial document is loaded",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 844,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:18.001Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-1cbb32fa70ec1bc57a45",
+          "file": "ux.spec.js",
+          "line": 80,
+          "column": 1
+        },
+        {
+          "title": "late clipboard images cannot edit an approved window and commit rejects any later unexpected edit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1666,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:18.855Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-f2d5ddcfac31d003baa4",
+          "file": "ux.spec.js",
+          "line": 142,
+          "column": 1
+        },
+        {
+          "title": "native close offers exactly Save / Don't Save / Cancel, saves current file, and Enter activates Save",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 766,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:20.534Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-def8b0aed611407e975a",
+          "file": "ux.spec.js",
+          "line": 230,
+          "column": 1
+        },
+        {
+          "title": "untitled Save As cancellation and write errors keep text editable; a successful retry saves before closing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1093,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:21.312Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-0b72cd9f6eab38c1509d",
+          "file": "ux.spec.js",
+          "line": 244,
+          "column": 1
+        },
+        {
+          "title": "Don't Save discards document recovery drafts, preserves disk bytes, and does not resurrect changes on restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1522,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:22.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-2176fb07fc131905f094",
+          "file": "ux.spec.js",
+          "line": 280,
+          "column": 1
+        },
+        {
+          "title": "Cancel, Escape and repeated close requests preserve edits, restore typing, and clean windows close without a prompt",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:23.950Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-0a932cfc0ff62a179fca",
+          "file": "ux.spec.js",
+          "line": 310,
+          "column": 1
+        },
+        {
+          "title": "multi-window Quit is atomic on Cancel; Save and Don't Save commit only after every window agrees",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1449,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:24.912Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-6cd61cb183f12c9aea29",
+          "file": "ux.spec.js",
+          "line": 335,
+          "column": 1
+        },
+        {
+          "title": "closing during an in-flight save preserves later edits until the user decides what to discard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1596,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:26.373Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-1ff8500ecfea45f883f7",
+          "file": "ux.spec.js",
+          "line": 374,
+          "column": 1
+        },
+        {
+          "title": "fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1052,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:27.980Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-6224c52e619109ef1d5a",
+          "file": "ux.spec.js",
+          "line": 403,
+          "column": 1
+        },
+        {
+          "title": "typing during an asynchronous external reload is preserved and becomes a visible conflict",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1825,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:29.043Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-567e1b21584131e9cf5b",
+          "file": "ux.spec.js",
+          "line": 455,
+          "column": 1
+        },
+        {
+          "title": "canceling Open never discards a draft; pending navigation locks editing and unlocks after loading",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:30.880Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-6f7873bd1cf4fe924dd8",
+          "file": "ux.spec.js",
+          "line": 485,
+          "column": 1
+        },
+        {
+          "title": "desktop math edits stay inline, render in the sandbox, and survive Save and reopen with CRLF intact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1022,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:32.194Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-bfa299b4d6aa51dab5b4",
+          "file": "ux.spec.js",
+          "line": 535,
+          "column": 1
+        },
+        {
+          "title": "native File Quit and Ctrl+W use the same cancelable save decision",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 890,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:33.229Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-d4f0a2a21fb16eb38b9e",
+          "file": "ux.spec.js",
+          "line": 619,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "windows-regressions.spec.js",
+      "file": "windows-regressions.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "undoing a renamed file prompts before moving an unsaved document and Cancel preserves it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1092,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:34.150Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-dc230aef2548f4cceeab",
+          "file": "windows-regressions.spec.js",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "undoing a folder rename saves the active descendant and reopens its restored path",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1103,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:35.254Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-168e8b091b7b6dc2b72d",
+          "file": "windows-regressions.spec.js",
+          "line": 90,
+          "column": 1
+        },
+        {
+          "title": "shortcut validation rejects inherited object properties without changing preferences",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 757,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:36.368Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-64817ba6649393f11f1c",
+          "file": "windows-regressions.spec.js",
+          "line": 115,
+          "column": 1
+        },
+        {
+          "title": "file URL images render and local links open percent-named files through authorized access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:37.136Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-ad1420d99f3226a5e41b",
+          "file": "windows-regressions.spec.js",
+          "line": 130,
+          "column": 1
+        },
+        {
+          "title": "case-only file rename preserves content and refuses a different existing destination",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1218,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:38.117Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-ff2a78d8488bf2f74a43",
+          "file": "windows-regressions.spec.js",
+          "line": 183,
+          "column": 3
+        },
+        {
+          "title": "case-only folder rename preserves content and refuses a different existing destination",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1061,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T13:55:39.345Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60b5ca207c61753049ba-a74bac24ab7a8a055591",
+          "file": "windows-regressions.spec.js",
+          "line": 183,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T13:53:37.833Z",
+    "duration": 122627.56,
+    "expected": 105,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

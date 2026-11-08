@@ -1,0 +1,16 @@
+{
+  "removedKeys": [
+    "uploadCommand",
+    "uploadArgs",
+    "uploadMode",
+    "uploadEndpoint",
+    "autoUpload",
+    "cloudSync",
+    "syncToken",
+    "searchURL"
+  ],
+  "startupVerified": true,
+  "updatesVerified": true,
+  "sourceBytesPreserved": true,
+  "assetBytesPreserved": true
+}

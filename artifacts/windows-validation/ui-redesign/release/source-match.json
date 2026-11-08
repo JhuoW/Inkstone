@@ -1,0 +1,26 @@
+{
+  "version": "0.4.0",
+  "results": [
+    {
+      "file": "release/win-unpacked/resources/app.asar",
+      "version": "0.4.0",
+      "matchedRuntimeFiles": 299,
+      "asarSHA256": "a1958b6837a27bf0e8c7b6bb05cdcb8e87c1650f643e4e87b6db305a2a0d0bf1",
+      "passed": true
+    },
+    {
+      "file": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-portable-final\\resources\\app.asar",
+      "version": "0.4.0",
+      "matchedRuntimeFiles": 299,
+      "asarSHA256": "a1958b6837a27bf0e8c7b6bb05cdcb8e87c1650f643e4e87b6db305a2a0d0bf1",
+      "passed": true
+    },
+    {
+      "file": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-installer-test\\Inkstone 安装测试\\resources\\app.asar",
+      "version": "0.4.0",
+      "matchedRuntimeFiles": 299,
+      "asarSHA256": "a1958b6837a27bf0e8c7b6bb05cdcb8e87c1650f643e4e87b6db305a2a0d0bf1",
+      "passed": true
+    }
+  ]
+}

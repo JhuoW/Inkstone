@@ -1,0 +1,11 @@
+{
+  "Phase": "installed",
+  "Passed": true,
+  "InstallPath": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-test\\Inkstone 安装测试",
+  "ExitCode": 0,
+  "ExistingDefaultsAndOtherEditorPreserved": true,
+  "AllFourOpenWithRegistrations": true,
+  "QuotedUnicodeInstallCommand": true,
+  "InstallerLocale": "en",
+  "NativeApplicationVerification": "Performed separately before uninstall."
+}

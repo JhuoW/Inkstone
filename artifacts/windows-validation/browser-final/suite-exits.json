@@ -1,0 +1,44 @@
+[
+  {
+    "Name": "editor",
+    "Script": "tests/editor-browser.mjs",
+    "StartedUtc": "2026-11-08T11:59:23.5401474Z",
+    "FinishedUtc": "2026-11-08T11:59:29.3345799Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "math",
+    "Script": "tests/math-editing-browser.mjs",
+    "StartedUtc": "2026-11-08T11:59:29.3493141Z",
+    "FinishedUtc": "2026-11-08T11:59:33.6681745Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "ui",
+    "Script": "tests/ui-polish-browser.mjs",
+    "StartedUtc": "2026-11-08T11:59:33.6712159Z",
+    "FinishedUtc": "2026-11-08T11:59:38.0238295Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "editor-design",
+    "Script": "tests/editor-design-browser.mjs",
+    "StartedUtc": "2026-11-08T11:59:38.0266203Z",
+    "FinishedUtc": "2026-11-08T11:59:40.8374033Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "branding",
+    "Script": "tests/branding-browser.mjs",
+    "StartedUtc": "2026-11-08T11:59:40.8397248Z",
+    "FinishedUtc": "2026-11-08T11:59:43.2196015Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "mermaid",
+    "Script": "scripts/verify-mermaid.mjs",
+    "StartedUtc": "2026-11-08T11:59:43.2220812Z",
+    "FinishedUtc": "2026-11-08T11:59:50.5562048Z",
+    "ExitCode": 0
+  }
+]

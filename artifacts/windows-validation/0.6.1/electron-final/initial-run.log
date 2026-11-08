@@ -1,0 +1,232 @@
+
+Running 113 tests using 1 worker
+
+(node:1552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x    1 tests\backend-e2e.spec.js:49:3 › desktop persistence, resource and export integration › native menus and file dialogs follow the persisted English or Chinese choice (11ms)
+  -    2 tests\backend-e2e.spec.js:180:3 › desktop persistence, resource and export integration › discarding one document's recoveries excludes other live windows and rejects late resurrection
+  -    3 tests\backend-e2e.spec.js:242:3 › desktop persistence, resource and export integration › unready renderer close waits for an explicit native choice and blocks unchecked new windows
+  -    4 tests\backend-e2e.spec.js:355:3 › desktop persistence, resource and export integration › startup and new-window files load once and retain edits made before preferences finish
+  -    5 tests\backend-e2e.spec.js:542:3 › desktop persistence, resource and export integration › isolated bridge rejects ungranted files and symlink escapes
+  -    6 tests\backend-e2e.spec.js:582:3 › desktop persistence, resource and export integration › native save preserves untouched bytes, detects external change, stores history
+  -    7 tests\backend-e2e.spec.js:606:3 › desktop persistence, resource and export integration › file operations, search and hidden filtering reach real filesystem
+  -    8 tests\backend-e2e.spec.js:656:3 › desktop persistence, resource and export integration › preferences, sessions and recovery roundtrip persist to disk
+  -    9 tests\backend-e2e.spec.js:700:3 › desktop persistence, resource and export integration › native menu shortcuts replace default accelerators and reject invalid bindings
+  -   10 tests\backend-e2e.spec.js:720:3 › desktop persistence, resource and export integration › invalid settings types preserve original bytes and boot with defaults plus a warning
+  -   11 tests\backend-e2e.spec.js:781:3 › desktop persistence, resource and export integration › clipboard-style image input deduplicates and exports self-contained HTML, paginated PDF and PNG
+  -   12 tests\backend-e2e.spec.js:874:3 › desktop persistence, resource and export integration › real Pandoc detection, DOCX export/import, formatting and missing-tool error
+  -   13 tests\backend-e2e.spec.js:915:3 › desktop persistence, resource and export integration › Pandoc output families contain the document and available readers reimport them; archive images survive import
+  -   14 tests\backend-e2e.spec.js:1081:3 › desktop persistence, resource and export integration › explicit URL download and native clipboard remain while retired service IPC is unavailable
+  -   15 tests\backend-e2e.spec.js:1165:3 › desktop persistence, resource and export integration › legacy service settings are removed on startup and updates without touching local documents or assets
+  -   16 tests\backend-e2e.spec.js:1265:3 › desktop persistence, resource and export integration › invalid JSON remains untouched when startup backup fails and a later explicit retry recovers it
+  -   17 tests\backend-e2e.spec.js:1339:3 › desktop persistence, resource and export integration › failed invalid-settings backup cannot be bypassed by service migration
+  -   18 tests\backend-e2e.spec.js:1441:3 › desktop persistence, resource and export integration › include and exclude globs filter tree and global search consistently
+  -   19 tests\backend-e2e.spec.js:1461:3 › desktop persistence, resource and export integration › export sanitizes direct bridge HTML and preserves SVG/MathML without executable content
+  -   20 tests\backend-e2e.spec.js:1522:3 › desktop persistence, resource and export integration › Save As preserves BOM and rebases local image/link spans through the native save flow
+  -   21 tests\backend-e2e.spec.js:1561:3 › desktop persistence, resource and export integration › polling detects external atomic replacement and deletion without inotify
+  -   22 tests\backend-e2e.spec.js:1603:3 › desktop persistence, resource and export integration › explicit encoding retry reuses the chosen file and legacy saves keep byte fidelity
+  -   23 tests\backend-e2e.spec.js:1647:3 › desktop persistence, resource and export integration › opening an export calls the OS opener only for an authorized document path
+  -   24 tests\backend-e2e.spec.js:1682:3 › desktop persistence, resource and export integration › export eagerly loads an image below the initial viewport
+  -   25 tests\backend-e2e.spec.js:1701:3 › desktop persistence, resource and export integration › inactive file watchers are released and active folders notice external new files
+  -   26 tests\backend-e2e.spec.js:1755:3 › desktop persistence, resource and export integration › Pandoc embeds supplied diagram PNGs in DOCX while keeping Markdown source intact
+  -   27 tests\backend-e2e.spec.js:1818:3 › desktop persistence, resource and export integration › custom CSS local font resources are embedded into exported HTML
+  -   28 tests\backend-e2e.spec.js:1838:3 › desktop persistence, resource and export integration › unstyled HTML contains one native MathML formula and retains diagram SVG
+  -   29 tests\backend-e2e.spec.js:1885:3 › desktop persistence, resource and export integration › image resource transactions copy, rename, unlink and trash with exact source patches
+  -   30 tests\backend-e2e.spec.js:1978:3 › desktop persistence, resource and export integration › image resource downloads batch atomically and refuse failed fetch or stale document commit
+  -   31 tests\backend-e2e.spec.js:2056:3 › desktop persistence, resource and export integration › new appearance settings and file sort controls persist with type checks
+  -   32 tests\backend-e2e.spec.js:2133:3 › desktop persistence, resource and export integration › global search supports Unicode whole words and cancels an expensive worker
+  -   33 tests\backend-e2e.spec.js:2178:3 › desktop persistence, resource and export integration › image insertion honors document image roots and escapes spaces, parentheses and Chinese paths
+  -   34 tests\backend-e2e.spec.js:2244:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests
+(node:40024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  35 tests\context-menu.spec.js:138:1 › context Copy and Cut preserve source Markdown through default live and source Paste (1.8s)
+  ok  36 tests\context-menu.spec.js:168:1 › keyboard and context copying share native Markdown fidelity in both editor modes (1.6s)
+  ok  37 tests\context-menu.spec.js:257:1 › Copy table and default live Paste retain escaped pipes and neighboring cells (1.2s)
+  ok  38 tests\context-menu.spec.js:282:1 › external native HTML table pipes remain inside their original cells (1.1s)
+  ok  39 tests\context-menu.spec.js:305:1 › live table native Paste handles literal multiline text, Excel TSV HTML and source-mode raw text (1.6s)
+  ok  40 tests\context-menu.spec.js:363:1 › context and native textarea edits repair escaping across a retained pipe boundary (1.2s)
+  ok  41 tests\context-menu.spec.js:391:1 › native Markdown clipboard representation rejects invalid sizes and mismatched source (760ms)
+  ok  42 tests\context-menu.spec.js:422:1 › live cell Cut and Delete repair retained pipe escaping while source mode stays raw (1.3s)
+  ok  43 tests\context-menu.spec.js:487:1 › selected text gets the compact document menu and formatting preserves selection and one-step undo (877ms)
+  ok  44 tests\context-menu.spec.js:529:1 › blank insertion moves the caret to the right-clicked line and exposes every document insertion (1.1s)
+  ok  45 tests\context-menu.spec.js:579:1 › table context has structural actions and only image and outside paragraphs in Insert (1.3s)
+  ok  46 tests\context-menu.spec.js:617:1 › right-clicking a selected middle word in a live table textarea keeps precisely that source selection (978ms)
+  ok  47 tests\context-menu.spec.js:669:1 › copy and paste formats use the native clipboard, retain the insertion range and undo once (1.3s)
+  ok  48 tests\context-menu.spec.js:696:1 › YAML, reference links and table copy, prettify and delete are real undoable commands (1.7s)
+  x   49 tests\context-menu.spec.js:737:1 › keyboard submenus and Escape work at the viewport edge; read-only keeps copying but disables edits (869ms)
+(node:30620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  50 tests\context-menu.spec.js:794:1 › Chinese and dark menus retain local labels and stay inside a short window (1.5s)
+  ok  51 tests\context-menu.spec.js:829:1 › pipe syntax inside a code fence keeps the ordinary document menu (920ms)
+  ok  52 tests\context-menu.spec.js:851:1 › inserting a footnote preserves selected prose and keeps the definition in one undo step (1.1s)
+  ok  53 tests\context-menu.spec.js:869:1 › empty clipboard Paste on a new document finishes without Save As or image work (1.1s)
+  ok  54 tests\context-menu.spec.js:906:1 › right-clicking the visible end of a long selection and Escape never jump to its distant head (953ms)
+  ok  55 tests\context-menu.spec.js:950:1 › inline math wrapping and immediate replacement typing undo as separate edits (1.1s)
+  ok  56 tests\context-menu.spec.js:969:1 › forwarded spelling suggestions replace only the verified clicked source word and undo once (929ms)
+  ok  57 tests\design-system-desktop.spec.js:214:1 › all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo (1.1s)
+  ok  58 tests\design-system-desktop.spec.js:255:1 › Insert menu toggles, navigates with keys, restores focus on Escape, and applies a selected format in place (1.0s)
+  ok  59 tests\design-system-desktop.spec.js:300:1 › sidebar tabs use arrow, Home and End navigation with one selected keyboard stop (789ms)
+  ok  60 tests\design-system-desktop.spec.js:329:1 › command palette advertises shortcuts, maintains combobox selection, executes the keyboard choice and honors customization (977ms)
+  ok  61 tests\design-system-desktop.spec.js:374:1 › 800px and 150% UI zoom retain reachable commands, status and preference actions without outer document scrolling (4.2s)
+  ok  62 tests\design-system-desktop.spec.js:459:1 › light and dark chrome provide readable text contrast while preserving source and settings actions (1.2s)
+  ok  63 tests\desktop.spec.js:55:1 › launches real offline desktop with rendered Markdown, math, diagram, and isolated Node (157ms)
+  ok  64 tests\desktop.spec.js:75:1 › untouched save preserves bytes and mtime; local edit and undo preserve source (101ms)
+  ok  65 tests\desktop.spec.js:99:1 › continuous Chinese editing, cross-block selection, undo and source switch retain state (150ms)
+  ok  66 tests\desktop.spec.js:131:1 › formatting toolbar, table edits, snippets, regex find, and persistent preferences work (470ms)
+  ok  67 tests\desktop.spec.js:171:1 › visual table grid edits, pastes TSV, reorders cells, and cancels without changing source (188ms)
+  ok  68 tests\desktop.spec.js:215:1 › HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats (132ms)
+  ok  69 tests\desktop.spec.js:251:1 › read-only, math copy, theme import, sidebar persistence, and export presets have real effects (715ms)
+  ok  70 tests\desktop.spec.js:325:1 › external edit conflict keeps unsaved text and disk contents (452ms)
+  ok  71 tests\desktop.spec.js:355:1 › real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated math and Mermaid (5.0s)
+  ok  72 tests\desktop.spec.js:413:1 › Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back (487ms)
+  ok  73 tests\desktop.spec.js:448:1 › complete offline acceptance sample renders native legacy diagrams and advanced math in the desktop CSP (727ms)
+Document performance: {
+  characters: 564000,
+  utf8Bytes: 1188000,
+  openMs: 191.19999999925494,
+  editMs: 26,
+  switchMs: 79.19999999925494
+}
+  ok  74 tests\desktop.spec.js:484:1 › one-megabyte document editing and switching produce measured performance evidence (322ms)
+  ok  75 tests\desktop.spec.js:521:1 › Save As rebases relative resources and keeps live content synchronized with the new file (81ms)
+  ok  76 tests\desktop.spec.js:547:1 › process termination recovers the unsaved draft on restart without modifying the source file (2.3s)
+  ok  77 tests\enhancements.spec.js:68:1 › file tree supports roving keyboard navigation, collapse, parent, filename search and rename (242ms)
+  ok  78 tests\enhancements.spec.js:104:1 › strict parsing, CJK emphasis, code defaults, outline numbering and saved CSS themes apply and persist (631ms)
+  ok  79 tests\enhancements.spec.js:161:1 › resource manager copies all Markdown, reference and HTML image occurrences without altering fenced examples or mixed EOL (197ms)
+  ok  80 tests\enhancements.spec.js:181:1 › local-only preferences and commands omit cloud services while URL images render and preserve their URLs (353ms)
+  ok  81 tests\enhancements.spec.js:227:1 › real clipboard image paste saves only a local asset and never sends file contents to a service (167ms)
+  ok  82 tests\enhancements.spec.js:264:1 › production desktop exports all 25 Mermaid types offline including ZenUML and Chinese Sankey (4.4s)
+  ok  83 tests\native-context.spec.js:42:1 › custom editor context menu does not open a second native menu and outside inputs retain native editing (916ms)
+  ok  84 tests\native-context.spec.js:69:1 › source-mode context hit testing reparses edited offsets and excludes fenced table examples (717ms)
+  ok  85 tests\native-context.spec.js:104:1 › native context dispatch uses the custom editor menu at 150 percent zoom (806ms)
+  ok  86 tests\native-context.spec.js:141:1 › native dictionary additions reject empty, multiword and oversized input (708ms)
+  ok  87 tests\system-integration.spec.js:112:1 › About IPC reads the runtime version and the exact bundled AGPL license (704ms)
+  ok  88 tests\system-integration.spec.js:131:1 › native Tools About opens one renderer dialog and preserves selection and undo (826ms)
+  ok  89 tests\system-integration.spec.js:161:3 › About en/light shows local branding and offline license with trusted links (1.1s)
+  ok  90 tests\system-integration.spec.js:161:3 › About zh-CN/dark shows local branding and offline license with trusted links (1.1s)
+  ok  91 tests\system-integration.spec.js:213:1 › native Default Markdown opens Files preferences and reports actual read-only association data (4.4s)
+  ok  92 tests\system-integration.spec.js:243:1 › Default Apps button requests only fixed Settings URI without claiming an association change (5.2s)
+  ok  93 tests\system-integration.spec.js:263:1 › Files preferences distinguish query failure, unsupported platform, and unopened Settings (970ms)
+  ok  94 tests\system-integration.spec.js:297:1 › development launch skips installed-app offer and validates the persisted prompt boolean (732ms)
+  ok  95 tests\ux.spec.js:80:1 › startup folder scanning keeps the welcome editor locked until the initial document is loaded (867ms)
+  ok  96 tests\ux.spec.js:142:1 › late clipboard images cannot edit an approved window and commit rejects any later unexpected edit (1.6s)
+  ok  97 tests\ux.spec.js:230:1 › native close offers exactly Save / Don't Save / Cancel, saves current file, and Enter activates Save (778ms)
+  ok  98 tests\ux.spec.js:244:1 › untitled Save As cancellation and write errors keep text editable; a successful retry saves before closing (1.1s)
+  ok  99 tests\ux.spec.js:280:1 › Don't Save discards document recovery drafts, preserves disk bytes, and does not resurrect changes on restart (1.6s)
+  ok 100 tests\ux.spec.js:310:1 › Cancel, Escape and repeated close requests preserve edits, restore typing, and clean windows close without a prompt (960ms)
+  ok 101 tests\ux.spec.js:335:1 › multi-window Quit is atomic on Cancel; Save and Don't Save commit only after every window agrees (1.5s)
+  ok 102 tests\ux.spec.js:374:1 › closing during an in-flight save preserves later edits until the user decides what to discard (1.1s)
+  x  103 tests\ux.spec.js:403:1 › fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo (5.8s)
+(node:45912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 104 tests\ux.spec.js:455:1 › typing during an asynchronous external reload is preserved and becomes a visible conflict (1.9s)
+  ok 105 tests\ux.spec.js:485:1 › canceling Open never discards a draft; pending navigation locks editing and unlocks after loading (1.3s)
+  ok 106 tests\ux.spec.js:535:1 › desktop math edits stay inline, render in the sandbox, and survive Save and reopen with CRLF intact (1.2s)
+  ok 107 tests\ux.spec.js:619:1 › native File Quit and Ctrl+W use the same cancelable save decision (891ms)
+  ok 108 tests\windows-regressions.spec.js:68:1 › undoing a renamed file prompts before moving an unsaved document and Cancel preserves it (1.1s)
+  ok 109 tests\windows-regressions.spec.js:90:1 › undoing a folder rename saves the active descendant and reopens its restored path (1.2s)
+  ok 110 tests\windows-regressions.spec.js:115:1 › shortcut validation rejects inherited object properties without changing preferences (1.3s)
+  ok 111 tests\windows-regressions.spec.js:130:1 › file URL images render and local links open percent-named files through authorized access (1.5s)
+  ok 112 tests\windows-regressions.spec.js:183:3 › case-only file rename preserves content and refuses a different existing destination (1.8s)
+  ok 113 tests\windows-regressions.spec.js:183:3 › case-only folder rename preserves content and refuses a different existing destination (2.1s)
+
+
+  1) tests\backend-e2e.spec.js:49:3 › desktop persistence, resource and export integration › native menus and file dialogs follow the persisted English or Chinese choice 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "en"
+    Received: "zh-CN"
+
+      49 |   test("native menus and file dialogs follow the persisted English or Chinese choice", async () => {
+      50 |     const initial = await invoke("bootstrap");
+    > 51 |     expect(initial.settings.locale).toBe("en");
+         |                                     ^
+      52 |     expect(initial.languageConfigured).toBe(false);
+      53 |     const evidence = [];
+      54 |     for (const locale of ["en", "zh-CN"]) {
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\backend-e2e.spec.js:51:37
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-ae7e1-d-English-or-Chinese-choice\error-context.md
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-ae7e1-d-English-or-Chinese-choice\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-ae7e1-d-English-or-Chinese-choice\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-ae7e1-d-English-or-Chinese-choice\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-ae7e1-d-English-or-Chinese-choice\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\context-menu.spec.js:737:1 › keyboard submenus and Escape work at the viewport edge; read-only keeps copying but disables edits 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 7
+    Received:    0
+
+      761 |     );
+      762 |   for (const box of geometry) {
+    > 763 |     expect(box.left).toBeGreaterThanOrEqual(7);
+          |                      ^
+      764 |     expect(box.top).toBeGreaterThanOrEqual(7);
+      765 |     expect(box.right).toBeLessThanOrEqual(box.width - 7);
+      766 |     expect(box.bottom).toBeLessThanOrEqual(box.height - 7);
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\context-menu.spec.js:763:22
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\context-menu-keyboard-subm-26315--copying-but-disables-edits\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\context-menu-keyboard-subm-26315--copying-but-disables-edits\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.1\test-results\context-menu-keyboard-subm-26315--copying-but-disables-edits\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\ux.spec.js:403:1 › fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('html')
+    Expected: "en"
+    Received: "zh-CN"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('html') with timeout 5000ms
+      - waiting for locator('html')
+        13 × locator resolved to <html lang="zh-CN" data-theme="light">…</html>
+           - unexpected value "zh-CN"
+
+
+      403 | test("fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo", async () => {
+      404 |   await launch({ named: false, preferences: null });
+    > 405 |   await expect(page.locator("html")).toHaveAttribute("lang", "en");
+          |                                      ^
+      406 |   await expect(page.locator("#welcome-language")).toHaveValue("en");
+      407 |   expect(await page.evaluate(() => __inkstone.editor.getText())).toContain(
+      408 |     "A place for your thoughts",
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\ux.spec.js:405:38
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\ux-fresh-profiles-default--111b8-ing-text-selection-and-undo\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\ux-fresh-profiles-default--111b8-ing-text-selection-and-undo\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.1\test-results\ux-fresh-profiles-default--111b8-ing-text-selection-and-undo\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\backend-e2e.spec.js:49:3 › desktop persistence, resource and export integration › native menus and file dialogs follow the persisted English or Chinese choice 
+    tests\context-menu.spec.js:737:1 › keyboard submenus and Escape work at the viewport edge; read-only keeps copying but disables edits 
+    tests\ux.spec.js:403:1 › fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo 
+  33 did not run
+  77 passed (1.8m)

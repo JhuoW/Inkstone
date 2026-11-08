@@ -1,0 +1,8 @@
+  • electron-builder  version=26.18.0 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=45.2.3 arch=x64 buildFromSource=false workspaceRoot=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=45.2.3 appOutDir=release\win-unpacked
+  • downloaded      label=electron progress=100%
+  ⨯ EBUSY: resource busy or locked, unlink 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\win-unpacked\resources\app.asar'  failedTask=build stackTrace=Error: EBUSY: resource busy or locked, unlink 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\win-unpacked\resources\app.asar'

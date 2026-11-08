@@ -1,0 +1,19 @@
+{
+  "Date": "2026-11-08",
+  "Platform": "Windows 11 x64",
+  "InputMethod": "Microsoft Pinyin",
+  "NativeCandidateWindowObserved": true,
+  "CompositionText": "ni",
+  "CommittedChinese": "你",
+  "ModeSwitchDuringCompositionPreservedInput": true,
+  "SourceSwitchAfterCommit": true,
+  "NativeUndoRedo": true,
+  "SavedChinesePreservesBOMAndCRLF": true,
+  "CloseWhileComposingPrompted": true,
+  "CancelCloseRetainedUncommittedText": true,
+  "UndoAfterCancel": true,
+  "SavedTextEndsWithExpectedChinese": true,
+  "Limitations": [
+    "Manual native IME sample, not exhaustive coverage of all IMEs or Windows versions."
+  ]
+}

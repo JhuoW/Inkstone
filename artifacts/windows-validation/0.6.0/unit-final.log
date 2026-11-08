@@ -1,0 +1,740 @@
+
+> inkstone-editor@0.6.0 test
+> node scripts/test-unit.mjs
+
+TAP version 13
+# Subtest: external HTML table preserves literal heading and cell pipes without inventing columns
+ok 1 - external HTML table preserves literal heading and cell pipes without inventing columns
+  ---
+  duration_ms: 32.4015
+  type: 'test'
+  ...
+# Subtest: table text retains every backslash immediately before a literal pipe
+ok 2 - table text retains every backslash immediately before a literal pipe
+  ---
+  duration_ms: 20.834
+  type: 'test'
+  ...
+# Subtest: inline code table cells retain pipe characters, backslashes and backtick delimiters
+ok 3 - inline code table cells retain pipe characters, backslashes and backtick delimiters
+  ---
+  duration_ms: 17.6911
+  type: 'test'
+  ...
+# Subtest: table pipe preservation composes with strong, emphasis and link formatting
+ok 4 - table pipe preservation composes with strong, emphasis and link formatting
+  ---
+  duration_ms: 9.9172
+  type: 'test'
+  ...
+# Subtest: pipes around nested inline spans stay in the original table cell
+ok 5 - pipes around nested inline spans stay in the original table cell
+  ---
+  duration_ms: 3.3169
+  type: 'test'
+  ...
+# Subtest: escaping table pipes never rewrites literal pipes or backslashes in code outside the table
+ok 6 - escaping table pipes never rewrites literal pipes or backslashes in code outside the table
+  ---
+  duration_ms: 7.144
+  type: 'test'
+  ...
+# Subtest: quit cancellation retains every window including already approved clean windows
+ok 7 - quit cancellation retains every window including already approved clean windows
+  ---
+  duration_ms: 3.2191
+  type: 'test'
+  ...
+# Subtest: commit persistence failure preserves all windows and a later quit can succeed
+ok 8 - commit persistence failure preserves all windows and a later quit can succeed
+  ---
+  duration_ms: 0.7547
+  type: 'test'
+  ...
+# Subtest: early close waits for renderer readiness and repeated quit shares one transaction
+ok 9 - early close waits for renderer readiness and repeated quit shares one transaction
+  ---
+  duration_ms: 0.4715
+  type: 'test'
+  ...
+# Subtest: unready timeout requests a native decision and never discards without explicit approval
+ok 10 - unready timeout requests a native decision and never discards without explicit approval
+  ---
+  duration_ms: 58.5974
+  type: 'test'
+  ...
+# Subtest: normal save decisions have no readiness deadline after the renderer is ready
+ok 11 - normal save decisions have no readiness deadline after the renderer is ready
+  ---
+  duration_ms: 31.7964
+  type: 'test'
+  ...
+# Subtest: Sankey Unicode CSV maps repeated and quoted nodes without modifying source
+ok 12 - Sankey Unicode CSV maps repeated and quoted nodes without modifying source
+  ---
+  duration_ms: 1.1256
+  type: 'test'
+  ...
+# Subtest: ASCII, other diagrams and malformed CSV use original upstream validation
+ok 13 - ASCII, other diagrams and malformed CSV use original upstream validation
+  ---
+  duration_ms: 1.3348
+  type: 'test'
+  ...
+# Subtest: Sankey mapping preserves directives and numeric values; label markup stays literal
+ok 14 - Sankey mapping preserves directives and numeric values; label markup stays literal
+  ---
+  duration_ms: 0.1658
+  type: 'test'
+  ...
+# Subtest: document image configuration reads quoted Unicode strings without changing source
+ok 15 - document image configuration reads quoted Unicode strings without changing source
+  ---
+  duration_ms: 7.7448
+  type: 'test'
+  ...
+# Subtest: only allowlisted scalar string settings are accepted
+ok 16 - only allowlisted scalar string settings are accepted
+  ---
+  duration_ms: 2.951
+  type: 'test'
+  ...
+# Subtest: invalid, duplicate, unclosed and oversized metadata fails closed
+ok 17 - invalid, duplicate, unclosed and oversized metadata fails closed
+  ---
+  duration_ms: 0.6562
+  type: 'test'
+  ...
+# Subtest: unmodified source is identical including BOM, CRLF, YAML, unknown syntax and HTML
+ok 18 - unmodified source is identical including BOM, CRLF, YAML, unknown syntax and HTML
+  ---
+  duration_ms: 1.1107
+  type: 'test'
+  ...
+# Subtest: local editing preserves all unaffected original bytes and mixed line endings
+ok 19 - local editing preserves all unaffected original bytes and mixed line endings
+  ---
+  duration_ms: 0.3557
+  type: 'test'
+  ...
+# Subtest: undo restores exact mixed-EOL source after multiline replacement
+ok 20 - undo restores exact mixed-EOL source after multiline replacement
+  ---
+  duration_ms: 0.2999
+  type: 'test'
+  ...
+# Subtest: multiple simultaneous replacements use old source coordinates
+ok 21 - multiple simultaneous replacements use old source coordinates
+  ---
+  duration_ms: 0.2259
+  type: 'test'
+  ...
+# Subtest: Chinese and English statistics handle characters without treating Chinese as one word
+ok 22 - Chinese and English statistics handle characters without treating Chinese as one word
+  ---
+  duration_ms: 2.6756
+  type: 'test'
+  ...
+# Subtest: table cells preserve escaped pipes and inline code pipes
+ok 23 - table cells preserve escaped pipes and inline code pipes
+  ---
+  duration_ms: 1.1295
+  type: 'test'
+  ...
+# Subtest: table operation modifies only table source range
+ok 24 - table operation modifies only table source range
+  ---
+  duration_ms: 1.0731
+  type: 'test'
+  ...
+# Subtest: table alignment and row reordering are real source edits
+ok 25 - table alignment and row reordering are real source edits
+  ---
+  duration_ms: 0.6363
+  type: 'test'
+  ...
+# Subtest: TSV paste grows rows and columns and escapes raw pipes
+ok 26 - TSV paste grows rows and columns and escapes raw pipes
+  ---
+  duration_ms: 0.8476
+  type: 'test'
+  ...
+# Subtest: Tab skips table delimiter and appends final row
+ok 27 - Tab skips table delimiter and appends final row
+  ---
+  duration_ms: 1.7962
+  type: 'test'
+  ...
+# Subtest: table creation is bounded and valid
+ok 28 - table creation is bounded and valid
+  ---
+  duration_ms: 0.4881
+  type: 'test'
+  ...
+# Subtest: single-column tables support creation, navigation and column edits
+ok 29 - single-column tables support creation, navigation and column edits
+  ---
+  duration_ms: 0.3618
+  type: 'test'
+  ...
+# Subtest: table navigation follows exact cell spans with indentation and code fences
+ok 30 - table navigation follows exact cell spans with indentation and code fences
+  ---
+  duration_ms: 0.4236
+  type: 'test'
+  ...
+# Subtest: table row splitting treats an even backslash run before a pipe as a delimiter
+ok 31 - table row splitting treats an even backslash run before a pipe as a delimiter
+  ---
+  duration_ms: 0.1023
+  type: 'test'
+  ...
+# Subtest: TSV paste keeps pre-escaped pipes inside their target cells
+ok 32 - TSV paste keeps pre-escaped pipes inside their target cells
+  ---
+  duration_ms: 0.1389
+  type: 'test'
+  ...
+# Subtest: mixed LF/CRLF/CR metadata restores arbitrary inserted ranges without full-text snapshots
+ok 33 - mixed LF/CRLF/CR metadata restores arbitrary inserted ranges without full-text snapshots
+  ---
+  duration_ms: 0.145
+  type: 'test'
+  ...
+# Subtest: visual table source spans retain whitespace, escaped pipes and code spans
+ok 34 - visual table source spans retain whitespace, escaped pipes and code spans
+  ---
+  duration_ms: 0.1016
+  type: 'test'
+  ...
+# Subtest: linear formula glyphs choose exact source positions including whitespace
+ok 35 - linear formula glyphs choose exact source positions including whitespace
+  ---
+  duration_ms: 3.2588
+  type: 'test'
+  ...
+# Subtest: fraction numerator and denominator map unique symbols using two-dimensional geometry
+ok 36 - fraction numerator and denominator map unique symbols using two-dimensional geometry
+  ---
+  duration_ms: 0.5768
+  type: 'test'
+  ...
+# Subtest: known TeX command glyphs select command boundaries rather than fabricated glyph offsets
+ok 37 - known TeX command glyphs select command boundaries rather than fabricated glyph offsets
+  ---
+  duration_ms: 0.3391
+  type: 'test'
+  ...
+# Subtest: repeated fraction symbols map numerator and denominator groups instead of command characters
+ok 38 - repeated fraction symbols map numerator and denominator groups instead of command characters
+  ---
+  duration_ms: 0.4175
+  type: 'test'
+  ...
+# Subtest: nested fractions, roots and superscripts retain repeated symbol source positions
+ok 39 - nested fractions, roots and superscripts retain repeated symbol source positions
+  ---
+  duration_ms: 0.6169
+  type: 'test'
+  ...
+# Subtest: ambiguous or path-only math stays bounded and never splits surrogate pairs
+ok 40 - ambiguous or path-only math stays bounded and never splits surrogate pairs
+  ---
+  duration_ms: 0.4598
+  type: 'test'
+  ...
+# Subtest: inactive inline syntax is hidden without changing source ranges
+ok 41 - inactive inline syntax is hidden without changing source ranges
+  ---
+  duration_ms: 4.8444
+  type: 'test'
+  ...
+# Subtest: cursor or non-empty selection reveals each intersecting inline token
+ok 42 - cursor or non-empty selection reveals each intersecting inline token
+  ---
+  duration_ms: 1.0679
+  type: 'test'
+  ...
+# Subtest: heading marker remains available at its source location
+ok 43 - heading marker remains available at its source location
+  ---
+  duration_ms: 0.4555
+  type: 'test'
+  ...
+# Subtest: TeX emphasis-like symbols are protected from prose inline decorations
+ok 44 - TeX emphasis-like symbols are protected from prose inline decorations
+  ---
+  duration_ms: 0.3129
+  type: 'test'
+  ...
+# Subtest: Save As preserves both destinations of an image inside a link
+ok 45 - Save As preserves both destinations of an image inside a link
+  ---
+  duration_ms: 2.0728
+  type: 'test'
+  ...
+# Subtest: Save As leaves HTML comments and unrelated HTML attributes exact
+ok 46 - Save As leaves HTML comments and unrelated HTML attributes exact
+  ---
+  duration_ms: 0.6734
+  type: 'test'
+  ...
+# Subtest: Save As finds media attributes after quoted greater-than characters
+ok 47 - Save As finds media attributes after quoted greater-than characters
+  ---
+  duration_ms: 0.2138
+  type: 'test'
+  ...
+# Subtest: Save As does not rewrite incomplete Markdown links
+ok 48 - Save As does not rewrite incomplete Markdown links
+  ---
+  duration_ms: 0.144
+  type: 'test'
+  ...
+# Subtest: Save As keeps encoded punctuation safe in Markdown and single-quoted HTML
+ok 49 - Save As keeps encoded punctuation safe in Markdown and single-quoted HTML
+  ---
+  duration_ms: 0.2678
+  type: 'test'
+  ...
+# Subtest: Save As decodes destination entities before encoding paths and preserves HTML query escaping
+ok 50 - Save As decodes destination entities before encoding paths and preserves HTML query escaping
+  ---
+  duration_ms: 0.4898
+  type: 'test'
+  ...
+# Subtest: Save As uses file URLs for resources on another Windows drive
+ok 51 - Save As uses file URLs for resources on another Windows drive
+  ---
+  duration_ms: 0.2508
+  type: 'test'
+  ...
+# Subtest: strict and relaxed headings follow official examples without altering source or token lines
+ok 52 - strict and relaxed headings follow official examples without altering source or token lines
+  ---
+  duration_ms: 8.7963
+  type: 'test'
+  ...
+# Subtest: loose list accepts two-space second paragraphs while strict requires marker alignment
+ok 53 - loose list accepts two-space second paragraphs while strict requires marker alignment
+  ---
+  duration_ms: 0.8681
+  type: 'test'
+  ...
+# Subtest: loose long ordered marker nests two-space lists and keeps every source character
+ok 54 - loose long ordered marker nests two-space lists and keeps every source character
+  ---
+  duration_ms: 1.1142
+  type: 'test'
+  ...
+# Subtest: relaxed parsing leaves fenced and indented code, quotes, references and tasks intact
+ok 55 - relaxed parsing leaves fenced and indented code, quotes, references and tasks intact
+  ---
+  duration_ms: 2.0394
+  type: 'test'
+  ...
+# Subtest: independent editor/export soft-break policies preserve hard breaks and code
+ok 56 - independent editor/export soft-break policies preserve hard breaks and code
+  ---
+  duration_ms: 0.686
+  type: 'test'
+  ...
+# Subtest: opt-in CJK emphasis handles adjacent punctuation without changing English identifiers or code
+ok 57 - opt-in CJK emphasis handles adjacent punctuation without changing English identifiers or code
+  ---
+  duration_ms: 1.9393
+  type: 'test'
+  ...
+# Subtest: policies are isolated per parser and repeated configuration does not install duplicate rules
+ok 58 - policies are isolated per parser and repeated configuration does not install duplicate rules
+  ---
+  duration_ms: 0.484
+  type: 'test'
+  ...
+# Subtest: relaxed marker indentation retains tabs, empty items, and indented code content
+ok 59 - relaxed marker indentation retains tabs, empty items, and indented code content
+  ---
+  duration_ms: 0.5381
+  type: 'test'
+  ...
+# Subtest: formula source spans identify repeated formulas, headings and nested prose without matching code examples
+ok 60 - formula source spans identify repeated formulas, headings and nested prose without matching code examples
+  ---
+  duration_ms: 15.0558
+  type: 'test'
+  ...
+# Subtest: GFM and extra inline syntax render together
+ok 61 - GFM and extra inline syntax render together
+  ---
+  duration_ms: 29.8403
+  type: 'test'
+  ...
+# Subtest: TOC uses unique Chinese and duplicate heading anchors
+ok 62 - TOC uses unique Chinese and duplicate heading anchors
+  ---
+  duration_ms: 7.0041
+  type: 'test'
+  ...
+# Subtest: YAML, reference links, HTML media, alerts and footnotes render
+ok 63 - YAML, reference links, HTML media, alerts and footnotes render
+  ---
+  duration_ms: 12.5383
+  type: 'test'
+  ...
+# Subtest: math renders chemical equations, labels and equation references with error feedback
+ok 64 - math renders chemical equations, labels and equation references with error feedback
+  ---
+  duration_ms: 33.2455
+  type: 'test'
+  ...
+# Subtest: untrusted Markdown cannot install script handlers, embedded forms or javascript links
+ok 65 - untrusted Markdown cannot install script handlers, embedded forms or javascript links
+  ---
+  duration_ms: 7.7669
+  type: 'test'
+  ...
+# Subtest: relative paths preserve Unicode and parent traversal for backend authorization
+ok 66 - relative paths preserve Unicode and parent traversal for backend authorization
+  ---
+  duration_ms: 0.4073
+  type: 'test'
+  ...
+# Subtest: file URL assets retain Windows drives and UNC shares while excluding URL suffixes from the path
+ok 67 - file URL assets retain Windows drives and UNC shares while excluding URL suffixes from the path
+  ---
+  duration_ms: 0.4526
+  type: 'test'
+  ...
+# Subtest: file URL image roots decode drive and UNC folders without rebasing absolute assets
+ok 68 - file URL image roots decode drive and UNC folders without rebasing absolute assets
+  ---
+  duration_ms: 0.5781
+  type: 'test'
+  ...
+# Subtest: file URL Markdown images use authorized assets and only anchor hrefs retain file URLs
+ok 69 - file URL Markdown images use authorized assets and only anchor hrefs retain file URLs
+  ---
+  duration_ms: 7.3821
+  type: 'test'
+  ...
+# Subtest: block ranges preserve nested lists as a single editing region and retain raw source
+ok 70 - block ranges preserve nested lists as a single editing region and retain raw source
+  ---
+  duration_ms: 0.3115
+  type: 'test'
+  ...
+# Subtest: live block rendering shares reference links, footnotes, equation numbering and heading IDs
+ok 71 - live block rendering shares reference links, footnotes, equation numbering and heading IDs
+  ---
+  duration_ms: 15.4262
+  type: 'test'
+  ...
+# Subtest: math fences and backslash delimiters share display numbering and labels
+ok 72 - math fences and backslash delimiters share display numbering and labels
+  ---
+  duration_ms: 6.9058
+  type: 'test'
+  ...
+# Subtest: embedded frames always receive a restrictive sandbox after HTML parsing
+ok 73 - embedded frames always receive a restrictive sandbox after HTML parsing
+  ---
+  duration_ms: 1.5417
+  type: 'test'
+  ...
+# Subtest: offline MathJax fallback renders physics, bbox, AMS and chemistry with real glyph paths
+ok 74 - offline MathJax fallback renders physics, bbox, AMS and chemistry with real glyph paths
+  ---
+  duration_ms: 46.9789
+  type: 'test'
+  ...
+# Subtest: unknown TeX and runtime extension loading still report explicit errors
+ok 75 - unknown TeX and runtime extension loading still report explicit errors
+  ---
+  duration_ms: 11.0368
+  type: 'test'
+  ...
+# Subtest: Azure TOC alias and relative video subtitle tracks render
+ok 76 - Azure TOC alias and relative video subtitle tracks render
+  ---
+  duration_ms: 2.7422
+  type: 'test'
+  ...
+# Subtest: YAML image roots resolve per document in full and live block rendering
+ok 77 - YAML image roots resolve per document in full and live block rendering
+  ---
+  duration_ms: 5.3635
+  type: 'test'
+  ...
+# Subtest: explicit equation tags render once while labels retain the explicit reference number
+ok 78 - explicit equation tags render once while labels retain the explicit reference number
+  ---
+  duration_ms: 3.5565
+  type: 'test'
+  ...
+# Subtest: HTML media resolves single, double, unquoted and poster resource attributes after HTML parsing
+ok 79 - HTML media resolves single, double, unquoted and poster resource attributes after HTML parsing
+  ---
+  duration_ms: 3.4748
+  type: 'test'
+  ...
+# Subtest: native shortcut aliases normalize to CodeMirror and DOM key names
+ok 80 - native shortcut aliases normalize to CodeMirror and DOM key names
+  ---
+  duration_ms: 1.0002
+  type: 'test'
+  ...
+# Subtest: shortcut matching retains explicit modifiers and handles shifted plus
+ok 81 - shortcut matching retains explicit modifiers and handles shifted plus
+  ---
+  duration_ms: 0.1746
+  type: 'test'
+  ...
+# Subtest: unsupported shortcut names and duplicate modifiers are ignored safely
+ok 82 - unsupported shortcut names and duplicate modifiers are ignored safely
+  ---
+  duration_ms: 0.8542
+  type: 'test'
+  ...
+# Subtest: every intermediate mixed-EOL state survives undo and redo beyond the former full-snapshot budget
+ok 83 - every intermediate mixed-EOL state survives undo and redo beyond the former full-snapshot budget
+  ---
+  duration_ms: 223.2184
+  type: 'test'
+  ...
+# Subtest: grouped history restores the final inverse EOL map and can redo the entire group
+ok 84 - grouped history restores the final inverse EOL map and can redo the entire group
+  ---
+  duration_ms: 1.0453
+  type: 'test'
+  ...
+# Subtest: character-only edits share a compact immutable EOL map
+ok 85 - character-only edits share a compact immutable EOL map
+  ---
+  duration_ms: 121.2616
+  type: 'test'
+  ...
+# Subtest: multiline reordering with an identical EOL map still records an inverse restore
+ok 86 - multiline reordering with an identical EOL map still records an inverse restore
+  ---
+  duration_ms: 0.4216
+  type: 'test'
+  ...
+# Subtest: discarded document recovery cannot return from pending or late writes
+ok 87 - discarded document recovery cannot return from pending or late writes
+  ---
+  duration_ms: 52.2583
+  type: 'test'
+  ...
+# Subtest: ordinary recovery cleanup after saving still permits recovery of subsequent edits
+ok 88 - ordinary recovery cleanup after saving still permits recovery of subsequent edits
+  ---
+  duration_ms: 27.8702
+  type: 'test'
+  ...
+# Subtest: first language defaults to English and installer language never replaces saved preferences
+ok 89 - first language defaults to English and installer language never replaces saved preferences
+  ---
+  duration_ms: 11.4238
+  type: 'test'
+  ...
+# Subtest: invalid JSON with a failed backup blocks subsequent state writes and preserves the original bytes
+ok 90 - invalid JSON with a failed backup blocks subsequent state writes and preserves the original bytes
+  ---
+  duration_ms: 24.3457
+  type: 'test'
+  ...
+# Subtest: untouched UTF-8 BOM and CRLF document is byte exact, no mtime update
+ok 91 - untouched UTF-8 BOM and CRLF document is byte exact, no mtime update
+  ---
+  duration_ms: 16.8835
+  type: 'test'
+  ...
+# Subtest: local edit preserves BOM, mixed line endings and unrelated content
+ok 92 - local edit preserves BOM, mixed line endings and unrelated content
+  ---
+  duration_ms: 27.6777
+  type: 'test'
+  ...
+# Subtest: external changes and deleted file cannot be silently overwritten
+ok 93 - external changes and deleted file cannot be silently overwritten
+  ---
+  duration_ms: 8.4189
+  type: 'test'
+  ...
+# Subtest: parallel saves with same revision serialize and detect conflict
+ok 94 - parallel saves with same revision serialize and detect conflict
+  ---
+  duration_ms: 27.2356
+  type: 'test'
+  ...
+# Subtest: history restores content without touching live document
+ok 95 - history restores content without touching live document
+  ---
+  duration_ms: 26.0869
+  type: 'test'
+  ...
+# Subtest: atomic write failure leaves original and no temporary file
+ok 96 - atomic write failure leaves original and no temporary file
+  ---
+  duration_ms: 8.1268
+  type: 'test'
+  ...
+# Subtest: atomic writes close directory handles when Windows refuses directory fsync
+ok 97 - atomic writes close directory handles when Windows refuses directory fsync
+  ---
+  duration_ms: 13.1602
+  type: 'test'
+  ...
+# Subtest: recovery drafts survive restart and can be explicitly dismissed
+ok 98 - recovery drafts survive restart and can be explicitly dismissed
+  ---
+  duration_ms: 14.2693
+  type: 'test'
+  ...
+# Subtest: unsafe encoding and missing revisions are rejected
+ok 99 - unsafe encoding and missing revisions are rejected
+  ---
+  duration_ms: 3.3524
+  type: 'test'
+  ...
+# Subtest: line endings in an inserted block follow the source convention
+ok 100 - line endings in an inserted block follow the source convention
+  ---
+  duration_ms: 0.1357
+  type: 'test'
+  ...
+# Subtest: concurrent preference writes retain the most recently submitted state
+ok 101 - concurrent preference writes retain the most recently submitted state
+  ---
+  duration_ms: 120.345
+  type: 'test'
+  ...
+# Subtest: discard queued after a recovery write cannot resurrect the draft
+ok 102 - discard queued after a recovery write cannot resurrect the draft
+  ---
+  duration_ms: 12.4243
+  type: 'test'
+  ...
+# Subtest: Save As rebases only local link destination spans, preserving code and all surrounding source
+ok 103 - Save As rebases only local link destination spans, preserving code and all surrounding source
+  ---
+  duration_ms: 2.7867
+  type: 'test'
+  ...
+# Subtest: Save As with custom YAML root reports review requirement without guessing links
+ok 104 - Save As with custom YAML root reports review requirement without guessing links
+  ---
+  duration_ms: 0.1422
+  type: 'test'
+  ...
+# Subtest: utf16le explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 105 - utf16le explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 30.4044
+  type: 'test'
+  ...
+# Subtest: utf16be explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 106 - utf16be explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 35.5149
+  type: 'test'
+  ...
+# Subtest: gb18030 explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 107 - gb18030 explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 40.9335
+  type: 'test'
+  ...
+# Subtest: windows1252 explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 108 - windows1252 explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 31.329
+  type: 'test'
+  ...
+# Subtest: shiftjis explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 109 - shiftjis explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 35.3102
+  type: 'test'
+  ...
+# Subtest: unrepresentable legacy characters refuse saving, while explicit UTF-8 conversion succeeds
+ok 110 - unrepresentable legacy characters refuse saving, while explicit UTF-8 conversion succeeds
+  ---
+  duration_ms: 22.5383
+  type: 'test'
+  ...
+# Subtest: image spans cover raw HTML and all reference forms while excluding YAML and code examples
+ok 111 - image spans cover raw HTML and all reference forms while excluding YAML and code examples
+  ---
+  duration_ms: 5.6198
+  type: 'test'
+  ...
+# Subtest: prepared image rename updates destination spans only and commits document before retiring original
+ok 112 - prepared image rename updates destination spans only and commits document before retiring original
+  ---
+  duration_ms: 43.0959
+  type: 'test'
+  ...
+# Subtest: resource batch refuses document/source/destination races and rolls back only newly published files
+ok 113 - resource batch refuses document/source/destination races and rolls back only newly published files
+  ---
+  duration_ms: 85.7262
+  type: 'test'
+  ...
+# Subtest: unlink removes image occurrences but preserves a shared link definition and original resource
+ok 114 - unlink removes image occurrences but preserves a shared link definition and original resource
+  ---
+  duration_ms: 26.1488
+  type: 'test'
+  ...
+# Subtest: retired preference migration removes service keys and bindings without mutating document-like values
+ok 115 - retired preference migration removes service keys and bindings without mutating document-like values
+  ---
+  duration_ms: 1.0529
+  type: 'test'
+  ...
+# Subtest: offline dictionary installation preserves cached dictionaries and user words without network access
+ok 116 - offline dictionary installation preserves cached dictionaries and user words without network access
+  ---
+  duration_ms: 28.1292
+  type: 'test'
+  ...
+# Subtest: moving a nested block retains its exact internal source and caret offset
+ok 117 - moving a nested block retains its exact internal source and caret offset
+  ---
+  duration_ms: 1.9855
+  type: 'test'
+  ...
+# Subtest: block deletion preserves neighboring blocks without joining their text
+ok 118 - block deletion preserves neighboring blocks without joining their text
+  ---
+  duration_ms: 0.1984
+  type: 'test'
+  ...
+# Subtest: word and sentence deletion stay inside the current block
+ok 119 - word and sentence deletion stay inside the current block
+  ---
+  duration_ms: 12.1194
+  type: 'test'
+  ...
+# Subtest: clear formatting preserves nested text and URLs unless the link style is selected
+ok 120 - clear formatting preserves nested text and URLs unless the link style is selected
+  ---
+  duration_ms: 4.086
+  type: 'test'
+  ...
+# Subtest: Pandoc integration discovers a native executable on PATH containing spaces and Unicode
+ok 121 - Pandoc integration discovers a native executable on PATH containing spaces and Unicode
+  ---
+  duration_ms: 12.0025
+  type: 'test'
+  ...
+1..121
+# tests 121
+# suites 0
+# pass 121
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1868.5472

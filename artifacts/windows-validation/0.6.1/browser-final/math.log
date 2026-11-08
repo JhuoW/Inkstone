@@ -1,0 +1,16 @@
+PASS Closing typed inline math renders once at the closing caret, with exact undo and source mode 210ms
+PASS Clicking internal linear glyphs positions source caret and source clicks remain native 86ms
+PASS Optional dollar pairing closes once and arrow boundaries reveal or render without changing text 63ms
+PASS Repeated formulas and fraction numerator or denominator retain their own click positions 49ms
+PASS Repeated fraction, nested fraction, root and scripted glyphs select their actual source symbols 300ms
+PASS Closed invalid inline math shows one error and can be corrected in place 74ms
+PASS Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo 22ms
+PASS Repeated formulas, backslash delimiters and active-paragraph widgets map independently 44ms
+PASS Double-click selects only formula content in the same editor 105ms
+PASS Block math and math fences reopen inside delimiters, update preview and recover errors 407ms
+PASS Arrow navigation enters inline math source; repeated mode switches keep exact text and selection 65ms
+PASS Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers 574ms
+PASS Composition near math survives preview updates and explicit finish without duplicate Chinese 118ms
+PASS Finishing an active IME composition commits prose and visual table cells before locking 200ms
+PASS Dragging from inline math across blocks copies source once and paste/undo preserves it 302ms
+PASS Settings no-op preserves widgets, selection and history; read-only math stays non-editable 293ms

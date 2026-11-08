@@ -1,0 +1,109 @@
+{
+  "version": "0.6.1",
+  "passed": true,
+  "generatedAt": "2026-11-08T15:08:09.137Z",
+  "scope": "Static package identity and extracted production dependency/core-load checks; no application UI, settings launch or OS installation",
+  "forms": [
+    {
+      "form": "unpacked",
+      "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+      "executableSHA256": "2e32991485dc29546178997544ff89e3cec36c5f0740bb579f7e14c793f3b40d",
+      "asar": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\resources\\app.asar",
+      "asarSHA256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "version": "0.6.1",
+      "license": "AGPL-3.0-only",
+      "exactBundledLicense": true,
+      "licenseBytes": 34020,
+      "exactThirdPartyNotices": true
+    },
+    {
+      "form": "portable",
+      "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\Inkstone.exe",
+      "executableSHA256": "2e32991485dc29546178997544ff89e3cec36c5f0740bb579f7e14c793f3b40d",
+      "asar": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\resources\\app.asar",
+      "asarSHA256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "version": "0.6.1",
+      "license": "AGPL-3.0-only",
+      "exactBundledLicense": true,
+      "licenseBytes": 34020,
+      "exactThirdPartyNotices": true
+    },
+    {
+      "form": "installer-payload",
+      "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+      "executableSHA256": "2e32991485dc29546178997544ff89e3cec36c5f0740bb579f7e14c793f3b40d",
+      "asar": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-payload-v2\\Inkstone 安装负载\\resources\\app.asar",
+      "asarSHA256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "version": "0.6.1",
+      "license": "AGPL-3.0-only",
+      "exactBundledLicense": true,
+      "licenseBytes": 34020,
+      "exactThirdPartyNotices": true
+    }
+  ],
+  "packages": [
+    {
+      "filename": "Inkstone-0.6.1-windows-x64.exe",
+      "path": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\Inkstone-0.6.1-windows-x64.exe",
+      "size": 115313897,
+      "sha256": "9980bd3c7f22baf235cbc2fdd3268b1bc1f5c26a2b365a36303b4d36a578827c"
+    },
+    {
+      "filename": "Inkstone-0.6.1-windows-x64.zip",
+      "path": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\Inkstone-0.6.1-windows-x64.zip",
+      "size": 159532512,
+      "sha256": "7ce7aa0e5a71fc35ce66f2da9adb5f55164f9b17cc6ec26bdba29314ed126cf3"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "argparse",
+      "version": "3.0.4",
+      "entry": "node_modules\\argparse\\lib\\argparse.js"
+    },
+    {
+      "name": "entities",
+      "version": "8.1.0",
+      "entry": "node_modules\\entities\\dist\\index.js"
+    },
+    {
+      "name": "iconv-lite",
+      "version": "0.7.3",
+      "entry": "node_modules\\iconv-lite\\lib\\index.js"
+    },
+    {
+      "name": "linkify-it",
+      "version": "6.1.0",
+      "entry": "node_modules\\linkify-it\\build\\index.cjs.js"
+    },
+    {
+      "name": "markdown-it",
+      "version": "15.0.3",
+      "entry": "node_modules\\markdown-it\\dist\\markdown-it.cjs.js"
+    },
+    {
+      "name": "mdurl",
+      "version": "2.1.0",
+      "entry": "node_modules\\mdurl\\build\\index.cjs.js"
+    },
+    {
+      "name": "punycode.js",
+      "version": "2.3.1",
+      "entry": "node_modules\\punycode.js\\punycode.js"
+    },
+    {
+      "name": "safer-buffer",
+      "version": "2.1.2",
+      "entry": "node_modules\\safer-buffer\\safer.js"
+    },
+    {
+      "name": "uc.micro",
+      "version": "3.0.0",
+      "entry": "node_modules\\uc.micro\\build\\index.cjs.js"
+    }
+  ],
+  "productionDependencyCount": 9,
+  "encodingCoreLoad": true,
+  "markdownCoreLoad": true,
+  "entitiesCoreLoad": true
+}

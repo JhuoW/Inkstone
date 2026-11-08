@@ -1,0 +1,237 @@
+[
+  {
+    "format": "docx",
+    "extension": "docx",
+    "reader": "docx",
+    "bytes": 10084,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "odt",
+    "extension": "odt",
+    "reader": "odt",
+    "bytes": 9543,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "rtf",
+    "extension": "rtf",
+    "reader": "rtf",
+    "bytes": 585,
+    "outputChinese": true,
+    "readbackChinese": null,
+    "inputReaderAvailable": false,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "epub",
+    "extension": "epub",
+    "reader": "epub",
+    "bytes": 4100,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": [
+      "[WARNING] This document format requires a nonempty <title> element.\r\n  Defaulting to 'source' as the title.\r\n  To specify a title, use 'title' in metadata or --metadata title=\"...\".\r\n"
+    ]
+  },
+  {
+    "format": "latex",
+    "extension": "tex",
+    "reader": "latex",
+    "bytes": 2082,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "mediawiki",
+    "extension": "mediawiki",
+    "reader": "mediawiki",
+    "bytes": 118,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "dokuwiki",
+    "extension": "dokuwiki",
+    "reader": "dokuwiki",
+    "bytes": 138,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "rst",
+    "extension": "rst",
+    "reader": "rst",
+    "bytes": 132,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "textile",
+    "extension": "textile",
+    "reader": "textile",
+    "bytes": 149,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "org",
+    "extension": "org",
+    "reader": "org",
+    "bytes": 223,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "opml",
+    "extension": "opml",
+    "reader": "opml",
+    "bytes": 383,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "pptx",
+    "extension": "pptx",
+    "reader": "pptx",
+    "bytes": 26096,
+    "outputChinese": true,
+    "readbackChinese": null,
+    "inputReaderAvailable": false,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "revealjs",
+    "extension": "html",
+    "reader": "html",
+    "bytes": 2149,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": [
+      "[WARNING] This document format requires a nonempty <title> element.\r\n  Defaulting to 'source' as the title.\r\n  To specify a title, use 'title' in metadata or --metadata title=\"...\".\r\n"
+    ]
+  },
+  {
+    "format": "beamer",
+    "extension": "tex",
+    "reader": "latex",
+    "bytes": 3116,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "asciidoc",
+    "extension": "asciidoc",
+    "reader": "asciidoc",
+    "bytes": 115,
+    "outputChinese": true,
+    "readbackChinese": null,
+    "inputReaderAvailable": false,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "json",
+    "extension": "json",
+    "reader": "json",
+    "bytes": 548,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": true,
+    "warnings": []
+  },
+  {
+    "format": "markdown",
+    "extension": "md",
+    "reader": "markdown",
+    "bytes": 117,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "gfm",
+    "extension": "md",
+    "reader": "gfm",
+    "bytes": 117,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "commonmark",
+    "extension": "md",
+    "reader": "commonmark",
+    "bytes": 117,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "markdown_strict",
+    "extension": "md",
+    "reader": "markdown_strict",
+    "bytes": 117,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": null,
+    "warnings": []
+  },
+  {
+    "format": "markdown_mmd",
+    "extension": "md",
+    "reader": "markdown_mmd",
+    "bytes": 117,
+    "outputChinese": true,
+    "readbackChinese": true,
+    "inputReaderAvailable": true,
+    "appImportChinese": null,
+    "warnings": []
+  }
+]

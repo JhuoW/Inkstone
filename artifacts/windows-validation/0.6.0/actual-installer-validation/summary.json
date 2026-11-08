@@ -1,0 +1,15 @@
+{
+  "version": "0.6.0",
+  "installerSHA256": "bf73b1c19a4d860f5860d233e2f876de3e9be6cd3dd264ebc4ec2b2420c681b2",
+  "freshSystemInstall": true,
+  "isolatedChineseSpacedPath": true,
+  "installExitCode": 0,
+  "uninstallExitCode": 0,
+  "protectedRegistryBeforeAfterEqual": true,
+  "normalizedRegistrySHA256Before": "26250b21bd2e8b16affbaa098ddc3561edf23b54ec78dc5b55d774d1a01c8dce",
+  "normalizedRegistrySHA256After": "26250b21bd2e8b16affbaa098ddc3561edf23b54ec78dc5b55d774d1a01c8dce",
+  "installedExecutableRemoved": true,
+  "ownProgIDAndUninstallEntryRemoved": true,
+  "permanentInstallationLeft": false,
+  "checkedUtc": "2026-11-08T14:03:16.1270118Z"
+}

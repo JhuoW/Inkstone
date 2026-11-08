@@ -1,0 +1,62 @@
+[
+  {
+    "Name": "editor",
+    "Script": "tests/editor-browser.mjs",
+    "Result": "editor-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 25,
+    "StartedUtc": "2026-11-08T13:50:55.3482770Z",
+    "FinishedUtc": "2026-11-08T13:51:01.0897835Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "math",
+    "Script": "tests/math-editing-browser.mjs",
+    "Result": "math-editing-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 16,
+    "StartedUtc": "2026-11-08T13:51:01.0995203Z",
+    "FinishedUtc": "2026-11-08T13:51:05.0833180Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "ui",
+    "Script": "tests/ui-polish-browser.mjs",
+    "Result": "ui-polish-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 12,
+    "StartedUtc": "2026-11-08T13:51:05.0861554Z",
+    "FinishedUtc": "2026-11-08T13:51:09.7491327Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "editor-design",
+    "Script": "tests/editor-design-browser.mjs",
+    "Result": "ui-redesign/editor/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 7,
+    "StartedUtc": "2026-11-08T13:51:09.7513726Z",
+    "FinishedUtc": "2026-11-08T13:51:12.4876711Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "branding",
+    "Script": "tests/branding-browser.mjs",
+    "Result": "branding-validation/browser-results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 6,
+    "StartedUtc": "2026-11-08T13:51:12.4903001Z",
+    "FinishedUtc": "2026-11-08T13:51:14.9560132Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "mermaid",
+    "Script": "scripts/verify-mermaid.mjs",
+    "Result": "mermaid-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 25,
+    "StartedUtc": "2026-11-08T13:51:14.9586778Z",
+    "FinishedUtc": "2026-11-08T13:51:22.7081487Z",
+    "ExitCode": 0
+  }
+]

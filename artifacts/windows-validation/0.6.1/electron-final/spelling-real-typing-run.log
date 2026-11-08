@@ -1,0 +1,11 @@
+
+Running 2 tests using 1 worker
+
+(node:39636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\backend-e2e.spec.js:2248:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests (2.6s)
+(node:42812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\backend-e2e.spec.js:2248:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests (2.5s)
+
+  2 passed (8.9s)

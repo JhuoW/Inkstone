@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Inkstone 墨石 — 让想法落在纸上</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<header class="nav">
+  <div class="wrap">
+    <a href="#"><img class="logo" src="assets/inkstone-logo-horizontal.svg" alt="Inkstone 墨石"></a>
+    <ul>
+      <li><a href="#features">功能</a></li>
+      <li><a href="#download">下载</a></li>
+      <li><a class="src" href="https://github.com/JhuoW/Inkstone">查看源码 <span class="arrow">↗</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><i class="dot"></i><span>开源</span><i class="sep"></i><span>本地优先的写作工具</span></div>
+    <h1><span class="name">墨石：</span><span class="tag">让想法落在纸上</span></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lede">一个安静的本地 Markdown 编辑器。<br>从一行随笔，到公式、图表与完整文章。</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/JhuoW/Inkstone/releases/latest">下载 Windows 版 <span class="arrow">↓</span></a>
+          <a class="btn btn-secondary" href="https://github.com/JhuoW/Inkstone">查看源码 <span class="arrow">↗</span></a>
+        </div>
+        <div class="alt">
+          <a href="#download">下载 Linux 版 <span class="arrow">↓</span></a>
+          <i class="bar"></i>
+          <span>Windows / Linux · 本地文件 · 核心写作离线可用</span>
+        </div>
+      </div>
+      <dl class="spec">
+        <div><dt>平台</dt><dd><span class="mono">Windows x64</span> · <span class="mono">Linux</span></dd></div>
+        <div><dt>文件</dt><dd>本地 <span class="mono">.md</span> 文件，原文保留</dd></div>
+        <div><dt>账号</dt><dd>无需注册，不经云端</dd></div>
+        <div><dt>界面</dt><dd>简体中文 / <span class="mono">English</span> · 浅色 / 深色</dd></div>
+        <div><dt>许可</dt><dd><span class="mono">AGPL-3.0</span> 开源</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- Product showcase -->
+<section class="showcase">
+  <div class="caption-row">
+    <span>真实界面 · 简体中文 · 浅色主题</span>
+    <span class="mono">1280 × 900</span>
+  </div>
+  <div class="window">
+    <div class="titlebar">
+      <img src="assets/inkstone-icon-32.png" alt="">
+      <span>A quieter place.md — Inkstone</span>
+      <div class="ctl">
+        <span><svg width="10" height="10"><path d="M0 5.5h10" stroke="#2b2930" stroke-width="1"/></svg></span>
+        <span><svg width="10" height="10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="#2b2930" stroke-width="1"/></svg></span>
+        <span><svg width="10" height="10"><path d="M.5 .5l9 9M9.5 .5l-9 9" stroke="#2b2930" stroke-width="1"/></svg></span>
+      </div>
+    </div>
+    <div class="menubar"><span>文件</span><span>编辑</span><span>段落</span><span>格式</span><span>视图</span><span>工具</span></div>
+    <div class="screen">
+      <img src="assets/app-writing-zh-1280.png" width="1280" height="899" alt="墨石写作界面：左侧文件侧栏，右侧为包含公式与表格的文档">
+      <span class="pin" style="left:222px; top:281px">1</span>
+      <span class="pin" style="left:370px; top:142px">2</span>
+      <span class="pin" style="left:370px; top:388px">3</span>
+      <span class="pin" style="left:370px; top:769px">4</span>
+    </div>
+  </div>
+  <div class="wrap legend">
+    <div><h4><i>1</i>文件侧栏</h4><p>文件、大纲与搜索三个入口，直接浏览电脑上的文件夹。</p></div>
+    <div><h4><i>2</i>正文排版</h4><p>舒展的行宽与行距，中英文混排依然清晰。</p></div>
+    <div><h4><i>3</i>行内公式</h4><p>公式就写在句子里，点击即可就地修改。</p></div>
+    <div><h4><i>4</i>表格</h4><p>表格在页面中直接编辑，不必回到源码。</p></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head"><h3>功能</h3><span>01 — 03</span></div>
+
+    <!-- 01 -->
+    <div class="row text-left">
+      <div class="copy">
+        <div class="idx"><b>01</b><i class="sep"></i><span>即时预览 · 源码模式</span></div>
+        <h2>写作，<br>自然发生。</h2>
+        <p>直接在页面里写 Markdown，标题、列表与公式随写随现。点开渲染后的公式，就地修改它的源码；需要逐字掌控时，一键切到源码模式，选区与撤销记录都还在。</p>
+        <dl class="kv">
+          <div><dt>快捷键</dt><dd><kbd>Ctrl</kbd> + <kbd>/</kbd>　即时预览 ⇄ 源码模式</dd></div>
+          <div><dt>原文</dt><dd>不重排、不改写你的 Markdown</dd></div>
+        </dl>
+      </div>
+      <div class="f1">
+        <div class="plabel"><b>即时预览</b><span>点击公式，源码就地展开</span></div>
+        <div class="panel"><img src="assets/f1-preview.png" alt=""></div>
+        <div class="switch"><i class="line"></i><kbd>Ctrl</kbd><span>+</span><kbd>/</kbd><span>整篇切换</span><i class="line"></i></div>
+        <div class="plabel"><b>源码模式</b><span>同一段文字，原样的 Markdown</span></div>
+        <div class="panel"><img src="assets/f1-source.png" alt="" style="-webkit-mask-image: linear-gradient(90deg, #000 86%, transparent 100%);"></div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="row text-right">
+      <div class="f2">
+        <div class="main">
+          <div class="plabel"><b>代码 · 表格 · 公式块</b><span>同一份文档中</span></div>
+          <div class="panel"><img src="assets/f2-structures@1.5x.png" alt=""></div>
+        </div>
+        <div class="side">
+          <div class="panel"><img src="assets/f2-mermaid-zh.png" alt=""></div>
+          <div class="plabel"><b>Mermaid 图表</b><span class="mono">sequenceDiagram</span></div>
+        </div>
+      </div>
+      <div class="copy">
+        <div class="idx"><b>02</b><i class="sep"></i><span>公式 · 表格 · 代码 · 图表</span></div>
+        <h2>思考，<br>也有结构。</h2>
+        <p>行内公式与 LaTeX 公式块、可直接编辑的表格、带语法高亮的代码块，以及 Mermaid 图表，都写在同一份 Markdown 里，也都在页面上清楚呈现。</p>
+        <dl class="kv">
+          <div><dt>公式</dt><dd>行内 <span class="mono">$…$</span> 与公式块 <span class="mono">$$…$$</span></dd></div>
+          <div><dt>代码</dt><dd>语法高亮，下拉选择语言</dd></div>
+          <div><dt>图表</dt><dd><span class="mono">Mermaid</span> 流程图、时序图等</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="row text-left">
+      <div class="copy">
+        <div class="idx"><b>03</b><i class="sep"></i><span>本地文件 · 离线编辑 · 导出</span></div>
+        <h2>文稿，<br>留在手边。</h2>
+        <p>打开电脑上的任意文件夹，文稿就是普通的 .md 文件。无需账号，不上传云端，断网也能照常写作。写完之后，导出为 HTML、PDF 或 PNG。</p>
+        <dl class="kv">
+          <div><dt>文件</dt><dd>本地文件夹 · 搜索 · 自动保存与恢复</dd></div>
+          <div><dt>离线</dt><dd>核心写作无需联网</dd></div>
+          <div><dt>更多格式</dt><dd>可选 <span class="mono">Pandoc</span>，导出 Word 等</dd></div>
+        </dl>
+      </div>
+      <div class="f3">
+        <div>
+          <div class="plabel"><b>墨石中的文件夹</b></div>
+          <div class="panel" style="background:#f2f1ed"><img src="assets/f3-sidebar-zh.png" alt=""></div>
+        </div>
+        <div class="disk">
+          <i class="link"></i>
+          <div class="plabel" style="padding-left:21px"><b>硬盘上的同一个文件夹</b></div>
+<div class="tree">Field notes/
+<span class="dim">├──</span> assets/
+<span class="dim">├──</span> Research/
+<span class="dim">│   └──</span> Writing rituals.md
+<span class="dim">├──</span> <span class="hl">A quieter place.md</span>
+<span class="dim">└──</span> Reading list.md</div>
+          <div class="note">普通 .md 文件，任何编辑器都能打开。</div>
+        </div>
+        <div class="exports">
+          <div><b>HTML</b><span>离线导出</span></div>
+          <div><b>PDF</b><span>离线导出</span></div>
+          <div><b>PNG</b><span>离线导出</span></div>
+          <div><b>DOCX …</b><span>经 Pandoc 转换</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Closing download -->
+<section class="wrap closing" id="download">
+  <img class="icon" src="assets/inkstone-icon-512.png" alt="">
+  <h2>你的下一篇文章，从这里开始。</h2>
+  <p>开源，本地，安静。适用于 Windows 与 Linux。</p>
+  <div class="cta">
+    <a class="btn btn-primary" style="width:270px" href="https://github.com/JhuoW/Inkstone/releases/latest">下载 Windows 版 <span class="arrow">↓</span></a>
+    <a class="btn btn-secondary" style="width:270px" href="https://github.com/JhuoW/Inkstone">查看源码 <span class="arrow">↗</span></a>
+  </div>
+  <div class="meta"><span>Windows x64 安装包 · .exe</span><span>github.com/JhuoW/Inkstone</span></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <img class="logo" src="assets/inkstone-logo-horizontal.svg" alt="Inkstone 墨石">
+      <nav><a href="#features">功能</a><a href="#download">下载</a><a href="https://github.com/JhuoW/Inkstone/releases/latest">更新说明</a><a href="https://github.com/JhuoW/Inkstone">查看源码 ↗</a></nav>
+      <div class="sign"><span>让想法落在纸上</span><img src="assets/inkstone-seal.svg" alt="墨石印"></div>
+    </div>
+    <div class="bottom">
+      <span>Inkstone 墨石 · 作者 Wei Zhuo</span>
+      <span class="mono">AGPL-3.0-only · Windows / Linux</span>
+    </div>
+  </div>
+</footer>
+
+<script src="page.js"></script>
+</body>
+</html>

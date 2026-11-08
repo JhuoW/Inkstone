@@ -1,0 +1,19 @@
+Command line defined: "INKSTONE_REPO=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone"
+Command line defined: "INKSTONE_INSTALLER_INCLUDE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\build\installer.nsh"
+Command line defined: "OUTPUT_EXE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\installer-locale-3Nbelu\locale-hook.exe"
+Processing config: C:\Users\wei\AppData\Local\electron-builder\Cache\nsis-3.0.4.1\nsis-3.0.4.1-1mx3n\nsisconf.nsh
+Processing script file: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\fixtures\installer-language.nsi" (ACP)
+
+Processed 1 file, writing output (x86-unicode):
+
+Output: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\installer-locale-3Nbelu\locale-hook.exe"
+Install: 0 pages (0 bytes), 1 section (16408 bytes), 49 instructions (1372 bytes), 158 strings (1238 bytes), 1 language table (158 bytes).
+
+Using zlib compression.
+
+EXE header size:               37888 / 39424 bytes
+Install code:                    891 / 19504 bytes
+Install data:                      0 / 0 bytes
+CRC (0x89C1A580):                  4 / 4 bytes
+
+Total size:                    38783 / 58932 bytes (65.8%)

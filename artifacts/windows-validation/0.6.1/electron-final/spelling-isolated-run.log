@@ -1,0 +1,49 @@
+
+Running 1 test using 1 worker
+
+(node:47672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\backend-e2e.spec.js:2248:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests (9.3s)
+
+
+  1) tests\backend-e2e.spec.js:2248:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "mispelled"
+    Received: ""
+
+    Call Log:
+    - Timeout 8000ms exceeded while waiting on the predicate
+
+      2331 |           { timeout: 8000 },
+      2332 |         )
+    > 2333 |         .toBe("mispelled");
+           |          ^
+      2334 |       spelling = await isolated.evaluate(() => global.__spellingParams.at(-1));
+      2335 |       expect(spelling.suggestions).toContain("misspelled");
+      2336 |       await localPage.evaluate(() =>
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\backend-e2e.spec.js:2333:10
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\error-context.md
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.1\test-results\backend-e2e-desktop-persis-7c7f3-y-local-dictionary-requests\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\backend-e2e.spec.js:2248:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests 

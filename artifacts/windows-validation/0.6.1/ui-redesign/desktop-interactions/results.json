@@ -1,0 +1,554 @@
+{
+  "version": "0.6.1",
+  "host": "win32",
+  "normalSandbox": true,
+  "sandboxBypass": null,
+  "desktopIPC": "real Electron",
+  "scope": "UI zoom is tested; this does not represent physical Windows DPI or an accessibility certification.",
+  "results": [
+    {
+      "name": "all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo",
+      "status": "passed",
+      "pageErrors": []
+    },
+    {
+      "name": "Insert menu toggles, navigates with keys, restores focus on Escape, and applies a selected format in place",
+      "status": "passed",
+      "pageErrors": []
+    },
+    {
+      "name": "sidebar tabs use arrow, Home and End navigation with one selected keyboard stop",
+      "status": "passed",
+      "pageErrors": []
+    },
+    {
+      "name": "command palette advertises shortcuts, maintains combobox selection, executes the keyboard choice and honors customization",
+      "status": "passed",
+      "pageErrors": []
+    },
+    {
+      "name": "800px and 150% UI zoom retain reachable commands, status and preference actions without outer document scrolling",
+      "status": "passed",
+      "pageErrors": []
+    },
+    {
+      "name": "light and dark chrome provide readable text contrast while preserving source and settings actions",
+      "status": "passed",
+      "pageErrors": []
+    }
+  ],
+  "contrasts": [
+    {
+      "theme": "light",
+      "selector": "#document-title",
+      "foreground": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "background": [
+        252,
+        252,
+        250,
+        1
+      ],
+      "contrast": 16.769563147865195,
+      "fontSize": "13px"
+    },
+    {
+      "theme": "light",
+      "selector": "#save-state",
+      "foreground": [
+        103,
+        99,
+        107,
+        1
+      ],
+      "background": [
+        252,
+        252,
+        250,
+        1
+      ],
+      "contrast": 5.720500845716575,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": "#statistics",
+      "foreground": [
+        103,
+        99,
+        107,
+        1
+      ],
+      "background": [
+        252,
+        252,
+        250,
+        1
+      ],
+      "contrast": 5.720500845716575,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": ".sidebar-tabs button.active",
+      "foreground": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "background": [
+        242,
+        241,
+        237,
+        1
+      ],
+      "contrast": 15.241195939976937,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": "#cursor-status",
+      "foreground": [
+        103,
+        99,
+        107,
+        1
+      ],
+      "background": [
+        252,
+        252,
+        250,
+        1
+      ],
+      "contrast": 5.720500845716575,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": "#file-filter",
+      "foreground": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 17.22590498930492,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": "dialog h2",
+      "foreground": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 17.22590498930492,
+      "fontSize": "14px"
+    },
+    {
+      "theme": "light",
+      "selector": "#settings-result",
+      "foreground": [
+        103,
+        99,
+        107,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 5.876170010552519,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "light",
+      "selector": "#settings-done",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "background": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "contrast": 17.22590498930492,
+      "fontSize": "13px"
+    },
+    {
+      "theme": "light",
+      "selector": "dialog select[name=locale]",
+      "foreground": [
+        28,
+        26,
+        33,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 17.22590498930492,
+      "fontSize": "13px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#document-title",
+      "foreground": [
+        244,
+        240,
+        230,
+        1
+      ],
+      "background": [
+        32,
+        33,
+        36,
+        1
+      ],
+      "contrast": 14.146599867177692,
+      "fontSize": "13px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#save-state",
+      "foreground": [
+        180,
+        176,
+        184,
+        1
+      ],
+      "background": [
+        32,
+        33,
+        36,
+        1
+      ],
+      "contrast": 7.5457560253996245,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#statistics",
+      "foreground": [
+        180,
+        176,
+        184,
+        1
+      ],
+      "background": [
+        32,
+        33,
+        36,
+        1
+      ],
+      "contrast": 7.5457560253996245,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": ".sidebar-tabs button.active",
+      "foreground": [
+        244,
+        240,
+        230,
+        1
+      ],
+      "background": [
+        24,
+        25,
+        28,
+        1
+      ],
+      "contrast": 15.446498290228462,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#cursor-status",
+      "foreground": [
+        180,
+        176,
+        184,
+        1
+      ],
+      "background": [
+        32,
+        33,
+        36,
+        1
+      ],
+      "contrast": 7.5457560253996245,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#file-filter",
+      "foreground": [
+        244,
+        240,
+        230,
+        1
+      ],
+      "background": [
+        36,
+        37,
+        41,
+        1
+      ],
+      "contrast": 13.45325453464787,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": "dialog h2",
+      "foreground": [
+        244,
+        240,
+        230,
+        1
+      ],
+      "background": [
+        36,
+        37,
+        41,
+        1
+      ],
+      "contrast": 13.45325453464787,
+      "fontSize": "14px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#settings-result",
+      "foreground": [
+        180,
+        176,
+        184,
+        1
+      ],
+      "background": [
+        36,
+        37,
+        41,
+        1
+      ],
+      "contrast": 7.175927602333936,
+      "fontSize": "12px"
+    },
+    {
+      "theme": "dark",
+      "selector": "#settings-done",
+      "foreground": [
+        36,
+        37,
+        41,
+        1
+      ],
+      "background": [
+        204,
+        195,
+        210,
+        1
+      ],
+      "contrast": 8.970259930554144,
+      "fontSize": "13px"
+    },
+    {
+      "theme": "dark",
+      "selector": "dialog select[name=locale]",
+      "foreground": [
+        244,
+        240,
+        230,
+        1
+      ],
+      "background": [
+        36,
+        37,
+        41,
+        1
+      ],
+      "contrast": 13.45325453464787,
+      "fontSize": "13px"
+    }
+  ],
+  "geometry": [
+    {
+      "label": "800x600-zoom100-sidebar256",
+      "width": 800,
+      "height": 600,
+      "documentWidth": 800,
+      "documentHeight": 600,
+      "bodyWidth": 800,
+      "bodyHeight": 600,
+      "footer": {
+        "left": 256,
+        "right": 800,
+        "top": 574,
+        "bottom": 600
+      }
+    },
+    {
+      "label": "800x600-zoom100-sidebar256-after-settings",
+      "width": 800,
+      "height": 600,
+      "documentWidth": 800,
+      "documentHeight": 600,
+      "bodyWidth": 800,
+      "bodyHeight": 600,
+      "footer": {
+        "left": 256,
+        "right": 800,
+        "top": 574,
+        "bottom": 600
+      }
+    },
+    {
+      "label": "800x800-zoom100-sidebar256",
+      "width": 800,
+      "height": 800,
+      "documentWidth": 800,
+      "documentHeight": 800,
+      "bodyWidth": 800,
+      "bodyHeight": 800,
+      "footer": {
+        "left": 256,
+        "right": 800,
+        "top": 774,
+        "bottom": 800
+      }
+    },
+    {
+      "label": "800x800-zoom100-sidebar256-after-settings",
+      "width": 800,
+      "height": 800,
+      "documentWidth": 800,
+      "documentHeight": 800,
+      "bodyWidth": 800,
+      "bodyHeight": 800,
+      "footer": {
+        "left": 256,
+        "right": 800,
+        "top": 774,
+        "bottom": 800
+      }
+    },
+    {
+      "label": "1280x900-zoom150-sidebar256",
+      "width": 853,
+      "height": 600,
+      "documentWidth": 853,
+      "documentHeight": 600,
+      "bodyWidth": 853,
+      "bodyHeight": 600,
+      "footer": {
+        "left": 256,
+        "right": 853.3333740234375,
+        "top": 574,
+        "bottom": 600
+      }
+    },
+    {
+      "label": "1280x900-zoom150-sidebar256-after-settings",
+      "width": 853,
+      "height": 600,
+      "documentWidth": 853,
+      "documentHeight": 600,
+      "bodyWidth": 853,
+      "bodyHeight": 600,
+      "footer": {
+        "left": 256,
+        "right": 853.3333740234375,
+        "top": 574,
+        "bottom": 600
+      }
+    },
+    {
+      "label": "800x800-zoom150-sidebar256",
+      "width": 533,
+      "height": 533,
+      "documentWidth": 533,
+      "documentHeight": 533,
+      "bodyWidth": 533,
+      "bodyHeight": 533,
+      "footer": {
+        "left": 256,
+        "right": 533.3333435058594,
+        "top": 507.3333435058594,
+        "bottom": 533.3333435058594
+      }
+    },
+    {
+      "label": "800x800-zoom150-sidebar256-after-settings",
+      "width": 533,
+      "height": 533,
+      "documentWidth": 533,
+      "documentHeight": 533,
+      "bodyWidth": 533,
+      "bodyHeight": 533,
+      "footer": {
+        "left": 256,
+        "right": 533.3333435058594,
+        "top": 507.3333435058594,
+        "bottom": 533.3333435058594
+      }
+    },
+    {
+      "label": "720x500-zoom100-sidebar500",
+      "width": 720,
+      "height": 500,
+      "documentWidth": 720,
+      "documentHeight": 500,
+      "bodyWidth": 720,
+      "bodyHeight": 500,
+      "footer": {
+        "left": 500,
+        "right": 720,
+        "top": 474,
+        "bottom": 500
+      }
+    },
+    {
+      "label": "720x500-zoom100-sidebar500-after-settings",
+      "width": 720,
+      "height": 500,
+      "documentWidth": 720,
+      "documentHeight": 500,
+      "bodyWidth": 720,
+      "bodyHeight": 500,
+      "footer": {
+        "left": 500,
+        "right": 720,
+        "top": 474,
+        "bottom": 500
+      }
+    }
+  ]
+}

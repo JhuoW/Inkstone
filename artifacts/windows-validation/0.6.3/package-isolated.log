@@ -1,0 +1,24 @@
+  • electron-builder  version=26.18.0 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=45.2.3 arch=x64 buildFromSource=false workspaceRoot=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=45.2.3 appOutDir=release\0.6.3\win-unpacked
+  • downloaded      label=electron progress=100%
+  • directory rename failed, retrying  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked code=EPERM
+  • directory rename failed, retrying  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked code=EPERM
+  • directory rename failed, retrying  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked code=EPERM
+  • directory rename failed, retrying  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked code=EPERM
+  • directory rename failed, retrying  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked code=EPERM
+  • directory rename failed repeatedly; falling back to copy+delete  src=release\0.6.3\win-unpacked.tmp dest=release\0.6.3\win-unpacked
+  ⨯ Failed to move directory from C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp to C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked: EBUSY: resource busy or locked, unlink 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp\resources\default_app.asar'; last rename error: EPERM: operation not permitted, rename 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp' -> 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked'  failedTask=build stackTrace=Error: Failed to move directory from C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp to C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked: EBUSY: resource busy or locked, unlink 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp\resources\default_app.asar'; last rename error: EPERM: operation not permitted, rename 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked.tmp' -> 'C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\release\0.6.3\win-unpacked'
+    at moveDirAtomic (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\util\electronGet.ts:243:11)
+    at extractArchive (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\util\electronGet.ts:321:5)
+    at unpack (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\electron\ElectronFramework.ts:259:5)
+    at ElectronFramework.prepareApplicationStageDirectory (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\electron\ElectronFramework.ts:157:27)
+    at WinPackager.doPack (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\platformPackager.ts:261:5)
+    at WinPackager.pack (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\platformPackager.ts:167:5)
+    at Packager.doBuild (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\packager.ts:539:11)
+    at executeFinally (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\builder-util\src\promise.ts:12:14)
+    at Packager.build (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\src\packager.ts:459:31)
+    at executeFinally (C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\builder-util\src\promise.ts:12:14)

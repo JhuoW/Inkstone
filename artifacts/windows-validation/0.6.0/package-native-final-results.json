@@ -1,0 +1,293 @@
+{
+  "version": "0.6.0",
+  "candidate": "index-CnNg5GrK.js",
+  "timeUtc": "2026-11-08T14:01:41.5374905Z",
+  "passed": true,
+  "normalSandbox": true,
+  "completedChecks": 8,
+  "pageErrors": 0,
+  "remainingInkstoneProcesses": 0,
+  "variants": [
+    {
+      "variant": "unpacked",
+      "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+      "asarSha256": "0bd679923c390c9ca8a5913fb10f3af11d31df5ce321cd6c58bd330948b2c894",
+      "smoke": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "variant": "unpackedfinal",
+        "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      }
+    },
+    {
+      "variant": "portable",
+      "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-portable-v2\\Inkstone.exe",
+      "asarSha256": "0bd679923c390c9ca8a5913fb10f3af11d31df5ce321cd6c58bd330948b2c894",
+      "smoke": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-portable-v2\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "variant": "portablefinal",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-portable-v2\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      }
+    },
+    {
+      "variant": "installer-payload",
+      "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+      "asarSha256": "0bd679923c390c9ca8a5913fb10f3af11d31df5ce321cd6c58bd330948b2c894",
+      "smoke": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "variant": "installer-payload-final",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      }
+    },
+    {
+      "variant": "installed",
+      "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-test\\Inkstone 安装测试\\Inkstone.exe",
+      "asarSha256": "0bd679923c390c9ca8a5913fb10f3af11d31df5ce321cd6c58bd330948b2c894",
+      "smoke": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-test\\Inkstone 安装测试\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.0",
+        "platform": "win32",
+        "variant": "installedfinal",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6-installer-test\\Inkstone 安装测试\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      }
+    }
+  ],
+  "actualInstalledVerification": "Actual NSIS install, smoke, interaction and uninstall passed; see actual-installer-validation/summary.json"
+}

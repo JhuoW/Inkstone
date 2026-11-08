@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Inkstone — A place for your thoughts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<header class="nav">
+  <div class="wrap">
+    <a href="#"><img class="logo" src="assets/inkstone-logo-horizontal.svg" alt="Inkstone 墨石"></a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#download">Download</a></li>
+      <li><a class="src" href="https://github.com/JhuoW/Inkstone">View source <span class="arrow">↗</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><i class="dot"></i><span>Open source</span><i class="sep"></i><span>A local-first writing tool</span></div>
+    <h1><span class="name">Inkstone:</span><br><span class="tag">A place for your thoughts</span></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lede">A quiet, local Markdown editor.<br>From a one-line note to equations, diagrams and the finished piece.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/JhuoW/Inkstone/releases/latest">Download for Windows <span class="arrow">↓</span></a>
+          <a class="btn btn-secondary" href="https://github.com/JhuoW/Inkstone">View source <span class="arrow">↗</span></a>
+        </div>
+        <div class="alt">
+          <a href="#download">Download for Linux <span class="arrow">↓</span></a>
+          <i class="bar"></i>
+          <span>Windows / Linux · Local files · Core writing works offline</span>
+        </div>
+      </div>
+      <dl class="spec">
+        <div><dt>Platform</dt><dd><span class="mono">Windows x64</span> · <span class="mono">Linux</span></dd></div>
+        <div><dt>Files</dt><dd>Local <span class="mono">.md</span> files, kept as written</dd></div>
+        <div><dt>Account</dt><dd>No sign-up, no cloud</dd></div>
+        <div><dt>Interface</dt><dd>English / 简体中文 · Light / Dark</dd></div>
+        <div><dt>License</dt><dd>Open source, <span class="mono">AGPL-3.0</span></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- Product showcase -->
+<section class="showcase">
+  <div class="caption-row">
+    <span>Actual interface · English · Light theme</span>
+    <span class="mono">1280 × 900</span>
+  </div>
+  <div class="window">
+    <div class="titlebar">
+      <img src="assets/inkstone-icon-32.png" alt="">
+      <span>A quieter place.md — Inkstone</span>
+      <div class="ctl">
+        <span><svg width="10" height="10"><path d="M0 5.5h10" stroke="#2b2930" stroke-width="1"/></svg></span>
+        <span><svg width="10" height="10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="#2b2930" stroke-width="1"/></svg></span>
+        <span><svg width="10" height="10"><path d="M.5 .5l9 9M9.5 .5l-9 9" stroke="#2b2930" stroke-width="1"/></svg></span>
+      </div>
+    </div>
+    <div class="menubar"><span>File</span><span>Edit</span><span>Paragraph</span><span>Format</span><span>View</span><span>Tools</span></div>
+    <div class="screen">
+      <img src="assets/app-writing-en-1280.png" width="1280" height="900" alt="Inkstone writing view: file sidebar on the left, a document with an equation and a table on the right">
+      <span class="pin" style="left:222px; top:281px">1</span>
+      <span class="pin" style="left:370px; top:96px">2</span>
+      <span class="pin" style="left:370px; top:342px">3</span>
+      <span class="pin" style="left:370px; top:723px">4</span>
+    </div>
+  </div>
+  <div class="wrap legend">
+    <div><h4><i>1</i>File sidebar</h4><p>Files, outline and search, working directly on the folders on your computer.</p></div>
+    <div><h4><i>2</i>Typography</h4><p>A comfortable measure and line height; mixed English and Chinese stay clear.</p></div>
+    <div><h4><i>3</i>Inline math</h4><p>Equations sit inside the sentence. Click one to edit it in place.</p></div>
+    <div><h4><i>4</i>Tables</h4><p>Edit tables right on the page, without a trip back to source.</p></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head"><h3>Features</h3><span>01 — 03</span></div>
+
+    <!-- 01 -->
+    <div class="row text-left">
+      <div class="copy">
+        <div class="idx"><b>01</b><i class="sep"></i><span>Live preview · Source mode</span></div>
+        <h2>Writing,<br>naturally.</h2>
+        <p>Write Markdown directly on the page and watch headings, lists and equations take shape as you type. Click a rendered equation to edit its source in place. When you want every character in view, switch to source mode; your selection and undo history come with you.</p>
+        <dl class="kv">
+          <div><dt>Shortcut</dt><dd><kbd>Ctrl</kbd> + <kbd>/</kbd>&nbsp; Live preview ⇄ Source</dd></div>
+          <div><dt>Original</dt><dd>Kept as written, no silent reformatting</dd></div>
+        </dl>
+      </div>
+      <div class="f1">
+        <div class="plabel"><b>Live preview</b><span>Click an equation to open its source</span></div>
+        <div class="panel"><img src="assets/f1-preview.png" alt=""></div>
+        <div class="switch"><i class="line"></i><kbd>Ctrl</kbd><span>+</span><kbd>/</kbd><span>switches the whole document</span><i class="line"></i></div>
+        <div class="plabel"><b>Source mode</b><span>The same passage, as plain Markdown</span></div>
+        <div class="panel"><img src="assets/f1-source.png" alt="" style="-webkit-mask-image: linear-gradient(90deg, #000 86%, transparent 100%);"></div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="row text-right">
+      <div class="f2">
+        <div class="main">
+          <div class="plabel"><b>Code · Tables · Math blocks</b><span>In one document</span></div>
+          <div class="panel"><img src="assets/f2-structures@1.5x.png" alt=""></div>
+        </div>
+        <div class="side">
+          <div class="panel"><img src="assets/f2-mermaid-en.png" alt=""></div>
+          <div class="plabel"><b>Mermaid diagram</b><span class="mono">sequenceDiagram</span></div>
+        </div>
+      </div>
+      <div class="copy">
+        <div class="idx"><b>02</b><i class="sep"></i><span>Math · Tables · Code · Diagrams</span></div>
+        <h2>Thinking,<br>with structure.</h2>
+        <p>Inline math and LaTeX blocks, tables you edit in place, syntax-highlighted code and Mermaid diagrams all live in the same Markdown file, and all render clearly on the page.</p>
+        <dl class="kv">
+          <div><dt>Math</dt><dd>Inline <span class="mono">$…$</span> and display <span class="mono">$$…$$</span></dd></div>
+          <div><dt>Code</dt><dd>Syntax highlighting, language picker</dd></div>
+          <div><dt>Diagrams</dt><dd><span class="mono">Mermaid</span> flowcharts, sequences and more</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="row text-left">
+      <div class="copy">
+        <div class="idx"><b>03</b><i class="sep"></i><span>Local files · Offline · Export</span></div>
+        <h2>Your files,<br>close at hand.</h2>
+        <p>Open any folder on your computer; your documents are ordinary .md files. No account, nothing uploaded, and writing keeps working offline. When you are done, export to HTML, PDF or PNG.</p>
+        <dl class="kv">
+          <div><dt>Files</dt><dd>Folders · search · autosave · recovery</dd></div>
+          <div><dt>Offline</dt><dd>Core writing needs no connection</dd></div>
+          <div><dt>More formats</dt><dd>Optional <span class="mono">Pandoc</span> for Word and more</dd></div>
+        </dl>
+      </div>
+      <div class="f3">
+        <div>
+          <div class="plabel"><b>The folder in Inkstone</b></div>
+          <div class="panel" style="background:#f2f1ed"><img src="assets/f3-sidebar-en.png" alt=""></div>
+        </div>
+        <div class="disk">
+          <i class="link"></i>
+          <div class="plabel" style="padding-left:21px"><b>The same folder on disk</b></div>
+<div class="tree">Field notes/
+<span class="dim">├──</span> assets/
+<span class="dim">├──</span> Research/
+<span class="dim">│   └──</span> Writing rituals.md
+<span class="dim">├──</span> <span class="hl">A quieter place.md</span>
+<span class="dim">└──</span> Reading list.md</div>
+          <div class="note">Plain .md files that open in any editor.</div>
+        </div>
+        <div class="exports">
+          <div><b>HTML</b><span>Offline export</span></div>
+          <div><b>PDF</b><span>Offline export</span></div>
+          <div><b>PNG</b><span>Offline export</span></div>
+          <div><b>DOCX …</b><span>Via Pandoc</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Closing download -->
+<section class="wrap closing" id="download">
+  <img class="icon" src="assets/inkstone-icon-512.png" alt="">
+  <h2>Your next piece starts here.</h2>
+  <p>Open source, local and quiet. For Windows and Linux.</p>
+  <div class="cta">
+    <a class="btn btn-primary" style="width:290px" href="https://github.com/JhuoW/Inkstone/releases/latest">Download for Windows <span class="arrow">↓</span></a>
+    <a class="btn btn-secondary" style="width:290px" href="https://github.com/JhuoW/Inkstone">View source <span class="arrow">↗</span></a>
+  </div>
+  <div class="meta"><span style="width:290px">Windows x64 installer · .exe</span><span style="width:290px">github.com/JhuoW/Inkstone</span></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <img class="logo" src="assets/inkstone-logo-horizontal.svg" alt="Inkstone 墨石">
+      <nav><a href="#features">Features</a><a href="#download">Download</a><a href="https://github.com/JhuoW/Inkstone/releases/latest">Release notes</a><a href="https://github.com/JhuoW/Inkstone">View source ↗</a></nav>
+      <div class="sign"><span>A place for your thoughts</span><img src="assets/inkstone-seal.svg" alt="Inkstone seal"></div>
+    </div>
+    <div class="bottom">
+      <span>Inkstone 墨石 · by Wei Zhuo</span>
+      <span class="mono">AGPL-3.0-only · Windows / Linux</span>
+    </div>
+  </div>
+</footer>
+
+<script src="page.js"></script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+{
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "name": "Editing headings preserves their size and following-content position",
+      "result": "passed",
+      "detail": [
+        {
+          "level": 1,
+          "before": {
+            "font": "31.45px",
+            "weight": "650",
+            "height": 51.734375,
+            "followingTop": 144.15625
+          },
+          "after": {
+            "font": "31.45px",
+            "weight": "650",
+            "height": 58.015625,
+            "followingTop": 144.15625
+          }
+        },
+        {
+          "level": 2,
+          "before": {
+            "font": "24.65px",
+            "weight": "600",
+            "height": 42.4375,
+            "followingTop": 133.5
+          },
+          "after": {
+            "font": "24.65px",
+            "weight": "600",
+            "height": 47.359375,
+            "followingTop": 133.5
+          }
+        },
+        {
+          "level": 3,
+          "before": {
+            "font": "20.4px",
+            "weight": "600",
+            "height": 36.65625,
+            "followingTop": 126.875
+          },
+          "after": {
+            "font": "20.4px",
+            "weight": "600",
+            "height": 40.734375,
+            "followingTop": 126.875
+          }
+        },
+        {
+          "level": 4,
+          "before": {
+            "font": "18.7px",
+            "weight": "600",
+            "height": 34.78125,
+            "followingTop": 124.65625
+          },
+          "after": {
+            "font": "18.7px",
+            "weight": "600",
+            "height": 38.515625,
+            "followingTop": 124.65625
+          }
+        },
+        {
+          "level": 5,
+          "before": {
+            "font": "17px",
+            "weight": "600",
+            "height": 31.890625,
+            "followingTop": 121.421875
+          },
+          "after": {
+            "font": "17px",
+            "weight": "600",
+            "height": 35.28125,
+            "followingTop": 121.421875
+          }
+        },
+        {
+          "level": 6,
+          "before": {
+            "font": "17px",
+            "weight": "600",
+            "height": 31.890625,
+            "followingTop": 121.421875
+          },
+          "after": {
+            "font": "17px",
+            "weight": "600",
+            "height": 35.28125,
+            "followingTop": 121.421875
+          }
+        }
+      ]
+    },
+    {
+      "name": "User writing and code fonts survive active and rendered states",
+      "result": "passed"
+    },
+    {
+      "name": "Rendered code and formula errors remain readable in light and dark themes",
+      "result": "passed",
+      "detail": [
+        {
+          "theme": "light",
+          "selector": ".cm-code-line",
+          "contrast": 15.37
+        },
+        {
+          "theme": "light",
+          "selector": ".cm-code-line span:text-is(\"// Keep source readable in both themes.\")",
+          "contrast": 5.24
+        },
+        {
+          "theme": "light",
+          "selector": ".cm-code-line span:text-is(\"const\")",
+          "contrast": 6.01
+        },
+        {
+          "theme": "light",
+          "selector": ".cm-code-line span:text-is(\"\\\"中文笔记\\\"\")",
+          "contrast": 6.29
+        },
+        {
+          "theme": "light",
+          "selector": ".cm-code-line span:text-is(\"save\")",
+          "contrast": 6.51
+        },
+        {
+          "theme": "light",
+          "selector": ".math-error",
+          "contrast": 5.8
+        },
+        {
+          "theme": "dark",
+          "selector": ".cm-code-line",
+          "contrast": 12.45
+        },
+        {
+          "theme": "dark",
+          "selector": ".cm-code-line span:text-is(\"// Keep source readable in both themes.\")",
+          "contrast": 6.64
+        },
+        {
+          "theme": "dark",
+          "selector": ".cm-code-line span:text-is(\"const\")",
+          "contrast": 6.97
+        },
+        {
+          "theme": "dark",
+          "selector": ".cm-code-line span:text-is(\"\\\"中文笔记\\\"\")",
+          "contrast": 8.73
+        },
+        {
+          "theme": "dark",
+          "selector": ".cm-code-line span:text-is(\"save\")",
+          "contrast": 7.8
+        },
+        {
+          "theme": "dark",
+          "selector": ".math-error",
+          "contrast": 6.63
+        }
+      ]
+    },
+    {
+      "name": "Source syntax stays readable while theme switches preserve selection and undo",
+      "result": "passed",
+      "detail": [
+        {
+          "theme": "light",
+          "text": "#",
+          "contrast": 16.77
+        },
+        {
+          "theme": "light",
+          "text": " Source typography",
+          "contrast": 16.77
+        },
+        {
+          "theme": "light",
+          "text": "**",
+          "contrast": 5.72
+        },
+        {
+          "theme": "light",
+          "text": "English and 中文",
+          "contrast": 16.77
+        },
+        {
+          "theme": "light",
+          "text": "**",
+          "contrast": 5.72
+        },
+        {
+          "theme": "light",
+          "text": "[",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": "links",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": "]",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": "(",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": "https://example.com",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": ")",
+          "contrast": 6.87
+        },
+        {
+          "theme": "light",
+          "text": "```",
+          "contrast": 5.72
+        },
+        {
+          "theme": "light",
+          "text": "javascript",
+          "contrast": 6.86
+        },
+        {
+          "theme": "light",
+          "text": "// A source comment",
+          "contrast": 5.72
+        },
+        {
+          "theme": "light",
+          "text": "const",
+          "contrast": 6.56
+        },
+        {
+          "theme": "light",
+          "text": "value",
+          "contrast": 7.11
+        },
+        {
+          "theme": "light",
+          "text": "\"中文笔记\"",
+          "contrast": 6.86
+        },
+        {
+          "theme": "light",
+          "text": "function",
+          "contrast": 6.56
+        },
+        {
+          "theme": "light",
+          "text": "save",
+          "contrast": 7.11
+        },
+        {
+          "theme": "light",
+          "text": "document",
+          "contrast": 7.11
+        },
+        {
+          "theme": "light",
+          "text": "return",
+          "contrast": 6.56
+        },
+        {
+          "theme": "light",
+          "text": "0",
+          "contrast": 6.86
+        },
+        {
+          "theme": "light",
+          "text": "```",
+          "contrast": 5.72
+        },
+        {
+          "theme": "dark",
+          "text": "#",
+          "contrast": 14.15
+        },
+        {
+          "theme": "dark",
+          "text": " Source typography",
+          "contrast": 14.15
+        },
+        {
+          "theme": "dark",
+          "text": "**",
+          "contrast": 7.55
+        },
+        {
+          "theme": "dark",
+          "text": "English and 中文",
+          "contrast": 14.15
+        },
+        {
+          "theme": "dark",
+          "text": "**",
+          "contrast": 7.55
+        },
+        {
+          "theme": "dark",
+          "text": "[",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": "links",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": "]",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": "(",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": "https://example.com",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": ")",
+          "contrast": 9.16
+        },
+        {
+          "theme": "dark",
+          "text": "```",
+          "contrast": 7.55
+        },
+        {
+          "theme": "dark",
+          "text": "javascript",
+          "contrast": 9.36
+        },
+        {
+          "theme": "dark",
+          "text": "// A source comment",
+          "contrast": 7.55
+        },
+        {
+          "theme": "dark",
+          "text": "const",
+          "contrast": 7.93
+        },
+        {
+          "theme": "dark",
+          "text": "value",
+          "contrast": 8.87
+        },
+        {
+          "theme": "dark",
+          "text": "\"中文笔记\"",
+          "contrast": 9.92
+        },
+        {
+          "theme": "dark",
+          "text": "function",
+          "contrast": 7.93
+        },
+        {
+          "theme": "dark",
+          "text": "save",
+          "contrast": 8.87
+        },
+        {
+          "theme": "dark",
+          "text": "document",
+          "contrast": 8.87
+        },
+        {
+          "theme": "dark",
+          "text": "return",
+          "contrast": 7.93
+        },
+        {
+          "theme": "dark",
+          "text": "0",
+          "contrast": 9.36
+        },
+        {
+          "theme": "dark",
+          "text": "```",
+          "contrast": 7.55
+        }
+      ]
+    },
+    {
+      "name": "Formula re-entry, source synchronization and undo work with themed typography",
+      "result": "passed"
+    },
+    {
+      "name": "Search keeps visible focus and wraps controls in a narrow editor",
+      "result": "passed"
+    },
+    {
+      "name": "Table cell focus remains visible and Tab plus undo preserve the Markdown",
+      "result": "passed"
+    }
+  ],
+  "browserErrors": []
+}

@@ -1,0 +1,548 @@
+{
+  "version": "0.6.1",
+  "timeUtc": "2026-11-08T15:18:33.5249330Z",
+  "passed": true,
+  "normalSandbox": true,
+  "completedChecks": 12,
+  "pageErrors": 0,
+  "remainingTestProcesses": 0,
+  "existingUserInkstoneProcessesPreserved": 4,
+  "userProcessIDsUnchanged": true,
+  "preservedUserProcessIDs": [
+    5588,
+    15124,
+    19384,
+    28388
+  ],
+  "actualInstalledProgramTestPerformed": true,
+  "installerOrUninstallerExecutedByHarness": false,
+  "variants": [
+    {
+      "variant": "unpacked",
+      "asarSha256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "smoke": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "variant": "unpackedfinal",
+        "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      },
+      "windowsIntegration": {
+        "version": "0.6.1",
+        "variant": "unpackedfinal",
+        "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "installerSeed": false,
+        "freshPrivateProfile": true,
+        "settingsLaunchStubbed": true,
+        "clipboardUntouched": true,
+        "screenshots": [
+          "first-language-choice.png",
+          "about-en.png",
+          "license-en.png",
+          "about-zh-CN.png",
+          "license-zh-CN.png",
+          "preferences-files.png"
+        ],
+        "errors": [],
+        "initialLocale": "en",
+        "windowsSystemLocale": "en",
+        "registration": {
+          "supported": true,
+          "packaged": true,
+          "registered": false,
+          "registrationScope": null,
+          "currentDefault": {
+            "progId": "Typora.md",
+            "name": "Typora",
+            "isInkstone": false
+          },
+          "extensions": [
+            ".md",
+            ".markdown",
+            ".mdown",
+            ".mkd"
+          ],
+          "requiresInstallation": true
+        },
+        "defaultBefore": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "unregisteredDoesNotOfferDefault": true,
+        "aboutVersionAndBundledLicenseExact": true,
+        "toolsAboutRendererBothLanguages": true,
+        "aboutClosePreservesDocumentAndSelection": true,
+        "fixedSettingsURI": "ms-settings:defaultapps",
+        "preferencesEffectiveDefaultReadOnly": true,
+        "newWindowHasNoRepeatedPrompt": true,
+        "sameProfileRelaunchHasNoRepeatedPrompt": true,
+        "defaultAfter": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "defaultUnchanged": true,
+        "syntheticBOMCRLFDocumentUnchanged": true,
+        "privateProfileRemoved": true,
+        "allTestAppsClosed": true
+      }
+    },
+    {
+      "variant": "portable",
+      "asarSha256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "smoke": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "variant": "portablefinal",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      },
+      "windowsIntegration": {
+        "version": "0.6.1",
+        "variant": "portablefinal",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-portable-v2\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "installerSeed": false,
+        "freshPrivateProfile": true,
+        "settingsLaunchStubbed": true,
+        "clipboardUntouched": true,
+        "screenshots": [
+          "first-language-choice.png",
+          "about-en.png",
+          "license-en.png",
+          "about-zh-CN.png",
+          "license-zh-CN.png",
+          "preferences-files.png"
+        ],
+        "errors": [],
+        "initialLocale": "en",
+        "windowsSystemLocale": "en",
+        "registration": {
+          "supported": true,
+          "packaged": true,
+          "registered": false,
+          "registrationScope": null,
+          "currentDefault": {
+            "progId": "Typora.md",
+            "name": "Typora",
+            "isInkstone": false
+          },
+          "extensions": [
+            ".md",
+            ".markdown",
+            ".mdown",
+            ".mkd"
+          ],
+          "requiresInstallation": true
+        },
+        "defaultBefore": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "unregisteredDoesNotOfferDefault": true,
+        "aboutVersionAndBundledLicenseExact": true,
+        "toolsAboutRendererBothLanguages": true,
+        "aboutClosePreservesDocumentAndSelection": true,
+        "fixedSettingsURI": "ms-settings:defaultapps",
+        "preferencesEffectiveDefaultReadOnly": true,
+        "newWindowHasNoRepeatedPrompt": true,
+        "sameProfileRelaunchHasNoRepeatedPrompt": true,
+        "defaultAfter": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "defaultUnchanged": true,
+        "syntheticBOMCRLFDocumentUnchanged": true,
+        "privateProfileRemoved": true,
+        "allTestAppsClosed": true
+      }
+    },
+    {
+      "variant": "installer-payload",
+      "asarSha256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "smoke": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "variant": "installer-payload-final",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      },
+      "windowsIntegration": {
+        "version": "0.6.1",
+        "variant": "installer-payload-final",
+        "executable": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.1-payload-v2\\Inkstone 安装负载\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "installerSeed": false,
+        "freshPrivateProfile": true,
+        "settingsLaunchStubbed": true,
+        "clipboardUntouched": true,
+        "screenshots": [
+          "first-language-choice.png",
+          "about-en.png",
+          "license-en.png",
+          "about-zh-CN.png",
+          "license-zh-CN.png",
+          "preferences-files.png"
+        ],
+        "errors": [],
+        "initialLocale": "en",
+        "windowsSystemLocale": "en",
+        "registration": {
+          "supported": true,
+          "packaged": true,
+          "registered": false,
+          "registrationScope": null,
+          "currentDefault": {
+            "progId": "Typora.md",
+            "name": "Typora",
+            "isInkstone": false
+          },
+          "extensions": [
+            ".md",
+            ".markdown",
+            ".mdown",
+            ".mkd"
+          ],
+          "requiresInstallation": true
+        },
+        "defaultBefore": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "unregisteredDoesNotOfferDefault": true,
+        "aboutVersionAndBundledLicenseExact": true,
+        "toolsAboutRendererBothLanguages": true,
+        "aboutClosePreservesDocumentAndSelection": true,
+        "fixedSettingsURI": "ms-settings:defaultapps",
+        "preferencesEffectiveDefaultReadOnly": true,
+        "newWindowHasNoRepeatedPrompt": true,
+        "sameProfileRelaunchHasNoRepeatedPrompt": true,
+        "defaultAfter": {
+          "progId": "Typora.md",
+          "name": "Typora",
+          "isInkstone": false
+        },
+        "defaultUnchanged": true,
+        "syntheticBOMCRLFDocumentUnchanged": true,
+        "privateProfileRemoved": true,
+        "allTestAppsClosed": true
+      }
+    },
+    {
+      "variant": "installed",
+      "asarSha256": "857b42f66403aa74020fa23735a4768d6a832b889c9d3660561050d0e9940ad3",
+      "smoke": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "architecture": "x64",
+        "executable": "C:\\Users\\wei\\AppData\\Local\\Programs\\Inkstone\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "nodeIsolation": true,
+        "spellcheck": {
+          "requested": true,
+          "enabled": true,
+          "available": true,
+          "initializing": false,
+          "languages": [
+            "en-US"
+          ],
+          "initializedLanguages": [
+            "en-US"
+          ],
+          "bundledLanguages": [
+            "en-US"
+          ],
+          "cachedLanguages": [],
+          "source": "Bundled: en-US; local cache: none",
+          "dictionaryURL": "inkstone-dictionary://local/",
+          "externalDownloads": false,
+          "error": ""
+        },
+        "noEditByteAndMtime": true,
+        "chinesePath": true,
+        "localEditAndUndo": true,
+        "selectionAcrossModes": true,
+        "mathAndDiagram": true,
+        "exports": [
+          "html",
+          "pdf"
+        ],
+        "htmlReopened": true,
+        "pageErrors": [],
+        "limitations": [
+          "This is not installer/association/uninstall verification.",
+          "insertText does not validate native OS IME.",
+          "PDF signature checked; typography needs visual inspection."
+        ]
+      },
+      "interactive": {
+        "version": "0.6.1",
+        "platform": "win32",
+        "variant": "installedfinal",
+        "executable": "C:\\Users\\wei\\AppData\\Local\\Programs\\Inkstone\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "typedDollarFormulaRendersInPlace": true,
+        "noAdjacentPreview": true,
+        "glyphClickCaretAtB": true,
+        "editAndUndoPreserveBOMCRLF": true,
+        "tableContextColumnInsertAndUndo": true,
+        "actualFileSave": true,
+        "contextCopyCutMarkdownRoundTrip": true,
+        "keyboardContextClipboardInteroperability": true,
+        "escapedTableCommentsFootnotesReferencesPreserved": true,
+        "clipboardPasteSingleUndo": true,
+        "originalClipboardAllFormatsRestored": true,
+        "errors": []
+      },
+      "windowsIntegration": {
+        "version": "0.6.1",
+        "variant": "installedfinal",
+        "executable": "C:\\Users\\wei\\AppData\\Local\\Programs\\Inkstone\\Inkstone.exe",
+        "passed": true,
+        "normalSandbox": true,
+        "installerSeed": true,
+        "freshPrivateProfile": true,
+        "settingsLaunchStubbed": true,
+        "clipboardUntouched": true,
+        "screenshots": [
+          "first-default-prompt.png",
+          "first-prompt-not-now.png",
+          "about-en.png",
+          "license-en.png",
+          "about-zh-CN.png",
+          "license-zh-CN.png",
+          "preferences-files.png"
+        ],
+        "errors": [],
+        "initialLocale": "en",
+        "windowsSystemLocale": "en",
+        "registration": {
+          "supported": true,
+          "packaged": true,
+          "registered": true,
+          "registrationScope": "user",
+          "currentDefault": {
+            "progId": "Inkstone.Markdown",
+            "name": "Inkstone",
+            "isInkstone": true
+          },
+          "extensions": [
+            ".md",
+            ".markdown",
+            ".mdown",
+            ".mkd"
+          ],
+          "requiresInstallation": false
+        },
+        "defaultBefore": {
+          "progId": "Inkstone.Markdown",
+          "name": "Inkstone",
+          "isInkstone": true
+        },
+        "defaultPromptPersisted": true,
+        "aboutVersionAndBundledLicenseExact": true,
+        "toolsAboutRendererBothLanguages": true,
+        "aboutClosePreservesDocumentAndSelection": true,
+        "fixedSettingsURI": "ms-settings:defaultapps?registeredAppUser=Inkstone",
+        "preferencesEffectiveDefaultReadOnly": true,
+        "newWindowHasNoRepeatedPrompt": true,
+        "sameProfileRelaunchHasNoRepeatedPrompt": true,
+        "defaultAfter": {
+          "progId": "Inkstone.Markdown",
+          "name": "Inkstone",
+          "isInkstone": true
+        },
+        "defaultUnchanged": true,
+        "syntheticBOMCRLFDocumentUnchanged": true,
+        "privateProfileRemoved": true,
+        "allTestAppsClosed": true
+      }
+    }
+  ],
+  "defaultTimelineNote": "The user manually installed 0.6.1 and chose Inkstone between the first three forms and actual-installed testing. Each form preserves its own measured start/end default. Installed run before/after snapshots both confirm Inkstone.Markdown; earlier forms both confirm Typora.md.",
+  "scope": "Four final runtime forms including user-installed program. System Settings calls were stubbed; no actual installer/uninstaller launched by this harness. Existing user process IDs retained."
+}

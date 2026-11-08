@@ -1,0 +1,22 @@
+Command line defined: "INKSTONE_REPO=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone"
+Command line defined: "INKSTONE_INSTALLER_INCLUDE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\build\installer.nsh"
+Command line defined: "BUILD_RESOURCES_DIR=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\build"
+Command line defined: "BUILDER_NSIS_INCLUDE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\node_modules\app-builder-lib\templates\nsis\include"
+Command line defined: "UAC_PLUGIN_DIR=C:\Users\wei\AppData\Local\electron-builder\Cache\nsis-resources-3.4.1\nsis-resources-3.4.1-2jx2y\plugins\x86-unicode"
+Command line defined: "OUTPUT_EXE=C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\installer-locale-QXpZyF\locale-hook.exe"
+Processing config: C:\Users\wei\AppData\Local\electron-builder\Cache\nsis-3.0.4.1\nsis-3.0.4.1-1mx3n\nsisconf.nsh
+Processing script file: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\fixtures\installer-language.nsi" (ACP)
+
+Processed 1 file, writing output (x86-unicode):
+
+Output: "C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\.tools\installer-locale-QXpZyF\locale-hook.exe"
+Install: 1 page (64 bytes), 1 section (16408 bytes), 417 instructions (11676 bytes), 518 strings (3758 bytes), 2 language tables (396 bytes).
+
+Using zlib compression.
+
+EXE header size:               52736 / 39424 bytes
+Install code:                   3409 / 32766 bytes
+Install data:                  17083 / 32780 bytes
+CRC (0xB8D012FF):                  4 / 4 bytes
+
+Total size:                    73232 / 104974 bytes (69.7%)

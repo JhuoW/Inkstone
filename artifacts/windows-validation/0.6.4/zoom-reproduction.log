@@ -1,0 +1,103 @@
+
+Running 3 tests using 1 worker
+
+(node:42416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 75 percent zoom before the DOM menu opens (891ms)
+(node:42636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 150 percent zoom before the DOM menu opens (906ms)
+(node:41636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 200 percent zoom before the DOM menu opens (891ms)
+
+
+  1) tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 75 percent zoom before the DOM menu opens 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 2
+    Received:   242
+
+      161 |     });
+      162 |     const point = await page.evaluate(() => window.__testContextPoint);
+    > 163 |     expect(Math.abs(dispatched.details.x - point.x)).toBeLessThan(2);
+          |                                                      ^
+      164 |     expect(Math.abs(dispatched.details.y - point.y)).toBeLessThan(2);
+      165 |   });
+      166 | }
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\native-context.spec.js:163:54
+
+    Error Context: artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-cd9cb-m-before-the-DOM-menu-opens\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-cd9cb-m-before-the-DOM-menu-opens\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-cd9cb-m-before-the-DOM-menu-opens\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 150 percent zoom before the DOM menu opens 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 2
+    Received:   275
+
+      161 |     });
+      162 |     const point = await page.evaluate(() => window.__testContextPoint);
+    > 163 |     expect(Math.abs(dispatched.details.x - point.x)).toBeLessThan(2);
+          |                                                      ^
+      164 |     expect(Math.abs(dispatched.details.y - point.y)).toBeLessThan(2);
+      165 |   });
+      166 | }
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\native-context.spec.js:163:54
+
+    Error Context: artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-6aaa4-m-before-the-DOM-menu-opens\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-6aaa4-m-before-the-DOM-menu-opens\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-6aaa4-m-before-the-DOM-menu-opens\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 200 percent zoom before the DOM menu opens 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "custom": 1,
+    -   "native": 0,
+    +   "custom": 0,
+    +   "native": 1,
+      }
+
+      156 |       .toBe(1);
+      157 |     const dispatched = await app.evaluate(() => global.__zoomContext);
+    > 158 |     expect(dispatched).toMatchObject({
+          |                        ^
+      159 |       native: 0,
+      160 |       custom: 1,
+      161 |     });
+        at C:\Users\wei\OneDrive - Nanyang Technological University\Desktop\inkstone\Inkstone\tests\native-context.spec.js:158:24
+
+    Error Context: artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-dc4ae-m-before-the-DOM-menu-opens\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-dc4ae-m-before-the-DOM-menu-opens\trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts\windows-validation\0.6.4\zoom-reproduction\test-results\native-context-native-cont-dc4ae-m-before-the-DOM-menu-opens\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 75 percent zoom before the DOM menu opens 
+    tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 150 percent zoom before the DOM menu opens 
+    tests\native-context.spec.js:105:3 › native context dispatch uses CSS coordinates at 200 percent zoom before the DOM menu opens 

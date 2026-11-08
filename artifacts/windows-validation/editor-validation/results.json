@@ -1,0 +1,152 @@
+{
+  "browser": "158.0.8127.18",
+  "checks": [
+    {
+      "name": "Custom shortcut aliases accepted by native menus invoke editor commands",
+      "result": "passed",
+      "ms": 97
+    },
+    {
+      "name": "Table dialog Apply keeps pipes and backslash runs inside the edited cell",
+      "result": "passed",
+      "ms": 259
+    },
+    {
+      "name": "Line formatting excludes the unselected line at a selection boundary",
+      "result": "passed",
+      "ms": 10
+    },
+    {
+      "name": "Read-only tables cannot grow through Tab and resume editing when unlocked",
+      "result": "passed",
+      "ms": 16
+    },
+    {
+      "name": "Mode switches preserve original text, selection and undo history",
+      "result": "passed",
+      "ms": 75
+    },
+    {
+      "name": "Continuous keyboard typing and nested-list Enter/Tab retain all text",
+      "result": "passed",
+      "ms": 20
+    },
+    {
+      "name": "Chromium IME composition commits Chinese without dropped or duplicate text",
+      "result": "passed",
+      "ms": 101
+    },
+    {
+      "name": "Cross-block selection, clipboard copy/paste and undo preserve Markdown",
+      "result": "passed",
+      "ms": 33
+    },
+    {
+      "name": "Real mouse dragging from rendered blocks selects across paragraphs and copies complete Markdown",
+      "result": "passed",
+      "ms": 1141
+    },
+    {
+      "name": "Table keyboard navigation, TSV paste, alignment and reordering change source",
+      "result": "passed",
+      "ms": 34
+    },
+    {
+      "name": "Active paragraphs and headings reveal only the selected inline syntax",
+      "result": "passed",
+      "ms": 131
+    },
+    {
+      "name": "Direct visual table cells edit exact source spans with IME, undo, Tab and row growth",
+      "result": "passed",
+      "ms": 154
+    },
+    {
+      "name": "Live blocks preserve global links, footnotes, math labels and duplicate heading anchors",
+      "result": "passed",
+      "ms": 39
+    },
+    {
+      "name": "Mermaid and legacy diagrams retain Chinese SVG labels, errors are visible",
+      "result": "passed",
+      "ms": 833
+    },
+    {
+      "name": "Native legacy grammars render conditional flow styles, notes, aliases and all arrow types",
+      "result": "passed",
+      "ms": 378
+    },
+    {
+      "name": "Offline sequence hand theme retains CJK labels and hand-drawn SVG geometry",
+      "result": "passed",
+      "ms": 192
+    },
+    {
+      "name": "Incremental paragraph edits keep following block clicks and references correct",
+      "result": "passed",
+      "ms": 49
+    },
+    {
+      "name": "Optional Markdown pairing and input typography preserve source-mode text",
+      "result": "passed",
+      "ms": 96
+    },
+    {
+      "name": "Offline MathJax physics fallback and SVG glyphs survive browser rendering and export",
+      "result": "passed",
+      "ms": 305
+    },
+    {
+      "name": "Read-only mode blocks edits and retains copy, find, links, and explicit refresh",
+      "result": "passed",
+      "ms": 72
+    },
+    {
+      "name": "Grouped undo/redo restores every intermediate BOM and mixed LF/CRLF/CR layout",
+      "result": "passed",
+      "ms": 12
+    },
+    {
+      "name": "Source structural commands preserve mixed EOL, nested blocks and one-step undo",
+      "result": "passed",
+      "ms": 91
+    },
+    {
+      "name": "Code wrapping preference changes layout without modifying code source",
+      "result": "passed",
+      "ms": 39
+    },
+    {
+      "name": "Strict heading and CJK punctuation settings agree between active and inactive rendering",
+      "result": "passed",
+      "ms": 45
+    },
+    {
+      "name": "Visual cells support formatting shortcuts and safe plain-text or TSV clipboard paste",
+      "result": "passed",
+      "ms": 122
+    }
+  ],
+  "performance": {
+    "characters": 888890,
+    "bytes": 1158890,
+    "lines": 10001,
+    "openMs": 173.59999999776483,
+    "liveEditSamplesMs": [
+      36.5,
+      32.69999999925494,
+      27.300000000745058,
+      27,
+      27.699999999254942,
+      27,
+      16,
+      15.399999998509884,
+      15,
+      11.900000002235174
+    ],
+    "modeRoundTripMs": 32.69999999925494,
+    "sourceSwitchAndEditMs": 12.5
+  },
+  "browserErrors": [],
+  "imeScope": "Chromium CDP composition protocol; native OS IME candidates and language-switch integration remain manual validation."
+}

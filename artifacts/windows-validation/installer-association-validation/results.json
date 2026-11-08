@@ -1,0 +1,119 @@
+{
+  "version": "0.4.0",
+  "progId": "Inkstone.Markdown",
+  "passed": true,
+  "runtime": "native Windows NSIS",
+  "existingDefaultPreserved": true,
+  "blankDefaultRemainsAbsent": true,
+  "ownOpenWithRegistered": true,
+  "iconRegistered": true,
+  "quotedOpenCommand": true,
+  "chineseInstallPath": true,
+  "unrelatedClassPreserved": true,
+  "uninstallRemovesOnlyOwnEntries": true,
+  "disposableRegistryKeysCleaned": true,
+  "scope": "Actual registration/unregistration macros with disposable random extensions and ProgIDs; no real Markdown associations or application install modified.",
+  "registered": {
+    ".inkstone_fixture_f666be0ae9f0451fac4ed71d4c2103fb_existing": {
+      "|": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Own.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    ".inkstone_fixture_f666be0ae9f0451fac4ed71d4c2103fb_blank": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-blank-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Own.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    "Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+      "|": {
+        "kind": "String",
+        "value": "Other editor fixture"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Existing Editor\\editor.exe\" \"%1\""
+      }
+    },
+    "Inkstone.AssociationFixture.Own.f666be0ae9f0451fac4ed71d4c2103fb": {
+      "|": {
+        "kind": "String",
+        "value": "Markdown document"
+      },
+      "\\DefaultIcon|": {
+        "kind": "String",
+        "value": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-9DwdnS\\Program Files\\Inkstone 安装测试\\Inkstone.exe,0"
+      },
+      "\\shell|": {
+        "kind": "String",
+        "value": "open"
+      },
+      "\\shell\\open|": {
+        "kind": "String",
+        "value": "Open with Inkstone"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-9DwdnS\\Program Files\\Inkstone 安装测试\\Inkstone.exe\" \"%1\""
+      }
+    }
+  },
+  "unregistered": {
+    ".inkstone_fixture_f666be0ae9f0451fac4ed71d4c2103fb_existing": {
+      "|": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    ".inkstone_fixture_f666be0ae9f0451fac4ed71d4c2103fb_blank": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-blank-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    "Inkstone.AssociationFixture.Other.f666be0ae9f0451fac4ed71d4c2103fb": {
+      "|": {
+        "kind": "String",
+        "value": "Other editor fixture"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Existing Editor\\editor.exe\" \"%1\""
+      }
+    },
+    "Inkstone.AssociationFixture.Own.f666be0ae9f0451fac4ed71d4c2103fb": null
+  }
+}

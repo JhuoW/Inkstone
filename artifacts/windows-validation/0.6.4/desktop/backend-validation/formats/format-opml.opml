@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title></title>
+    <dateModified></dateModified>
+    <ownerName></ownerName>
+  </head>
+  <body>
+<outline text="中文格式验收" _note="Inkstone offline writing. 中文段落。">
+  <outline text="第二节" _note="-   第一项&#10;-   Second item">
+  </outline>
+</outline>
+  </body>
+</opml>

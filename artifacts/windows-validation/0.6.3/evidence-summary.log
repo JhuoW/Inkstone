@@ -1,0 +1,69 @@
+{
+  "version": "0.6.3",
+  "platform": "win32",
+  "node": "v22.23.4",
+  "finished": "2026-11-08T16:26:00.574Z",
+  "unit": 153,
+  "browser": 108,
+  "desktop": 120,
+  "packaged": 11,
+  "total": 392,
+  "failures": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "frozenFiles": 345,
+  "changedFrozenFiles": [],
+  "languages": 138,
+  "asarSHA256": "10434c5648c62802373c66cd2a705cb8c66492af7340b1eee9f51185f141389b",
+  "binaries": [
+    {
+      "name": "Inkstone-0.6.3-windows-x64.exe",
+      "bytes": 115312243,
+      "sha256": "dee2ef5e9f66f5a60ff6b240f13a13c19edbf2f3dc051126cc35290d8434578e"
+    },
+    {
+      "name": "Inkstone-0.6.3-windows-x64.zip",
+      "bytes": 159536682,
+      "sha256": "5f2f55cd1904cb0fe110a6b69a13a20844b66b0437bda5724e9f9611fefd73f9"
+    }
+  ],
+  "browserSuites": [
+    {
+      "file": "code-fences/results.json",
+      "passed": 12
+    },
+    {
+      "file": "editor-validation/results.json",
+      "passed": 25
+    },
+    {
+      "file": "math-editing-validation/results.json",
+      "passed": 16
+    },
+    {
+      "file": "ui-polish-validation/results.json",
+      "passed": 12
+    },
+    {
+      "file": "ui-redesign/editor/results.json",
+      "passed": 7
+    },
+    {
+      "file": "branding-validation/browser-results.json",
+      "passed": 6
+    },
+    {
+      "file": "about-dialog/results.json",
+      "passed": 5
+    },
+    {
+      "file": "mermaid-validation/results.json",
+      "passed": 25
+    }
+  ],
+  "desktopSandbox": true,
+  "packagedForm": "Actual extracted final portable ZIP",
+  "installerScope": "NSIS payload extracted and compared with the tested program. No installation or uninstallation was performed.",
+  "initialRun": "An initial broader run timed out in an existing spelling test because flags preceded the development app path, causing the repository to be opened and scanned. The harness argument order was corrected; the final full 120-test run passes.",
+  "signature": "No code-signing certificate configured."
+}

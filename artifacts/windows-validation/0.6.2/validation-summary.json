@@ -1,0 +1,19 @@
+{
+  "Version": "0.6.2",
+  "Contributor": "Wei Zhuo",
+  "ContributorURL": "https://wei2hu0.github.io/",
+  "UnitPassed": 8,
+  "BrowserPassedGroups": 5,
+  "DevelopmentAboutPassed": 4,
+  "PackagedAboutPassed": 4,
+  "TotalFocusedChecks": 21,
+  "FullPreviousRegressionRerun": false,
+  "NormalSandbox": true,
+  "Build": "index-DkhSLJEf.js",
+  "MatchedRuntimeFilesPerForm": 300,
+  "PackageForms": 3,
+  "AsarSHA256": "be757fabfc384a2342bf650a088ce730ea2c0278444cec9f2abb2512de6d13d2",
+  "License": "AGPL-3.0-only",
+  "UserInstallationModified": false,
+  "GitCommitOrPush": false
+}

@@ -1,0 +1,15 @@
+{
+  "version": "0.6.0",
+  "platform": "win32",
+  "variant": "unpacked",
+  "executable": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\release\\win-unpacked\\Inkstone.exe",
+  "passed": true,
+  "normalSandbox": true,
+  "typedDollarFormulaRendersInPlace": true,
+  "noAdjacentPreview": true,
+  "glyphClickCaretAtB": true,
+  "editAndUndoPreserveBOMCRLF": true,
+  "tableContextColumnInsertAndUndo": true,
+  "actualFileSave": true,
+  "errors": []
+}

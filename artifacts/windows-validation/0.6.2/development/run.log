@@ -1,0 +1,11 @@
+
+Running 4 tests using 1 worker
+
+(node:46704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\system-integration.spec.js:122:1 › About IPC reads the runtime version and the exact bundled AGPL license (789ms)
+  ok 2 tests\system-integration.spec.js:146:1 › native Tools About opens one renderer dialog and preserves selection and undo (861ms)
+  ok 3 tests\system-integration.spec.js:182:3 › About en/light shows local branding and offline license with trusted links (1.2s)
+  ok 4 tests\system-integration.spec.js:182:3 › About zh-CN/dark shows local branding and offline license with trusted links (1.2s)
+
+  4 passed (4.6s)

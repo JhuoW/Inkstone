@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "editor",
+    "Script": "tests/editor-browser.mjs",
+    "Result": "editor-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 25,
+    "StartedUtc": "2026-11-08T14:51:38.7523916Z",
+    "FinishedUtc": "2026-11-08T14:51:44.6348767Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "math",
+    "Script": "tests/math-editing-browser.mjs",
+    "Result": "math-editing-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 16,
+    "StartedUtc": "2026-11-08T14:51:44.6444653Z",
+    "FinishedUtc": "2026-11-08T14:51:48.6192341Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "ui",
+    "Script": "tests/ui-polish-browser.mjs",
+    "Result": "ui-polish-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 12,
+    "StartedUtc": "2026-11-08T14:51:48.6220112Z",
+    "FinishedUtc": "2026-11-08T14:51:52.9609623Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "editor-design",
+    "Script": "tests/editor-design-browser.mjs",
+    "Result": "ui-redesign/editor/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 7,
+    "StartedUtc": "2026-11-08T14:51:52.9638213Z",
+    "FinishedUtc": "2026-11-08T14:51:55.6976526Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "branding",
+    "Script": "tests/branding-browser.mjs",
+    "Result": "branding-validation/browser-results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 6,
+    "StartedUtc": "2026-11-08T14:51:55.6999889Z",
+    "FinishedUtc": "2026-11-08T14:51:58.1377543Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "mermaid",
+    "Script": "scripts/verify-mermaid.mjs",
+    "Result": "mermaid-validation/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 25,
+    "StartedUtc": "2026-11-08T14:51:58.1398135Z",
+    "FinishedUtc": "2026-11-08T14:52:05.9123841Z",
+    "ExitCode": 0
+  },
+  {
+    "Name": "about",
+    "Script": "tests/about-dialog-browser.mjs",
+    "Result": "about-dialog/results.json",
+    "Browser": "158.0.8127.18",
+    "Passed": 5,
+    "StartedUtc": "2026-11-08T14:52:05.9292064Z",
+    "FinishedUtc": "2026-11-08T14:52:07.5098850Z",
+    "ExitCode": 0
+  }
+]

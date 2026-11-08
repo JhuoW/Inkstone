@@ -1,0 +1,33 @@
+
+7-Zip (a) 24.09 (x86) : Copyright (c) 1999-2024 Igor Pavlov : 2024-11-29
+
+Scanning the drive for archives:
+1 file, 115313922 bytes (110 MiB)
+
+Extracting archive: C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\Inkstone-0.6.4-windows-x64.exe
+
+WARNINGS:
+There are data after the end of archive
+
+--
+Path = C:\Users\wei\Documents\Codex\2026-11-08\an\work\inkstone-0.6.4-package\Inkstone-0.6.4-windows-x64.exe
+Type = 7z
+WARNINGS:
+There are data after the end of archive
+Offset = 331984
+Physical Size = 114568844
+Tail Size = 413094
+Headers Size = 1084
+Method = LZMA2:26 BCJ
+Solid = +
+Blocks = 2
+
+Everything is Ok
+
+Archives with Warnings: 1
+
+Warnings: 1
+Folders: 2
+Files: 73
+Size:       394820637
+Compressed: 115313922

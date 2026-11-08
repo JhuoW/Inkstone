@@ -1,0 +1,58 @@
+{
+  "version": "0.6.1",
+  "platform": "win32",
+  "browser": "158.0.8127.18",
+  "desktopIPC": "stubbed; not file/OS integration validation",
+  "passed": 12,
+  "checks": [
+    {
+      "name": "Dialog primary Enter, Escape/cancel, close icon, backdrop and restored focus",
+      "passed": true
+    },
+    {
+      "name": "Dialog padding is not backdrop; busy and IME cancellation protect the active operation",
+      "passed": true
+    },
+    {
+      "name": "English and Chinese prompt labels, selected value, explicit Cancel and Enter submission",
+      "passed": true
+    },
+    {
+      "name": "Notifications are accessible, safely render literal text, and dismiss from keyboard",
+      "passed": true
+    },
+    {
+      "name": "Table dialog keyboard edits remain local and English controls reflect available operations",
+      "passed": true
+    },
+    {
+      "name": "Resource selection count, empty state, and cancel during preparation never commit",
+      "passed": true
+    },
+    {
+      "name": "Export freezes editable options while working, then reports success and restores controls",
+      "passed": true
+    },
+    {
+      "name": "Preferences retain every field, support keyboard tabs and validate without accidental form navigation",
+      "passed": true
+    },
+    {
+      "name": "Preferences have readable fields and keep footer actions inside the dialog",
+      "passed": true
+    },
+    {
+      "name": "Task dialogs keep content and actions reachable at 800px with 150% display density",
+      "passed": true
+    },
+    {
+      "name": "Short windows keep table cells and resources editable with reachable footer actions",
+      "passed": true
+    },
+    {
+      "name": "English/Chinese light/dark chrome preserves original brand and stays usable at narrow widths",
+      "passed": true
+    }
+  ],
+  "pageErrors": []
+}

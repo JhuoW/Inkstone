@@ -1,0 +1,276 @@
+{
+  "version": "0.6.1",
+  "progId": "Inkstone.Markdown",
+  "passed": true,
+  "runtime": "native Windows NSIS",
+  "existingDefaultPreserved": true,
+  "blankDefaultRemainsAbsent": true,
+  "ownOpenWithRegistered": true,
+  "iconRegistered": true,
+  "quotedOpenCommand": true,
+  "chineseInstallPath": true,
+  "unrelatedClassPreserved": true,
+  "uninstallRemovesOnlyOwnEntries": true,
+  "defaultAppsCapabilitiesRegistered": true,
+  "fourMarkdownExtensionsRegistered": true,
+  "applicationsSupportedTypesRegistered": true,
+  "userChoiceAndHashPreserved": true,
+  "changedValuesPreserved": true,
+  "replacementInstallationPreserved": true,
+  "emptyOwnedRegistryKeysRemoved": true,
+  "disposableRegistryKeysCleaned": true,
+  "scope": "Actual registration/unregistration macros with disposable random extensions and ProgIDs; no real Markdown associations or application install modified.",
+  "registered": {
+    ".inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_existing": {
+      "|": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    ".inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_blank": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-blank-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+      "|": {
+        "kind": "String",
+        "value": "Other editor fixture"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Existing Editor\\editor.exe\" \"%1\""
+      }
+    },
+    "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556": {
+      "|": {
+        "kind": "String",
+        "value": "Markdown document"
+      },
+      "\\DefaultIcon|": {
+        "kind": "String",
+        "value": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-KX7H3q\\Program Files\\Inkstone 安装测试\\Inkstone.exe,0"
+      },
+      "\\shell|": {
+        "kind": "String",
+        "value": "open"
+      },
+      "\\shell\\open|": {
+        "kind": "String",
+        "value": "Open with Inkstone"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-KX7H3q\\Program Files\\Inkstone 安装测试\\Inkstone.exe\" \"%1\""
+      }
+    }
+  },
+  "unregistered": {
+    ".inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_existing": {
+      "|": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    ".inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_blank": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-blank-extension-data"
+      },
+      "\\OpenWithProgids|Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+        "kind": "None",
+        "value": []
+      }
+    },
+    "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556": {
+      "|": {
+        "kind": "String",
+        "value": "Other editor fixture"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Existing Editor\\editor.exe\" \"%1\""
+      }
+    },
+    "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556": null
+  },
+  "defaultsRegistered": {
+    "registeredApplication": "Software\\Inkstone.AssociationFixture.b9ce75edd48343c391a02761e5bfe556\\Capabilities",
+    "capabilities": {
+      "|": {
+        "kind": "String",
+        "value": "preserve-capability-default-value"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-capability-data"
+      },
+      "|ApplicationName": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "|ApplicationDescription": {
+        "kind": "String",
+        "value": "Inkstone Markdown editor"
+      },
+      "|ApplicationIcon": {
+        "kind": "String",
+        "value": "\"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-KX7H3q\\Program Files\\Inkstone 安装测试\\Inkstone.exe\",0"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_untouched": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_existing": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_blank": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mdown": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mkd": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Own.b9ce75edd48343c391a02761e5bfe556"
+      }
+    },
+    "application": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-application-data"
+      },
+      "|FriendlyAppName": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\DefaultIcon|": {
+        "kind": "String",
+        "value": "\"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-KX7H3q\\Program Files\\Inkstone 安装测试\\Inkstone.exe\",0"
+      },
+      "\\shell\\edit\\command|": {
+        "kind": "String",
+        "value": "preserve-other-verb"
+      },
+      "\\shell\\open\\command|": {
+        "kind": "String",
+        "value": "\"C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\.tools\\association-hook-KX7H3q\\Program Files\\Inkstone 安装测试\\Inkstone.exe\" \"%1\""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_untouched": {
+        "kind": "String",
+        "value": ""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_existing": {
+        "kind": "String",
+        "value": ""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_blank": {
+        "kind": "String",
+        "value": ""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mdown": {
+        "kind": "String",
+        "value": ""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mkd": {
+        "kind": "String",
+        "value": ""
+      }
+    },
+    "userChoice": {
+      "\\UserChoice|ProgId": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\UserChoice|Hash": {
+        "kind": "String",
+        "value": "fixture-user-choice-preserved"
+      }
+    }
+  },
+  "defaultsUnregistered": {
+    "registeredApplication": null,
+    "capabilities": {
+      "|": {
+        "kind": "String",
+        "value": "preserve-capability-default-value"
+      },
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-capability-data"
+      },
+      "|ApplicationDescription": {
+        "kind": "String",
+        "value": "Keep a changed description"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_untouched": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\FileAssociations|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mkd": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      }
+    },
+    "application": {
+      "|FixtureSentinel": {
+        "kind": "String",
+        "value": "preserve-application-data"
+      },
+      "\\shell\\edit\\command|": {
+        "kind": "String",
+        "value": "preserve-other-verb"
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_untouched": {
+        "kind": "String",
+        "value": ""
+      },
+      "\\SupportedTypes|.inkstone_fixture_b9ce75edd48343c391a02761e5bfe556_mkd": {
+        "kind": "String",
+        "value": "Keep a changed supported type"
+      }
+    },
+    "userChoice": {
+      "\\UserChoice|ProgId": {
+        "kind": "String",
+        "value": "Inkstone.AssociationFixture.Other.b9ce75edd48343c391a02761e5bfe556"
+      },
+      "\\UserChoice|Hash": {
+        "kind": "String",
+        "value": "fixture-user-choice-preserved"
+      }
+    }
+  }
+}

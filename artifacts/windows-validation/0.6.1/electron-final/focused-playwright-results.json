@@ -1,0 +1,285 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\wei\\AppData\\Local\\Programs\\nodejs\\node.exe",
+      "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/context-menu.spec.js",
+      "tests/backend-e2e.spec.js",
+      "tests/ux.spec.js",
+      "-g",
+      "keyboard submenus and Escape|native menus and file dialogs|fresh profiles follow"
+    ],
+    "configFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\playwright.config.js",
+    "rootDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/artifacts/windows-validation/0.6.1/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js",
+          "system-integration.spec.js"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.1\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "snapshotDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js",
+          "system-integration.spec.js"
+        ],
+        "timeout": 90000,
+        "use": {
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "open": "never",
+          "outputFolder": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.1\\playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.1\\playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "backend-e2e.spec.js",
+      "file": "backend-e2e.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "desktop persistence, resource and export integration",
+          "file": "backend-e2e.spec.js",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "native menus and file dialogs follow the persisted English or Chinese choice",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                        "line": 15,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1006,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-08T14:52:02.282Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests\\backend-e2e.spec.js",
+                            "line": 15,
+                            "column": 6
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "08950d2c8309445b22b1-de32d52cf181cbf30bbb",
+              "file": "backend-e2e.spec.js",
+              "line": 50,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "context-menu.spec.js",
+      "file": "context-menu.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keyboard submenus and Escape work at the viewport edge; read-only keeps copying but disables edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1216,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T14:52:04.634Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05af0e74f03b3ffa1413-b4d1db7cc9d577eab702",
+          "file": "context-menu.spec.js",
+          "line": 737,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ux.spec.js",
+      "file": "ux.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fresh profiles follow the system language; first-run and preferences switch all UI while preserving text, selection and undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2638,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T14:52:05.876Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "556847e58476631bffaa-00bdfbfdb48c3e949ccb",
+          "file": "ux.spec.js",
+          "line": 404,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T14:52:01.471Z",
+    "duration": 7083.843,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

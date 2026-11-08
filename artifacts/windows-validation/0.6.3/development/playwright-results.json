@@ -1,0 +1,523 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\wei\\AppData\\Local\\Programs\\nodejs\\node.exe",
+      "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/code-fences.spec.js",
+      "tests/system-integration.spec.js",
+      "-g",
+      "code|Code|context Insert|Branding|About"
+    ],
+    "configFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\playwright.config.js",
+    "rootDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/artifacts/windows-validation/0.6.3/development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/wei/OneDrive - Nanyang Technological University/Desktop/inkstone/Inkstone/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js",
+          "system-integration.spec.js",
+          "code-fences.spec.js"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.3\\development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "snapshotDir": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\tests",
+        "testIgnore": [],
+        "testMatch": [
+          "desktop.spec.js",
+          "backend-e2e.spec.js",
+          "enhancements.spec.js",
+          "ux.spec.js",
+          "design-system-desktop.spec.js",
+          "windows-regressions.spec.js",
+          "context-menu.spec.js",
+          "native-context.spec.js",
+          "system-integration.spec.js",
+          "code-fences.spec.js"
+        ],
+        "timeout": 90000,
+        "use": {
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "open": "never",
+          "outputFolder": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.3\\development\\playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\wei\\OneDrive - Nanyang Technological University\\Desktop\\inkstone\\Inkstone\\artifacts\\windows-validation\\0.6.3\\development\\playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "code-fences.spec.js",
+      "file": "code-fences.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Insert code block focuses typing, language selection highlights Python, and save preserves CRLF",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1028,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:22.852Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-8a49fa38c0867334f169",
+          "file": "code-fences.spec.js",
+          "line": 78,
+          "column": 1
+        },
+        {
+          "title": "Native and context paste keep code text, indentation and literal fences with undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1034,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:23.907Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-b5a7f9d6c36dace1ba34",
+          "file": "code-fences.spec.js",
+          "line": 100,
+          "column": 1
+        },
+        {
+          "title": "The context Insert menu creates an immediately editable code block",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1080,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:24.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-7891734313c6b5ff4ed6",
+          "file": "code-fences.spec.js",
+          "line": 140,
+          "column": 1
+        },
+        {
+          "title": "Branding and persistent code are readable in zh-CN/light",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1025,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:26.040Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-c478ed0bac3583e1bffa",
+          "file": "code-fences.spec.js",
+          "line": 168,
+          "column": 3
+        },
+        {
+          "title": "Branding and persistent code are readable in zh-CN/dark",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1047,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:27.080Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-0e9ad2e7677c6f865c85",
+          "file": "code-fences.spec.js",
+          "line": 168,
+          "column": 3
+        },
+        {
+          "title": "Branding and persistent code are readable in en/light",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1045,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:28.142Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-22251afb6dc0fd09b304",
+          "file": "code-fences.spec.js",
+          "line": 168,
+          "column": 3
+        },
+        {
+          "title": "Branding and persistent code are readable in en/dark",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1038,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:29.201Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44ab8bebc538e01bb702-26c78a841f7a1e9bd021",
+          "file": "code-fences.spec.js",
+          "line": 168,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "system-integration.spec.js",
+      "file": "system-integration.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "About IPC reads the runtime version and the exact bundled AGPL license",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 756,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:30.278Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63292050cfa4ab9ac367-fe08feaf7c55683588fb",
+          "file": "system-integration.spec.js",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "native Tools About opens one renderer dialog and preserves selection and undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 884,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:31.050Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63292050cfa4ab9ac367-581b2773b6e36d826c3c",
+          "file": "system-integration.spec.js",
+          "line": 146,
+          "column": 1
+        },
+        {
+          "title": "About en/light shows local branding and offline license with trusted links",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1230,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:31.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63292050cfa4ab9ac367-812ff8e2fc95cb81fd4d",
+          "file": "system-integration.spec.js",
+          "line": 182,
+          "column": 3
+        },
+        {
+          "title": "About zh-CN/dark shows local branding and offline license with trusted links",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1220,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T16:10:33.194Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63292050cfa4ab9ac367-dd314469238c7fd5e915",
+          "file": "system-integration.spec.js",
+          "line": 182,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T16:10:22.393Z",
+    "duration": 12054.17,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

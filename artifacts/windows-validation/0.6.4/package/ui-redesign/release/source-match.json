@@ -1,0 +1,19 @@
+{
+  "version": "0.6.4",
+  "results": [
+    {
+      "file": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.4-package\\win-unpacked\\resources\\app.asar",
+      "version": "0.6.4",
+      "matchedRuntimeFiles": 300,
+      "asarSHA256": "8abdbf0d314b5153f2299a0af6ce2d1b468babdea689f7038e6c253f3212b736",
+      "passed": true
+    },
+    {
+      "file": "C:\\Users\\wei\\Documents\\Codex\\2026-11-08\\an\\work\\inkstone-0.6.4-nsis\\resources\\app.asar",
+      "version": "0.6.4",
+      "matchedRuntimeFiles": 300,
+      "asarSHA256": "8abdbf0d314b5153f2299a0af6ce2d1b468babdea689f7038e6c253f3212b736",
+      "passed": true
+    }
+  ]
+}
