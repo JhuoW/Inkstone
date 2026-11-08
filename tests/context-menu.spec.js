@@ -85,8 +85,12 @@ async function openSelected(value, source = true) {
 }
 async function loadClipboardDocument(value, source = false) {
   await page.evaluate(
-    ({ value, source }) => {
-      __inkstone.loadDocument({ ...__inkstone.getDocument(), text: value });
+    async ({ value, source }) => {
+      // Loading ends by focusing the editor; finish it before interacting with cells.
+      await __inkstone.loadDocument({
+        ...__inkstone.getDocument(),
+        text: value,
+      });
       __inkstone.editor.setMode(source ? "source" : "live");
       __inkstone.editor.focus();
     },

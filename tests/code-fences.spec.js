@@ -57,8 +57,8 @@ test.afterEach(async () => {
 });
 const text = () => page.evaluate(() => __inkstone.editor.getText());
 async function load(text) {
-  await page.evaluate((text) => {
-    __inkstone.loadDocument({ ...__inkstone.getDocument(), text });
+  await page.evaluate(async (text) => {
+    await __inkstone.loadDocument({ ...__inkstone.getDocument(), text });
     __inkstone.editor.setMode("live");
   }, text);
 }
