@@ -14,7 +14,7 @@ Inkstone is a local Markdown editor for focused writing. Your notes stay as ordi
 
 ## Download
 
-**[Download Inkstone 0.6.4 for Windows x64](https://github.com/JhuoW/Inkstone/releases/download/v0.6.4/Inkstone-0.6.4-windows-x64.exe)** · [Release notes](https://github.com/JhuoW/Inkstone/releases/latest)
+**[Download the latest Windows installer](https://github.com/JhuoW/Inkstone/releases/latest)**
 
 Run the installer to install or upgrade Inkstone. Choose it from **Open with** for Markdown files, or use **Tools → Default Markdown app** to open Windows default-app settings.
 
@@ -25,6 +25,24 @@ Run the installer to install or upgrade Inkstone. Choose it from **Open with** f
 - Persistent code blocks with syntax highlighting and a language picker.
 - Local folders, search, autosave, recovery, and HTML/PDF export.
 - English and Simplified Chinese interfaces, light and dark themes.
+
+### Math, as you write
+
+Formulas render in place. Click to edit the expression directly in your paragraph.
+
+![Inline formula editing and a rendered math block](docs/images/math-en.png)
+
+### Code that stays editable
+
+Type or paste into a code block, then choose its language for syntax highlighting.
+
+![Python and SQL code blocks with language pickers](docs/images/code-en.png)
+
+### Tables, a right-click away
+
+Insert a table or use its context menu to add, move, and remove rows and columns.
+
+![Table editing through the context menu](docs/images/tables-en.png)
 
 ## Development
 
