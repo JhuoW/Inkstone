@@ -7,6 +7,7 @@
 
 <p align="center"><strong>A place for your thoughts</strong></p>
 <p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
+<p align="center"><a href="https://wei2hu0.github.io/inkstone-website/index.html">Visit the official website ↗</a></p>
 
 Inkstone is a local Markdown editor for focused writing. Your notes stay as ordinary files on your computer.
 

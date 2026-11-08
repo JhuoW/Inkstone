@@ -7,6 +7,7 @@
 
 <p align="center"><strong>让想法落在纸上</strong></p>
 <p align="center"><a href="README.md">English</a> · 简体中文</p>
+<p align="center"><a href="https://wei2hu0.github.io/inkstone-website/zh.html">访问墨石官网 ↗</a></p>
 
 墨石是一款专注写作的本地 Markdown 编辑器。你的笔记始终以普通文件保存在自己的电脑上。
 
