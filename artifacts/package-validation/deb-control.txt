@@ -1,0 +1,20 @@
+ new Debian package, version 2.0.
+ size 106790300 bytes: control archive=4548 bytes.
+     546 bytes,    14 lines      control
+    5573 bytes,    85 lines      md5sums
+    2912 bytes,    57 lines   *  postinst             #!/bin/bash
+    1107 bytes,    26 lines   *  postrm               #!/bin/bash
+ Package: inkstone-editor
+ Version: 0.4.0
+ License: MIT
+ Vendor: Inkstone contributors <inkstone@example.invalid>
+ Architecture: amd64
+ Maintainer: Inkstone contributors <inkstone@example.invalid>
+ Installed-Size: 300900
+ Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0
+ Recommends: libappindicator3-1
+ Section: default
+ Priority: optional
+ Homepage: https://github.com/JhuoW/Open-Typora
+ Description: 
+   Inkstone 墨石 — a local-first, source-preserving Markdown editor for Windows and Linux

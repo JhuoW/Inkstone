@@ -1,0 +1,162 @@
+{
+  "name": "inkstone-editor",
+  "productName": "Inkstone",
+  "version": "0.4.0",
+  "description": "Inkstone 墨石 — a local-first, source-preserving Markdown editor for Windows and Linux",
+  "author": "Inkstone contributors",
+  "license": "MIT",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "start": "npm run build && node scripts/start.mjs",
+    "build": "vite build",
+    "test": "node scripts/test-unit.mjs",
+    "test:e2e": "playwright test",
+    "pack": "npm run build && electron-builder --dir",
+    "dist:linux": "npm run build && electron-builder --linux AppImage deb tar.gz --x64 --publish never",
+    "dist:win": "npm run build && electron-builder --win nsis zip --x64 --publish never",
+    "test:editor": "node tests/editor-browser.mjs",
+    "licenses": "node scripts/licenses.mjs",
+    "test:all": "npm test && npm run test:editor && npm run test:math && npm run test:ui && npm run test:editor-design && npm run test:e2e",
+    "verify:packages": "node scripts/verify-packages.mjs",
+    "format": "prettier --write src electron tests scripts/*.mjs *.js index.html package.json",
+    "test:native": "node scripts/verify-native.mjs",
+    "package:source": "node scripts/package-source.mjs",
+    "checksums": "node scripts/write-checksums.mjs",
+    "verify:windows": "node scripts/verify-windows-package.mjs",
+    "test:ui": "node tests/ui-polish-browser.mjs",
+    "test:math": "node tests/math-editing-browser.mjs",
+    "verify:installer-language": "node scripts/verify-installer-language.mjs",
+    "test:editor-design": "node tests/editor-design-browser.mjs",
+    "test:design-baseline": "node scripts/capture-design-baseline.mjs --stage after",
+    "verify:source": "node scripts/verify-release-source.mjs"
+  },
+  "build": {
+    "appId": "io.inkstone.editor",
+    "productName": "Inkstone",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md",
+      "build/icon.png",
+      "build/icon.ico"
+    ],
+    "asar": true,
+    "fileAssociations": [
+      {
+        "ext": [
+          "md",
+          "markdown",
+          "mdown",
+          "mkd"
+        ],
+        "name": "Markdown document",
+        "role": "Editor",
+        "mimeType": "text/markdown"
+      }
+    ],
+    "linux": {
+      "category": "Office",
+      "icon": "build/icons",
+      "executableName": "inkstone",
+      "maintainer": "Inkstone contributors <inkstone@example.invalid>",
+      "syncDesktopName": true
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Inkstone-${version}-windows-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "differentialPackage": false,
+      "installerLanguages": [
+        "en_US",
+        "zh_CN"
+      ],
+      "displayLanguageSelector": true,
+      "language": "1033",
+      "include": "build/installer.nsh"
+    },
+    "publish": null
+  },
+  "devDependencies": {
+    "@codemirror/autocomplete": "^6.20.4",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/language-data": "^6.5.2",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@lezer/highlight": "^1.2.5",
+    "@mermaid-js/mermaid-zenuml": "1.0.1",
+    "@playwright/test": "^1.65.0",
+    "dompurify": "^3.4.17",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
+    "flowchart.js": "^1.18.1",
+    "highlight.js": "^11.12.0",
+    "jsdom": "^31.0.0",
+    "katex": "^0.19.1",
+    "markdown-it-emoji": "^3.1.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-mark": "^4.0.0",
+    "markdown-it-sub": "^2.0.0",
+    "markdown-it-sup": "^2.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "mathjax-full": "^3.2.2",
+    "mermaid": "^12.3.0",
+    "prettier": "^3.9.10",
+    "raphael": "^2.3.0",
+    "resedit": "1.7.2",
+    "turndown": "^7.2.5",
+    "turndown-plugin-gfm": "^1.0.2",
+    "underscore": "^1.13.8",
+    "vite": "^8.3.6",
+    "yaml": "^2.9.1"
+  },
+  "overrides": {
+    "app-builder-lib": {
+      "minimatch": "^11.0.1"
+    },
+    "@electron/universal": {
+      "minimatch": "^11.0.1"
+    }
+  },
+  "dependencies": {
+    "iconv-lite": "^0.7.2",
+    "markdown-it": "^15.0.3"
+  },
+  "desktopName": "inkstone.desktop",
+  "os": [
+    "win32",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

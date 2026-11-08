@@ -1,0 +1,12 @@
+  • electron-builder  version=26.18.0 os=6.17.0-14-generic
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=45.2.3 arch=x64 buildFromSource=false workspaceRoot=/home/zhuowei/software/Open-Typora projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=linux arch=x64 electron=45.2.3 appOutDir=.tools/linux-0.4-build/linux-unpacked
+  • using custom electronDist directory  electronDist=/home/zhuowei/.cache/electron/8f3ac71e340a9b80141ce76e61a0af56be8beee5aed0cf501a00bd07792a0295
+  • searching for node modules  pm=npm searchDir=/home/zhuowei/software/Open-Typora
+  • building        target=AppImage arch=x64 file=.tools/linux-0.4-build/Inkstone-0.4.0.AppImage
+  • building        target=tar.gz arch=x64 file=.tools/linux-0.4-build/inkstone-editor-0.4.0.tar.gz
+  • building embedded block map  file=.tools/linux-0.4-build/Inkstone-0.4.0.AppImage
+  • building        target=deb arch=x64 file=.tools/linux-0.4-build/inkstone-editor_0.4.0_amd64.deb

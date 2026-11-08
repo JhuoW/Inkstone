@@ -1,0 +1,306 @@
+{
+  "windows": [
+    {
+      "handle": "262238",
+      "pid": 364,
+      "id": 0,
+      "visible": true,
+      "enabled": true,
+      "class": "#32770",
+      "text": "Inkstone 安装 ",
+      "rect": {
+        "x": 427,
+        "y": 289,
+        "width": 585,
+        "height": 421
+      },
+      "controls": [
+        {
+          "handle": "262250",
+          "pid": 364,
+          "id": 3,
+          "visible": false,
+          "enabled": false,
+          "class": "Button",
+          "text": "",
+          "rect": {
+            "x": 721,
+            "y": 670,
+            "width": 88,
+            "height": 25
+          }
+        },
+        {
+          "handle": "262234",
+          "pid": 364,
+          "id": 1,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "下一步(&N) >",
+          "rect": {
+            "x": 808,
+            "y": 670,
+            "width": 88,
+            "height": 25
+          }
+        },
+        {
+          "handle": "262236",
+          "pid": 364,
+          "id": 2,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "取消(&C)",
+          "rect": {
+            "x": 908,
+            "y": 670,
+            "width": 88,
+            "height": 25
+          }
+        },
+        {
+          "handle": "262232",
+          "pid": 364,
+          "id": 1018,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 456,
+            "y": 397,
+            "width": 525,
+            "height": 245
+          }
+        },
+        {
+          "handle": "262272",
+          "pid": 364,
+          "id": 1044,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 430,
+            "y": 318,
+            "width": 579,
+            "height": 338
+          }
+        },
+        {
+          "handle": "262270",
+          "pid": 364,
+          "id": 1035,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 439,
+            "y": 656,
+            "width": 564,
+            "height": 2
+          }
+        },
+        {
+          "handle": "131196",
+          "pid": 364,
+          "id": 1036,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 430,
+            "y": 379,
+            "width": 597,
+            "height": 2
+          }
+        },
+        {
+          "handle": "131194",
+          "pid": 364,
+          "id": 1045,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 430,
+            "y": 656,
+            "width": 597,
+            "height": 2
+          }
+        },
+        {
+          "handle": "131192",
+          "pid": 364,
+          "id": 1256,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Inkstone 0.4.0 ",
+          "rect": {
+            "x": 439,
+            "y": 647,
+            "width": 564,
+            "height": 14
+          }
+        },
+        {
+          "handle": "262260",
+          "pid": 364,
+          "id": 1028,
+          "visible": true,
+          "enabled": false,
+          "class": "Static",
+          "text": "Inkstone 0.4.0",
+          "rect": {
+            "x": 439,
+            "y": 647,
+            "width": 564,
+            "height": 14
+          }
+        },
+        {
+          "handle": "262262",
+          "pid": 364,
+          "id": 1034,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 430,
+            "y": 318,
+            "width": 581,
+            "height": 61
+          }
+        },
+        {
+          "handle": "196706",
+          "pid": 364,
+          "id": 1037,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "安装选项",
+          "rect": {
+            "x": 448,
+            "y": 327,
+            "width": 490,
+            "height": 18
+          }
+        },
+        {
+          "handle": "196704",
+          "pid": 364,
+          "id": 1038,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "为哪位用户安装该应用？",
+          "rect": {
+            "x": 456,
+            "y": 346,
+            "width": 481,
+            "height": 28
+          }
+        },
+        {
+          "handle": "196708",
+          "pid": 364,
+          "id": 1039,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "￿g",
+          "rect": {
+            "x": 955,
+            "y": 332,
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "handle": "262246",
+          "pid": 364,
+          "id": 0,
+          "visible": true,
+          "enabled": true,
+          "class": "#32770",
+          "text": "",
+          "rect": {
+            "x": 456,
+            "y": 397,
+            "width": 525,
+            "height": 245
+          }
+        },
+        {
+          "handle": "131218",
+          "pid": 364,
+          "id": 1200,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "请选择为当前用户还是所有用户安装该软件",
+          "rect": {
+            "x": 456,
+            "y": 397,
+            "width": 525,
+            "height": 35
+          }
+        },
+        {
+          "handle": "131216",
+          "pid": 364,
+          "id": 1201,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "为使用这台电脑的任何人安装 (所有用户)",
+          "rect": {
+            "x": 474,
+            "y": 450,
+            "width": 490,
+            "height": 35
+          }
+        },
+        {
+          "handle": "131214",
+          "pid": 364,
+          "id": 1202,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "仅为我安装 (zhuowei)",
+          "rect": {
+            "x": 474,
+            "y": 485,
+            "width": 490,
+            "height": 35
+          }
+        },
+        {
+          "handle": "131212",
+          "pid": 364,
+          "id": 1203,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "仅为当前用户进行全新安装.",
+          "rect": {
+            "x": 456,
+            "y": 590,
+            "width": 490,
+            "height": 88
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Keep source checkout stable on Windows, Linux, and in CI.
+* text=auto eol=lf
+
+# Preserve byte-exact validation fixtures and upstream/license evidence.
+artifacts/** -text
+THIRD_PARTY_NOTICES.md -text
+electron/dictionaries/** -text

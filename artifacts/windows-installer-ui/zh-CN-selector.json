@@ -1,0 +1,101 @@
+{
+  "windows": [
+    {
+      "handle": "131156",
+      "pid": 364,
+      "id": 0,
+      "visible": true,
+      "enabled": true,
+      "class": "#32770",
+      "text": "Inkstone Setup",
+      "rect": {
+        "x": 573,
+        "y": 405,
+        "width": 294,
+        "height": 190
+      },
+      "controls": [
+        {
+          "handle": "196700",
+          "pid": 364,
+          "id": 1002,
+          "visible": true,
+          "enabled": true,
+          "class": "ComboBox",
+          "text": "English",
+          "rect": {
+            "x": 644,
+            "y": 512,
+            "width": 210,
+            "height": 24
+          },
+          "selectedIndex": 0,
+          "items": [
+            "English",
+            "中文(简体)"
+          ]
+        },
+        {
+          "handle": "196698",
+          "pid": 364,
+          "id": 1,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "OK",
+          "rect": {
+            "x": 689,
+            "y": 552,
+            "width": 75,
+            "height": 28
+          }
+        },
+        {
+          "handle": "196714",
+          "pid": 364,
+          "id": 2,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "Cancel",
+          "rect": {
+            "x": 779,
+            "y": 552,
+            "width": 75,
+            "height": 28
+          }
+        },
+        {
+          "handle": "262256",
+          "pid": 364,
+          "id": 1007,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Choose the language for installation and first launch.",
+          "rect": {
+            "x": 644,
+            "y": 454,
+            "width": 210,
+            "height": 54
+          }
+        },
+        {
+          "handle": "196702",
+          "pid": 364,
+          "id": 1008,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 591,
+            "y": 454,
+            "width": 32,
+            "height": 32
+          }
+        }
+      ]
+    }
+  ]
+}

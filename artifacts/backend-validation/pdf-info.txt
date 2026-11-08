@@ -1,0 +1,19 @@
+Title:           中文验收
+Creator:         Chromium
+Producer:        Skia/PDF m156
+CreationDate:    Sun Nov  8 18:31:10 2026 +08
+ModDate:         Sun Nov  8 18:31:10 2026 +08
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          yes
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           2
+Encrypted:       no
+Page size:       595.92 x 842.88 pts (A4)
+Page rot:        0
+File size:       82460 bytes
+Optimized:       no
+PDF version:     1.4

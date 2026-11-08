@@ -1,0 +1,276 @@
+{
+  "version": "0.3.0",
+  "generatedAt": "2026-11-08T09:52:57.158973+00:00",
+  "host": "Linux-6.17.0-14-generic-x86_64-with-glibc2.39",
+  "electron": "45.2.3",
+  "tests": {
+    "unit": 90,
+    "editor": 21,
+    "math": 10,
+    "ui": 9,
+    "branding": 6,
+    "electron": 67,
+    "electronBreakdown": {
+      "backend": 34,
+      "desktop": 14,
+      "enhancements": 6,
+      "ux": 13
+    },
+    "extension": 13,
+    "mermaidTypes": 25,
+    "nativeIBusLifecycle": 4
+  },
+  "changesVerified": [
+    "Parser source ranges and rectangular math hit targets; inline/block formulas edit in the same editor, including errors, undo and reopen",
+    "Shared Save / Don't Save / Cancel lifecycle across native close, menu and keyboard",
+    "Two-phase multi-window quit, async edit guards, startup lock and external-read typing conflict protection",
+    "English default, first-run language choice, live preference translation and original brand assets",
+    "Local files/URL image reads without account, upload or sync integration"
+  ],
+  "linux": {
+    "nativePackagedSmoke": true,
+    "normalSandbox": true,
+    "distributionPackages": [
+      {
+        "version": "0.3.0",
+        "bundledWindowIconMatchesProvided": true,
+        "bundledWindowIconSHA256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+        "desktopIcons": [
+          {
+            "path": "squashfs-root/inkstone.png",
+            "width": 1024,
+            "height": 1024,
+            "sha256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+            "source": "build/icons/1024x1024.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/1024x1024/apps/inkstone.png",
+            "width": 1024,
+            "height": 1024,
+            "sha256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+            "source": "build/icons/1024x1024.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/128x128/apps/inkstone.png",
+            "width": 128,
+            "height": 128,
+            "sha256": "de58a21e17dcc400c9a2e0ce4be659cce639d2cd4b87b0f2488af692e0ca2b38",
+            "source": "build/icons/128x128.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/16x16/apps/inkstone.png",
+            "width": 16,
+            "height": 16,
+            "sha256": "c8846e9c3ec6de3c31436005f17e6c6dfcb6826d441e67e1e71ce961fed77e8c",
+            "source": "build/icons/16x16.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/256x256/apps/inkstone.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "c5f48339b015d64541e38278841999da24f8ad88cd0c02dfdccd1011079b87eb",
+            "source": "build/icons/256x256.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/32x32/apps/inkstone.png",
+            "width": 32,
+            "height": 32,
+            "sha256": "fec0f07a79b9dd5f102ec62a82ad49391e26b186c8859d2f0ae60eb05e5df68c",
+            "source": "build/icons/32x32.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/48x48/apps/inkstone.png",
+            "width": 48,
+            "height": 48,
+            "sha256": "2f2cc5edbcfd067c3ae4ceb13ce9d1b810bf5c4b137163f0885b5cb032f73e47",
+            "source": "build/icons/48x48.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/512x512/apps/inkstone.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "3949fd9be2616970dc7bd99bc411429369f7f48343f0033a6ea40479dbffe836",
+            "source": "build/icons/512x512.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "squashfs-root/usr/share/icons/hicolor/64x64/apps/inkstone.png",
+            "width": 64,
+            "height": 64,
+            "sha256": "be72304e7e4660f0b3dcc3c282a96b48f5b07abbce9df77bb7effbdf9aa31891",
+            "source": "build/icons/64x64.png",
+            "matchesProvided": true
+          }
+        ],
+        "kind": "appimage",
+        "path": "release/Inkstone-0.3.0.AppImage",
+        "size": 132998669,
+        "sha256": "a46c1cfa53f1d21c327d30a759d0a465c06aa8a234fb00b0e5d5eb22c34aba96",
+        "asarSHA256": "0f50808867ef58c77f688ddb9fe7945139c45b410b214303aa63b6712c09317f",
+        "launch": true,
+        "editAndAtomicSave": true,
+        "nodeIsolation": true,
+        "normalSandbox": true,
+        "sandboxError": null
+      },
+      {
+        "version": "0.3.0",
+        "bundledWindowIconMatchesProvided": true,
+        "bundledWindowIconSHA256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+        "desktopIcons": [
+          {
+            "path": "usr/share/icons/hicolor/1024x1024/apps/inkstone.png",
+            "width": 1024,
+            "height": 1024,
+            "sha256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+            "source": "build/icons/1024x1024.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/128x128/apps/inkstone.png",
+            "width": 128,
+            "height": 128,
+            "sha256": "de58a21e17dcc400c9a2e0ce4be659cce639d2cd4b87b0f2488af692e0ca2b38",
+            "source": "build/icons/128x128.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/16x16/apps/inkstone.png",
+            "width": 16,
+            "height": 16,
+            "sha256": "c8846e9c3ec6de3c31436005f17e6c6dfcb6826d441e67e1e71ce961fed77e8c",
+            "source": "build/icons/16x16.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/256x256/apps/inkstone.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "c5f48339b015d64541e38278841999da24f8ad88cd0c02dfdccd1011079b87eb",
+            "source": "build/icons/256x256.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/32x32/apps/inkstone.png",
+            "width": 32,
+            "height": 32,
+            "sha256": "fec0f07a79b9dd5f102ec62a82ad49391e26b186c8859d2f0ae60eb05e5df68c",
+            "source": "build/icons/32x32.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/48x48/apps/inkstone.png",
+            "width": 48,
+            "height": 48,
+            "sha256": "2f2cc5edbcfd067c3ae4ceb13ce9d1b810bf5c4b137163f0885b5cb032f73e47",
+            "source": "build/icons/48x48.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/512x512/apps/inkstone.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "3949fd9be2616970dc7bd99bc411429369f7f48343f0033a6ea40479dbffe836",
+            "source": "build/icons/512x512.png",
+            "matchesProvided": true
+          },
+          {
+            "path": "usr/share/icons/hicolor/64x64/apps/inkstone.png",
+            "width": 64,
+            "height": 64,
+            "sha256": "be72304e7e4660f0b3dcc3c282a96b48f5b07abbce9df77bb7effbdf9aa31891",
+            "source": "build/icons/64x64.png",
+            "matchesProvided": true
+          }
+        ],
+        "kind": "deb",
+        "path": "release/inkstone-editor_0.3.0_amd64.deb",
+        "size": 106785544,
+        "sha256": "fc2bf9b3bf80a5736d2b7d58eb4c8ef8f43fe2e59eaaa8e8b039174c3945a7fd",
+        "asarSHA256": "0f50808867ef58c77f688ddb9fe7945139c45b410b214303aa63b6712c09317f",
+        "launch": true,
+        "editAndAtomicSave": true,
+        "nodeIsolation": true,
+        "normalSandbox": true,
+        "sandboxError": null
+      },
+      {
+        "version": "0.3.0",
+        "bundledWindowIconMatchesProvided": true,
+        "bundledWindowIconSHA256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+        "desktopIcons": [],
+        "kind": "archive",
+        "path": "release/inkstone-editor-0.3.0.tar.gz",
+        "size": 126442025,
+        "sha256": "fd43c1d1ddb55a8bce1689f6f075ea41a59797860023ea1aefd425719567fe58",
+        "asarSHA256": "0f50808867ef58c77f688ddb9fe7945139c45b410b214303aa63b6712c09317f",
+        "launch": true,
+        "editAndAtomicSave": true,
+        "nodeIsolation": true,
+        "normalSandbox": true,
+        "sandboxError": null
+      }
+    ],
+    "nativeIME": "Actual IBus Cangjie via XTest on X11; lifecycle, table composition and disk equality passed. This IME test uses --no-sandbox, separately from normal-sandbox package tests.",
+    "systemInstallationVerified": false
+  },
+  "windows": {
+    "crossBuilt": true,
+    "unsigned": true,
+    "exeAndInstallerIconMetadataVerified": true,
+    "zipIntegrityVerified": true,
+    "wineInstallerLanguageUI": true,
+    "wineUILanguages": [
+      "en",
+      "zh-CN"
+    ],
+    "wineUITestFonts": "Host Noto CJK aliases configured only in temporary Wine profile; no application or installer payload alteration.",
+    "nativeWindowsExecuted": false,
+    "installationAndUninstallationVerified": false
+  },
+  "packagedSourceMatchesCurrent": {
+    "win": 299,
+    "linux": 299
+  },
+  "performance": {
+    "editor": {
+      "characters": 888890,
+      "bytes": 1158890,
+      "lines": 10001,
+      "openMs": 115.60000228881836,
+      "liveEditSamplesMs": [
+        29.900001525878906,
+        28.299999237060547,
+        27.400001525878906,
+        34.29999923706055,
+        10.400001525878906,
+        9,
+        8.199996948242188,
+        11.700000762939453,
+        10.900001525878906,
+        9.39999771118164
+      ],
+      "modeRoundTripMs": 37.10000228881836,
+      "sourceSwitchAndEditMs": 6
+    },
+    "fullDesktop": {
+      "characters": 564000,
+      "utf8Bytes": 1188000,
+      "openMs": 246.0999984741211,
+      "editMs": 31.200000762939453,
+      "switchMs": 97.89999771118164
+    }
+  },
+  "limitations": [
+    "Windows native installation, file associations, Microsoft Pinyin, DPI and uninstall await a Windows device or CI run.",
+    "Linux archives were extracted and executed; system installation, desktop associations/uninstall and AppImage FUSE mounting were not tested.",
+    "Fine-grained active lists/quotes/images, rectangular table selection and drag handles, MathJax 4 parity and target Office/EPUB readers remain detailed in FEATURE_PARITY.md."
+  ]
+}

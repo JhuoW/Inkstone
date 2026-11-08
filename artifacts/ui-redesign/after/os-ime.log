@@ -1,0 +1,108 @@
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.gtk.vfs.Daemon' requested by ':1.0' (uid=1003 pid=597920 comm="ibus-daemon --replace --xim --config=/usr/libexec/" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.gtk.vfs.Daemon'
+fusermount3: failed to access mountpoint /run/user/1003/gvfs: Permission denied
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.freedesktop.portal.IBus' requested by ':1.0' (uid=1003 pid=597920 comm="ibus-daemon --replace --xim --config=/usr/libexec/" label="unconfined")
+Not connected to the ibus bus
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activated service 'org.freedesktop.portal.IBus' failed: Process org.freedesktop.portal.IBus exited with status 1
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.a11y.Bus' requested by ':1.5' (uid=1003 pid=597948 comm="/usr/libexec/ibus-extension-gtk3" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[597969]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1003 pid=597952 comm="/usr/libexec/ibus-x11 --kill-daemon" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.11' (uid=1003 pid=597948 comm="/usr/libexec/ibus-extension-gtk3" label="unconfined")
+dbus-daemon[597969]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.freedesktop.portal.Documents' requested by ':1.13' (uid=1003 pid=597984 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.14' (uid=1003 pid=597994 comm="/usr/libexec/xdg-document-portal" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /run/user/1003/doc: Permission denied
+error: fuse init failed: Can't mount path /run/user/1003/doc
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.913: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.913: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.13' (uid=1003 pid=597984 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Activating service name='ca.desrt.dconf' requested by ':1.10' (uid=1003 pid=597947 comm="/usr/libexec/ibus-ui-gtk3" label="unconfined")
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'ca.desrt.dconf'
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.952: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.952: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.952: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.952: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.953: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.953: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.954: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.957: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.957: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:597984): xdg-desktop-portal-WARNING **: 18:23:28.958: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[597882]: [session uid=1003 pid=597882] Successfully activated service 'org.freedesktop.portal.Desktop'
+command: search
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: key
+command: type
+Exec arg[0]: b
+command: key
+{"text":"# IBus 验收\n\n日月","events":[{"type":"compositionstart","data":""},{"type":"compositionupdate","data":"日"},{"type":"beforeinput","data":"日","inputType":"insertCompositionText","isComposing":true},{"type":"compositionupdate","data":""},{"type":"beforeinput","data":"","inputType":"insertCompositionText","isComposing":true},{"type":"compositionend","data":""},{"type":"beforeinput","data":"日","inputType":"insertText","isComposing":false},{"type":"compositionstart","data":""},{"type":"compositionupdate","data":"月"},{"type":"beforeinput","data":"月","inputType":"insertCompositionText","isComposing":true},{"type":"compositionupdate","data":""},{"type":"beforeinput","data":"","inputType":"insertCompositionText","isComposing":true},{"type":"compositionend","data":""},{"type":"beforeinput","data":"月","inputType":"insertText","isComposing":false}]}
+command: type
+Exec arg[0]: a
+command: key
+command: key
+command: key
+command: type
+Exec arg[0]: a
+command: key
+command: type
+Exec arg[0]: b
+command: key
+command: key
+command: type
+Exec arg[0]: a
+command: key
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: b
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: type
+Exec arg[0]: b
+command: key
+command: key
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '# IBus 验收\n\n月\n\n| 候选 | 内容 |\n| --- | --- |\n| 日 | 留白 |\n\n日月'
+- '# IBus 验收\n\n月\n\n| 候选 | 内容 |\n| --- | --- |\n| 日 | 留白 |\n\n日月日'
+
+    at file:///home/zhuowei/software/Open-Typora/tests/os-ime.mjs:334:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '# IBus 验收\n\n月\n\n| 候选 | 内容 |\n| --- | --- |\n| 日 | 留白 |\n\n日月',
+  expected: '# IBus 验收\n\n月\n\n| 候选 | 内容 |\n| --- | --- |\n| 日 | 留白 |\n\n日月日',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.4
+A connection to the bus can't be made

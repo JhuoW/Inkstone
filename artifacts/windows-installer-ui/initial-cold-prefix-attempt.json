@@ -1,0 +1,19 @@
+{
+  "version": "0.3.0",
+  "host": "Linux Wine with XTest input and read-only Win32 control inspection",
+  "nativeWindows": false,
+  "passed": false,
+  "installationPerformed": false,
+  "installationVerified": false,
+  "uninstallVerified": false,
+  "checks": [],
+  "installer": "release/Inkstone-0.3.0-windows-x64.exe",
+  "installerSHA256": "3235e057331a9b8e81050f0bc165b7acd02f464695b8569ba200511a9b12b8d6",
+  "display": ":95",
+  "wineVersion": "wine-11.0",
+  "reason": "spawnSync /home/zhuowei/software/Open-Typora/.tools/installer-ui-wW5F9J/probe.exe ETIMEDOUT",
+  "status": "blocked or failed; inspect evidence",
+  "failureScreenshot": "failure.png",
+  "finishedAt": "2026-11-08T09:44:14.506Z",
+  "localWorkDirectory": ".tools/installer-ui-wW5F9J"
+}

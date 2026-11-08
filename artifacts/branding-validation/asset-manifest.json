@@ -1,0 +1,223 @@
+{
+  "assetSource": "User-provided inkstone-brand; source directory unchanged",
+  "targets": [
+    "Windows",
+    "Linux"
+  ],
+  "files": [
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-logo-horizontal.svg",
+      "target": "src/assets/brand/inkstone-logo-horizontal.svg",
+      "bytes": 12547,
+      "sha256": "673803b4ef9fbd591ff53a7a544a34d9fa45014ac774fec750b38729ac23aa0b",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-logo-horizontal-reversed.svg",
+      "target": "src/assets/brand/inkstone-logo-horizontal-reversed.svg",
+      "bytes": 12547,
+      "sha256": "93ab9dc217327584e9cb3aa73104a455119ef76253a547161379c3cdebdc3824",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-logo-horizontal-en.svg",
+      "target": "src/assets/brand/inkstone-logo-horizontal-en.svg",
+      "bytes": 8607,
+      "sha256": "97f571cce553cba324fe6d268b370e6966bb1250860b8b4d236c35329ad2cc23",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-logo-horizontal-en-reversed.svg",
+      "target": "src/assets/brand/inkstone-logo-horizontal-en-reversed.svg",
+      "bytes": 8607,
+      "sha256": "c8efb06028a8e2ce120f2a20fd75fbfde89a9574d64872e28fbe1b3b2166e6d2",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-mark.svg",
+      "target": "src/assets/brand/inkstone-mark.svg",
+      "bytes": 3013,
+      "sha256": "f64aa3e0d6f6ce85529749855a7351642e8ecc4527ba217bf4105234cd94263e",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/logo/svg/inkstone-mark-reversed.svg",
+      "target": "src/assets/brand/inkstone-mark-reversed.svg",
+      "bytes": 3013,
+      "sha256": "55ae412d37eaaae8b64aa0ae385863743f1ce6a87ed0c01312aab1cd22d904a5",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/icon/web/favicon.svg",
+      "target": "src/assets/brand/favicon.svg",
+      "bytes": 3044,
+      "sha256": "903592763701e0e0670cc7625b2947518ea4dc0d55fdc89bcc767d31ca684731",
+      "identical": true
+    },
+    {
+      "source": "inkstone-brand/icon/web/favicon.ico",
+      "target": "src/assets/brand/favicon.ico",
+      "bytes": 15086,
+      "sha256": "15e26831da1fbd997da83e553c70489f087b281bee4b1038828115f98bdbf344",
+      "identical": true,
+      "layers": [
+        {
+          "width": 16,
+          "height": 16
+        },
+        {
+          "width": 32,
+          "height": 32
+        },
+        {
+          "width": 48,
+          "height": 48
+        }
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/windows/Inkstone.ico",
+      "target": "build/icon.ico",
+      "bytes": 142354,
+      "sha256": "80a6fb9945cbb4e0c2fb2e6fd5bb61cd9cdbe8da851d728db0e267f4fb063758",
+      "identical": true,
+      "layers": [
+        {
+          "width": 16,
+          "height": 16
+        },
+        {
+          "width": 20,
+          "height": 20
+        },
+        {
+          "width": 24,
+          "height": 24
+        },
+        {
+          "width": 32,
+          "height": 32
+        },
+        {
+          "width": 40,
+          "height": 40
+        },
+        {
+          "width": 48,
+          "height": 48
+        },
+        {
+          "width": 64,
+          "height": 64
+        },
+        {
+          "width": 128,
+          "height": 128
+        },
+        {
+          "width": 256,
+          "height": 256
+        }
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-1024.png",
+      "target": "build/icon.png",
+      "bytes": 262521,
+      "sha256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+      "identical": true,
+      "dimensions": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-16.png",
+      "target": "build/icons/16x16.png",
+      "bytes": 819,
+      "sha256": "c8846e9c3ec6de3c31436005f17e6c6dfcb6826d441e67e1e71ce961fed77e8c",
+      "identical": true,
+      "dimensions": [
+        16,
+        16
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-32.png",
+      "target": "build/icons/32x32.png",
+      "bytes": 2089,
+      "sha256": "fec0f07a79b9dd5f102ec62a82ad49391e26b186c8859d2f0ae60eb05e5df68c",
+      "identical": true,
+      "dimensions": [
+        32,
+        32
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-48.png",
+      "target": "build/icons/48x48.png",
+      "bytes": 3315,
+      "sha256": "2f2cc5edbcfd067c3ae4ceb13ce9d1b810bf5c4b137163f0885b5cb032f73e47",
+      "identical": true,
+      "dimensions": [
+        48,
+        48
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-64.png",
+      "target": "build/icons/64x64.png",
+      "bytes": 4643,
+      "sha256": "be72304e7e4660f0b3dcc3c282a96b48f5b07abbce9df77bb7effbdf9aa31891",
+      "identical": true,
+      "dimensions": [
+        64,
+        64
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-128.png",
+      "target": "build/icons/128x128.png",
+      "bytes": 11312,
+      "sha256": "de58a21e17dcc400c9a2e0ce4be659cce639d2cd4b87b0f2488af692e0ca2b38",
+      "identical": true,
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-256.png",
+      "target": "build/icons/256x256.png",
+      "bytes": 29286,
+      "sha256": "c5f48339b015d64541e38278841999da24f8ad88cd0c02dfdccd1011079b87eb",
+      "identical": true,
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-512.png",
+      "target": "build/icons/512x512.png",
+      "bytes": 80530,
+      "sha256": "3949fd9be2616970dc7bd99bc411429369f7f48343f0033a6ea40479dbffe836",
+      "identical": true,
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "source": "inkstone-brand/icon/png/inkstone-icon-1024.png",
+      "target": "build/icons/1024x1024.png",
+      "bytes": 262521,
+      "sha256": "26359512c754ac67b41f27a6f43a32eaf5a5e95158a79b59a900890fb8cdafcb",
+      "identical": true,
+      "dimensions": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

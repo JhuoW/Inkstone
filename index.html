@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: inkstone-asset: https: http:; font-src 'self' data: inkstone-asset:; media-src 'self' file: inkstone-asset: https:; connect-src 'self' inkstone-asset: data:; frame-src https:; object-src 'none'; base-uri 'none'"
+    />
+    <link rel="icon" href="/src/assets/brand/favicon.ico" sizes="32x32" />
+    <link
+      rel="icon"
+      href="/src/assets/brand/favicon.svg"
+      type="image/svg+xml"
+    />
+    <meta
+      name="theme-color"
+      content="#F4F0E6"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1C1A21"
+      media="(prefers-color-scheme: dark)"
+    />
+    <title>Inkstone · 墨石</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>

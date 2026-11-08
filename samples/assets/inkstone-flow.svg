@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260" role="img" aria-labelledby="title desc">
+  <title id="title">墨石写作流程</title><desc id="desc">三个原创图形依次表示想法、文字、成稿。</desc>
+  <rect width="720" height="260" rx="24" fill="#f5f2eb"/>
+  <path d="M82 50h28v28H82z" fill="#365e52"/><path d="M91 58h12v12H91z" fill="#f5f2eb"/>
+  <text x="126" y="71" fill="#263b34" font-family="sans-serif" font-size="22">Inkstone · 让想法落在纸上</text>
+  <g fill="#fff" stroke="#c7d4ca" stroke-width="2"><rect x="52" y="112" width="170" height="88" rx="16"/><rect x="275" y="112" width="170" height="88" rx="16"/><rect x="498" y="112" width="170" height="88" rx="16"/></g>
+  <g stroke="#627b6c" stroke-width="3" fill="none"><path d="M231 156h33m-9-7 9 7-9 7"/><path d="M454 156h33m-9-7 9 7-9 7"/></g>
+  <g fill="#29473b" font-family="sans-serif" text-anchor="middle" font-size="23"><text x="137" y="150">想法</text><text x="360" y="150">文字</text><text x="583" y="150">成稿</text></g>
+  <g fill="#738478" font-family="sans-serif" text-anchor="middle" font-size="13"><text x="137" y="178">THINK</text><text x="360" y="178">WRITE</text><text x="583" y="178">SHARE</text></g>
+</svg>

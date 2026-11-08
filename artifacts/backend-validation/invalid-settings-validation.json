@@ -1,0 +1,18 @@
+[
+  {
+    "invalidKey": "theme",
+    "booted": true,
+    "backupExact": true,
+    "warnings": [
+      "Invalid preferences (Invalid theme). Defaults restored. Original settings are preserved at: /tmp/inkstone-desktop-E63INa/invalid-profile-theme/settings.invalid-1794133868482-2f31fd56-4d03-424b-9e1d-a7ce679622c8.json"
+    ]
+  },
+  {
+    "invalidKey": "recentFiles",
+    "booted": true,
+    "backupExact": true,
+    "warnings": [
+      "Invalid preferences (Invalid setting: recentFiles). Defaults restored. Original settings are preserved at: /tmp/inkstone-desktop-E63INa/invalid-profile-recentFiles/settings.invalid-1794133869221-1d519cba-bcd1-453e-835e-2547abf4a24a.json"
+    ]
+  }
+]

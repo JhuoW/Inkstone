@@ -1,0 +1,306 @@
+{
+  "windows": [
+    {
+      "handle": "131178",
+      "pid": 216,
+      "id": 0,
+      "visible": true,
+      "enabled": true,
+      "class": "#32770",
+      "text": "Inkstone Setup ",
+      "rect": {
+        "x": 468,
+        "y": 262,
+        "width": 503,
+        "height": 476
+      },
+      "controls": [
+        {
+          "handle": "131174",
+          "pid": 216,
+          "id": 3,
+          "visible": false,
+          "enabled": false,
+          "class": "Button",
+          "text": "",
+          "rect": {
+            "x": 720,
+            "y": 693,
+            "width": 75,
+            "height": 28
+          }
+        },
+        {
+          "handle": "131172",
+          "pid": 216,
+          "id": 1,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "&Next >",
+          "rect": {
+            "x": 795,
+            "y": 693,
+            "width": 75,
+            "height": 28
+          }
+        },
+        {
+          "handle": "131168",
+          "pid": 216,
+          "id": 2,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "Cancel",
+          "rect": {
+            "x": 881,
+            "y": 693,
+            "width": 75,
+            "height": 28
+          }
+        },
+        {
+          "handle": "131170",
+          "pid": 216,
+          "id": 1018,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 494,
+            "y": 381,
+            "width": 450,
+            "height": 280
+          }
+        },
+        {
+          "handle": "196726",
+          "pid": 216,
+          "id": 1044,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 471,
+            "y": 291,
+            "width": 497,
+            "height": 386
+          }
+        },
+        {
+          "handle": "196724",
+          "pid": 216,
+          "id": 1035,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 479,
+            "y": 677,
+            "width": 484,
+            "height": 2
+          }
+        },
+        {
+          "handle": "65656",
+          "pid": 216,
+          "id": 1036,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 471,
+            "y": 361,
+            "width": 512,
+            "height": 2
+          }
+        },
+        {
+          "handle": "65658",
+          "pid": 216,
+          "id": 1045,
+          "visible": false,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 471,
+            "y": 677,
+            "width": 512,
+            "height": 2
+          }
+        },
+        {
+          "handle": "65660",
+          "pid": 216,
+          "id": 1256,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Inkstone 0.4.0 ",
+          "rect": {
+            "x": 479,
+            "y": 667,
+            "width": 483,
+            "height": 16
+          }
+        },
+        {
+          "handle": "65662",
+          "pid": 216,
+          "id": 1028,
+          "visible": true,
+          "enabled": false,
+          "class": "Static",
+          "text": "Inkstone 0.4.0",
+          "rect": {
+            "x": 479,
+            "y": 667,
+            "width": 483,
+            "height": 16
+          }
+        },
+        {
+          "handle": "65664",
+          "pid": 216,
+          "id": 1034,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "",
+          "rect": {
+            "x": 471,
+            "y": 291,
+            "width": 498,
+            "height": 70
+          }
+        },
+        {
+          "handle": "65666",
+          "pid": 216,
+          "id": 1037,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Choose Installation Options",
+          "rect": {
+            "x": 486,
+            "y": 301,
+            "width": 420,
+            "height": 20
+          }
+        },
+        {
+          "handle": "65668",
+          "pid": 216,
+          "id": 1038,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Who should this application be installed for?",
+          "rect": {
+            "x": 494,
+            "y": 323,
+            "width": 413,
+            "height": 32
+          }
+        },
+        {
+          "handle": "65670",
+          "pid": 216,
+          "id": 1039,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "￿g",
+          "rect": {
+            "x": 921,
+            "y": 307,
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "handle": "131208",
+          "pid": 216,
+          "id": 0,
+          "visible": true,
+          "enabled": true,
+          "class": "#32770",
+          "text": "",
+          "rect": {
+            "x": 494,
+            "y": 381,
+            "width": 450,
+            "height": 280
+          }
+        },
+        {
+          "handle": "65676",
+          "pid": 216,
+          "id": 1200,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Please select whether you wish to make this software available to all users or just yourself",
+          "rect": {
+            "x": 494,
+            "y": 381,
+            "width": 450,
+            "height": 40
+          }
+        },
+        {
+          "handle": "65678",
+          "pid": 216,
+          "id": 1201,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "Anyone who uses this computer (&all users)",
+          "rect": {
+            "x": 509,
+            "y": 441,
+            "width": 420,
+            "height": 40
+          }
+        },
+        {
+          "handle": "65680",
+          "pid": 216,
+          "id": 1202,
+          "visible": true,
+          "enabled": true,
+          "class": "Button",
+          "text": "Only for &me (zhuowei)",
+          "rect": {
+            "x": 509,
+            "y": 481,
+            "width": 420,
+            "height": 40
+          }
+        },
+        {
+          "handle": "65682",
+          "pid": 216,
+          "id": 1203,
+          "visible": true,
+          "enabled": true,
+          "class": "Static",
+          "text": "Fresh install for current user only.",
+          "rect": {
+            "x": 494,
+            "y": 601,
+            "width": 420,
+            "height": 100
+          }
+        }
+      ]
+    }
+  ]
+}

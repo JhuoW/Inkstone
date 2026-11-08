@@ -1,0 +1,507 @@
+/* Desktop task dialogs share the shell tokens; controls remain native. */
+.preferences-dialog .modal-body,
+.export-dialog .modal-body,
+.table-dialog .modal-body,
+.resources-dialog .modal-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.preferences-dialog .settings-grid {
+  display: grid;
+  grid-template-columns: 144px minmax(0, 1fr);
+  gap: 24px;
+  min-height: 0;
+  height: min(540px, calc(100vh - 218px));
+  padding: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+.preferences-dialog .settings-tabs {
+  position: static;
+  min-height: 0;
+  padding: 0 12px 0 0;
+  border-right: 1px solid var(--border);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.preferences-dialog .settings-tabs button {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 10px;
+  margin: 0 0 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.4;
+  scroll-margin-block: 4px;
+}
+.preferences-dialog .settings-tabs button[aria-selected="true"] {
+  color: var(--text);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.preferences-dialog .settings-form {
+  min-width: 0;
+  min-height: 0;
+  padding: 2px 12px 2px 2px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.preferences-dialog .settings-form section {
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+}
+.preferences-dialog h3 {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.settings-group {
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+}
+.settings-group:last-child {
+  margin-bottom: 8px;
+}
+.settings-group legend {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.preferences-dialog .setting-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(100px, 1fr);
+  gap: 8px 16px;
+  align-items: center;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.preferences-dialog .setting-row > span {
+  min-width: 0;
+}
+.preferences-dialog .setting-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-height: 28px;
+  margin: 0 0 3px;
+  padding: 3px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.preferences-dialog .setting-toggle input {
+  flex-shrink: 0;
+  margin: 3px 0 0;
+}
+.preferences-dialog .setting-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.preferences-dialog input:not([type="checkbox"]),
+.preferences-dialog select,
+.preferences-dialog textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  font-size: 13px;
+}
+.preferences-dialog textarea {
+  resize: vertical;
+  font-family: var(--code-font);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.preferences-dialog .setting-row input[type="number"] {
+  max-width: 120px;
+  font-variant-numeric: tabular-nums;
+}
+.preferences-dialog .setting-help {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.preferences-dialog #spellcheck-status {
+  margin-left: 22px;
+}
+.preferences-dialog .setting-error {
+  grid-column: 1 / -1;
+  color: var(--danger, #a82f34);
+  font-size: 12px;
+}
+.preferences-dialog [aria-invalid="true"] {
+  border-color: var(--danger, #a82f34);
+}
+.preferences-dialog .theme-library,
+.preferences-dialog .theme-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.preferences-dialog .theme-library select {
+  flex: 1;
+  min-width: 140px;
+  width: auto;
+}
+.preferences-dialog .theme-library button,
+.preferences-dialog .theme-buttons button {
+  flex-shrink: 0;
+}
+.preferences-dialog .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.preferences-dialog #tool-results {
+  max-height: 260px;
+  margin: 12px 0 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--code-font);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.preferences-dialog #tool-results:empty {
+  display: none;
+}
+.preferences-dialog .settings-grid + footer,
+.export-dialog .export-footer,
+.resources-dialog footer,
+.table-dialog footer {
+  position: static;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+.preferences-dialog #settings-result {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.export-dialog #export-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+}
+.export-dialog .export-scroll {
+  min-height: 0;
+  /* Leave room for native control paint and keyboard focus at scroll edges. */
+  padding: 4px 8px 4px 4px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.export-dialog .export-profiles {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.export-dialog .export-profiles > label {
+  flex: 1;
+  min-width: 180px;
+  margin: 0;
+}
+.export-dialog .export-profiles select {
+  width: 100%;
+  min-width: 0;
+}
+.export-dialog .export-profiles button {
+  flex-shrink: 0;
+  min-height: 32px;
+}
+.export-dialog .export-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+.export-dialog .export-grid .full {
+  grid-column: 1 / -1;
+}
+.export-dialog label {
+  min-width: 0;
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.export-dialog input:not([type="checkbox"]),
+.export-dialog select,
+.export-dialog textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+}
+.export-dialog label > div {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.export-dialog .export-scroll > .muted {
+  margin: 4px 0 0;
+  max-width: 76ch;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.export-dialog #template-state {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+.export-dialog .export-status {
+  flex: 1;
+  min-width: 120px;
+  max-height: 72px;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.export-dialog .export-status:not(:empty) {
+  padding: 0;
+}
+
+.resources-dialog .modal-body > p:first-child,
+.table-dialog .modal-body > p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.resources-dialog .resource-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+}
+.resources-dialog .resource-summary label {
+  margin: 0;
+}
+.resources-dialog .resource-list {
+  min-height: 0;
+  max-height: 42vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.resources-dialog .resource-list label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.resources-dialog .resource-source {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.resources-dialog .resource-list small {
+  min-width: 80px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: right;
+}
+.resources-dialog .resource-uses {
+  display: block;
+  white-space: nowrap;
+}
+.resources-dialog #resource-status {
+  margin: 10px 0 0;
+  max-height: 72px;
+  overflow: auto;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+.resources-dialog #resource-status:empty {
+  display: none;
+}
+.resources-dialog footer select {
+  flex: 1;
+  min-width: 120px;
+  min-height: 32px;
+}
+.resources-dialog .empty-state {
+  padding: 30px 16px;
+  font-size: 13px;
+}
+
+.table-dialog .table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0 0 12px;
+  padding: 0;
+}
+.table-dialog .table-action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+}
+.table-dialog .table-group-label {
+  margin-right: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.table-dialog .table-actions button {
+  min-height: 28px;
+  padding: 4px 7px;
+  font-size: 12px;
+}
+.table-dialog .table-actions [aria-pressed="true"] {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.table-dialog .table-grid {
+  min-height: 0;
+  max-height: 48vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.table-dialog .table-grid table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table-dialog .table-grid td,
+.table-dialog .table-grid th {
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.table-dialog .table-grid td:last-child,
+.table-dialog .table-grid th:last-child {
+  border-right: 0;
+}
+.table-dialog .table-grid tr:last-child td {
+  border-bottom: 0;
+}
+.table-dialog .table-grid th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--sidebar);
+}
+.table-dialog .table-grid input {
+  width: 100%;
+  min-width: 110px;
+  min-height: 34px;
+  border: 0;
+  border-radius: 0;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.table-dialog .table-grid th input {
+  font-weight: 600;
+  background: var(--sidebar);
+}
+.table-dialog .table-grid input:focus-visible {
+  outline-offset: -2px;
+  background: var(--panel);
+}
+.table-dialog #table-position {
+  min-width: 160px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* High display scaling can leave less height than the task controls require.
+   Scroll the complete task instead of shrinking its editable content away. */
+@media (max-height: 520px) {
+  .table-dialog .modal-body,
+  .resources-dialog .modal-body {
+    display: block;
+    overflow: auto;
+  }
+  .table-dialog .table-grid,
+  .resources-dialog .resource-list {
+    min-height: 104px;
+    max-height: max(104px, 36vh);
+  }
+}
+
+@media (max-width: 720px) {
+  .preferences-dialog .settings-grid {
+    grid-template-columns: 118px minmax(0, 1fr);
+    gap: 16px;
+  }
+  .preferences-dialog .setting-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .preferences-dialog .settings-tabs button {
+    padding: 6px 8px;
+  }
+  .export-dialog .export-grid {
+    column-gap: 14px;
+  }
+}
+@media (max-width: 560px) {
+  .preferences-dialog .settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+  }
+  .preferences-dialog .settings-tabs {
+    display: flex;
+    overflow: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 8px;
+  }
+  .preferences-dialog .settings-tabs button {
+    width: auto;
+    flex-shrink: 0;
+    margin: 0 4px 0 0;
+  }
+  .export-dialog .export-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .resources-dialog footer select {
+    flex-basis: 100%;
+  }
+}

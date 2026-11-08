@@ -1,0 +1,5 @@
+
+> inkstone-editor@0.4.0 test:native
+> node scripts/verify-native.mjs
+
+Native linux smoke passed (0.4.0).

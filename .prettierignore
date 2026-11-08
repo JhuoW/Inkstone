@@ -1,0 +1,10 @@
+node_modules
+.tools
+dist
+release
+artifacts
+test-results
+src/vendor
+electron/vendor
+THIRD_PARTY_NOTICES.md
+package-lock.json

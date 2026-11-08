@@ -1,0 +1,12 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const {spawnSync} = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const manifest = require(path.join(root, 'package.json'));
+const destination = path.resolve(root, '../../release/extensions');
+fs.mkdirSync(destination, {recursive:true});
+const vsce = require.resolve('@vscode/vsce/vsce');
+const result = spawnSync(process.execPath, [vsce, 'package', '--no-dependencies', '--allow-missing-repository', '--out', path.join(destination, `inkstone-open-${manifest.version}.vsix`)], {cwd:root, stdio:'inherit', shell:false});
+if (result.error) throw result.error;
+process.exitCode = result.status ?? 1;

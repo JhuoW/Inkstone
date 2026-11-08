@@ -1,0 +1,95 @@
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.gtk.vfs.Daemon' requested by ':1.0' (uid=1003 pid=607656 comm="ibus-daemon --replace --xim --config=/usr/libexec/" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.gtk.vfs.Daemon'
+fusermount3: failed to access mountpoint /run/user/1003/gvfs: Permission denied
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.freedesktop.portal.IBus' requested by ':1.0' (uid=1003 pid=607656 comm="ibus-daemon --replace --xim --config=/usr/libexec/" label="unconfined")
+Not connected to the ibus bus
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activated service 'org.freedesktop.portal.IBus' failed: Process org.freedesktop.portal.IBus exited with status 1
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.a11y.Bus' requested by ':1.5' (uid=1003 pid=607684 comm="/usr/libexec/ibus-ui-gtk3" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[607706]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1003 pid=607690 comm="/usr/libexec/ibus-x11 --kill-daemon" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.9' (uid=1003 pid=607685 comm="/usr/libexec/ibus-extension-gtk3" label="unconfined")
+dbus-daemon[607706]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.freedesktop.portal.Documents' requested by ':1.13' (uid=1003 pid=607721 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.14' (uid=1003 pid=607731 comm="/usr/libexec/xdg-document-portal" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /run/user/1003/doc: Permission denied
+error: fuse init failed: Can't mount path /run/user/1003/doc
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.044: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.044: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.13' (uid=1003 pid=607721 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Activating service name='ca.desrt.dconf' requested by ':1.10' (uid=1003 pid=607684 comm="/usr/libexec/ibus-ui-gtk3" label="unconfined")
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'ca.desrt.dconf'
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.083: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.083: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.083: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.083: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.084: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.084: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.085: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.087: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.088: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:607721): xdg-desktop-portal-WARNING **: 18:26:40.088: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[607639]: [session uid=1003 pid=607639] Successfully activated service 'org.freedesktop.portal.Desktop'
+command: search
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: key
+command: type
+Exec arg[0]: b
+command: key
+{"text":"# IBus 验收\n\n日月","events":[{"type":"compositionstart","data":""},{"type":"compositionupdate","data":"日"},{"type":"beforeinput","data":"日","inputType":"insertCompositionText","isComposing":true},{"type":"compositionupdate","data":""},{"type":"beforeinput","data":"","inputType":"insertCompositionText","isComposing":true},{"type":"compositionend","data":""},{"type":"beforeinput","data":"日","inputType":"insertText","isComposing":false},{"type":"compositionstart","data":""},{"type":"compositionupdate","data":"月"},{"type":"beforeinput","data":"月","inputType":"insertCompositionText","isComposing":true},{"type":"compositionupdate","data":""},{"type":"beforeinput","data":"","inputType":"insertCompositionText","isComposing":true},{"type":"compositionend","data":""},{"type":"beforeinput","data":"月","inputType":"insertText","isComposing":false}]}
+command: type
+Exec arg[0]: a
+command: key
+command: key
+command: key
+command: type
+Exec arg[0]: a
+command: key
+command: type
+Exec arg[0]: b
+command: key
+command: key
+command: type
+Exec arg[0]: a
+command: key
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: b
+command: key
+command: windowfocus
+command: type
+Exec arg[0]: a
+command: type
+Exec arg[0]: b
+command: key
+command: key
+command: key
+command: key
+command: type
+Exec arg[0]: b
+command: windowfocus
+command: type
+Exec arg[0]: a
+A connection to the bus can't be made

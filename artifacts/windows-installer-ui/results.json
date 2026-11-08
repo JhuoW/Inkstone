@@ -1,0 +1,60 @@
+{
+  "version": "0.4.0",
+  "host": "Linux Wine with XTest input and read-only Win32 control inspection",
+  "nativeWindows": false,
+  "passed": true,
+  "installationPerformed": false,
+  "installationVerified": false,
+  "uninstallVerified": false,
+  "checks": [
+    {
+      "locale": "en",
+      "offeredLanguages": [
+        "English",
+        "中文(简体)"
+      ],
+      "englishDefault": true,
+      "keyboardSelection": true,
+      "firstPage": "installation options",
+      "localizedButtons": true,
+      "canceledBeforeInstallation": true,
+      "installerExitCode": 1,
+      "screenshots": [
+        "en-selector.png",
+        "en-selected.png",
+        "en-first-page.png"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "offeredLanguages": [
+        "English",
+        "中文(简体)"
+      ],
+      "englishDefault": true,
+      "keyboardSelection": true,
+      "firstPage": "installation options",
+      "localizedButtons": true,
+      "canceledBeforeInstallation": true,
+      "installerExitCode": 1,
+      "screenshots": [
+        "zh-CN-selector.png",
+        "zh-CN-selected.png",
+        "zh-CN-first-page.png"
+      ]
+    }
+  ],
+  "installer": "release/Inkstone-0.4.0-windows-x64.exe",
+  "installerSHA256": "a5dc7e713e88da92d6281fc6a7c506f0fa264a4af8259ce1eff20858572ab0aa",
+  "display": ":95",
+  "wineVersion": "wine-11.0",
+  "wineFontOverride": {
+    "source": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "family": "Noto Sans CJK SC",
+    "sha256": "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a",
+    "scope": "Temporary Wine prefix only; neither installer nor application fonts were changed"
+  },
+  "winePreflightMs": 3585,
+  "finishedAt": "2026-11-08T10:35:44.368Z",
+  "localWorkDirectory": ".tools/installer-ui-RODvLA"
+}

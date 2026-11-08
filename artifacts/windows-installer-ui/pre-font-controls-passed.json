@@ -1,0 +1,54 @@
+{
+  "version": "0.3.0",
+  "host": "Linux Wine with XTest input and read-only Win32 control inspection",
+  "nativeWindows": false,
+  "passed": true,
+  "installationPerformed": false,
+  "installationVerified": false,
+  "uninstallVerified": false,
+  "checks": [
+    {
+      "locale": "en",
+      "offeredLanguages": [
+        "English",
+        "中文(简体)"
+      ],
+      "englishDefault": true,
+      "keyboardSelection": true,
+      "firstPage": "installation options",
+      "localizedButtons": true,
+      "canceledBeforeInstallation": true,
+      "installerExitCode": 1,
+      "screenshots": [
+        "en-selector.png",
+        "en-selected.png",
+        "en-first-page.png"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "offeredLanguages": [
+        "English",
+        "中文(简体)"
+      ],
+      "englishDefault": true,
+      "keyboardSelection": true,
+      "firstPage": "installation options",
+      "localizedButtons": true,
+      "canceledBeforeInstallation": true,
+      "installerExitCode": 1,
+      "screenshots": [
+        "zh-CN-selector.png",
+        "zh-CN-selected.png",
+        "zh-CN-first-page.png"
+      ]
+    }
+  ],
+  "installer": "release/Inkstone-0.3.0-windows-x64.exe",
+  "installerSHA256": "3235e057331a9b8e81050f0bc165b7acd02f464695b8569ba200511a9b12b8d6",
+  "display": ":95",
+  "wineVersion": "wine-11.0",
+  "winePreflightMs": 3577,
+  "finishedAt": "2026-11-08T09:45:42.447Z",
+  "localWorkDirectory": ".tools/installer-ui-n8mOzM"
+}

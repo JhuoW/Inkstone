@@ -1,0 +1,5 @@
+{
+  "command.openFile": "在墨石中打开",
+  "setting.executablePath": "Windows或Linux的墨石可执行文件路径（不是shell命令）。留空使用Windows用户安装目录或Linux PATH；忽略工作区覆盖。",
+  "setting.args": "附加参数，每个数组元素对应一个完整参数。Markdown绝对路径自动追加；不会执行shell展开。"
+}

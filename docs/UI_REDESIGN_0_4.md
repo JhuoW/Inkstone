@@ -1,0 +1,59 @@
+# Inkstone 0.4：桌面 UI/UX 升级
+
+本次以现有0.3版本为功能基线，改造应用界面与交互，不改变本地文件产品范围。Windows仍为主目标，Linux为附加目标；不加入账号、云同步、上传器或macOS支持，继续使用用户提供的原始品牌素材。
+
+## 设计依据与实现
+
+先安装并阅读了以下规范，再建立[产品约束](../PRODUCT.md)、[设计系统](../DESIGN.md)和[功能基线](UI_FUNCTION_BASELINE.md)：
+
+- [Impeccable](https://github.com/pbakaus/impeccable)：采用现有产品的Operate/Read界面准则、craft floor和独立完成复核；上下文引擎下载失败后直接读取规范及项目，没有把失败当成已运行。
+- [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)：明确产品视觉方向，避免模板式组件堆砌。
+- [desktop-ui-design](https://github.com/dasien/ClaudeMultiAgentTemplate/tree/main/templates/.claude/skills/desktop-ui-design)：桌面窗口、键盘及密度规范。
+- [Vercel web-design-guidelines](https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines)：用于Electron网页界面的焦点、语义、表单、溢出与对比度检查。
+
+品牌字标与图标保持原样。重新建立明暗主题令牌，区分文档、导航与对话框表面；UI采用系统字体，正文继续尊重用户已有字体、字号、行高和宽度。标题栏44px、工具栏38px、状态栏26px，统一20px SVG图标网格，移除工具栏中的装饰字符。保留原生窗口和系统菜单，不制作仿制窗口控制。
+
+所有11个原有格式按钮仍在。新增固定可见的Insert菜单组织数学、代码、表格、图片及其他格式；命令面板显示有效快捷键，提供combobox/listbox语义。侧栏和设置分类采用方向键/Home/End导航。菜单支持方向键、Enter、Escape及焦点返回，选区保留在原编辑器内。
+
+设置保留全部40项，按功能分组；导出保留27种格式及原参数、预设和模板。长内容在内部滚动，操作区保持可达；矮窗口的表格/资源对话框允许整体滚动，防止编辑区压缩消失。表格常规Tab导航不再重建所有单元格DOM。
+
+正文标题在源码编辑与渲染状态保持相同尺寸，避免跳动；代码、公式错误、选区和搜索控件共用明暗语义颜色。未改变Markdown原文模型、解析规则、保存冲突判定或关闭协调流程。另在完成组合输入后设置明确的撤销分组边界，防止取消关闭后立即输入的文字与确认前提交的汉字合并撤销；不清空已有历史。该问题先以真实输入法复现，再通过浏览器断言与正式构建的IBus验证。
+
+## 实际截图对照
+
+截图由真实Electron应用生成。before来自修改前0.3应用；after来自0.4当前构建，同一文稿、同一尺寸和设置。不是概念稿。
+
+| 场景 | 改版前 | 改版后 |
+| --- | --- | --- |
+| 明亮写作与文件树 | [before](../artifacts/ui-redesign/before/writing-light-1280.png) | [after](../artifacts/ui-redesign/after/writing-light-1280.png) |
+| 深色800px窗口 | [before](../artifacts/ui-redesign/before/writing-dark-800.png) | [after](../artifacts/ui-redesign/after/writing-dark-800.png) |
+| 偏好设置 | [before](../artifacts/ui-redesign/before/preferences-light-1280.png) | [after](../artifacts/ui-redesign/after/preferences-light-1280.png) |
+| 导出 | [before](../artifacts/ui-redesign/before/export-light-1280.png) | [after](../artifacts/ui-redesign/after/export-light-1280.png) |
+| 命令面板 | [before](../artifacts/ui-redesign/before/commands-light-1280.png) | [after](../artifacts/ui-redesign/after/commands-light-1280.png) |
+| 公式原位编辑 | [before](../artifacts/ui-redesign/before/math-edit-light-1280.png) | [after](../artifacts/ui-redesign/after/math-edit-light-1280.png) |
+| 150%界面缩放 | [before](../artifacts/ui-redesign/before/writing-light-zoom150.png) | [after](../artifacts/ui-redesign/after/writing-light-zoom150.png) |
+
+完整截图目录还包含中文、源码、大纲及结构内容。`capturePage`等待缩放布局和绘制后取得完整窗口像素，并记录CSS视口、DPR与实际zoomFactor；不再使用会裁截Electron缩放截图的CDP默认截图范围。150%是Electron界面缩放，不冒充Windows原生DPI测试。
+
+## 功能保留与回归
+
+[自动功能清单](../artifacts/ui-redesign/after/inventory.json)逐项对比：82个固定命令、2个默认片段、64个应用操作分支、52个编辑器命令、55个原生动作、40个设置项和27种导出格式未减少。基线原文、CRLF字节、模式选区均保持，renderer错误为空。清单是保留检查的一部分，不替代实际操作测试。
+
+本次新增的交互验收覆盖：
+
+- 原工具栏格式、源码切换与撤销；Insert菜单开关、键盘、选区格式编辑。
+- 命令面板快捷键展示及自定义绑定，侧栏与设置roving tabindex。
+- 全部设置字段、就地校验、Enter不误提交；隐藏格式无效数值不阻止另一种格式导出。
+- 六级标题切换不引起后文位移、自定义字体、双主题源码/渲染高亮、公式重编辑与错误恢复。
+- 800px、150%缩放、720px窗口配500px侧栏、800×333矮视口；状态栏、设置和表格/资源动作均实际操作。
+- 主要UI小字号文字20对实测最低5.72:1；编辑区代码/错误文字检查最低5.24:1。这些数字只覆盖已测组合，不宣称任意用户CSS也合格。
+
+修复过程中原PDF测试发现应用全局视口约束导致分页失效。已把高度和overflow规则限定在含`#app`的窗口页面，重新通过两页A4、中文、图片、公式、SVG和书签检查；保留原测试断言，未通过更改预期掩盖回归。独立复核发现的菜单遮挡、矮窗分类/表格裁切、宽侧栏状态栏溢出也已修复并增加交互检查。
+
+## 验证边界
+
+本轮在Linux环境运行。Windows原生安装、文件关联、卸载、DPI、微软拼音和辅助技术仍需对应设备/CI；跨平台打包、Wine和Linux截图不能代替这些验证。此前功能矩阵中细粒度列表/引用/图片交互、鼠标矩形表格选区等部分实现项保持原状态，本次UI升级不把它们改写为完成。
+
+另外纠正一项旧取证错误：Playwright Electron默认会注入`--no-sandbox`。本次显式检查启动argv，当前宿主helper未配置root/setuid且user namespace受限，正常沙箱启动失败，因此本机自动化功能测试明确使用测试模式；产品启动参数没有加入此绕过，宿主安全策略没有修改。正常沙箱、系统级安装和桌面集成仍待适合的环境验证。
+
+执行命令、当前安装包与最终测试计数见[交付记录](DELIVERY.md)及[验收记录](ACCEPTANCE.md)。

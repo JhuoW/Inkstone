@@ -1,0 +1,32 @@
+[
+  {
+    "file": "Inkstone-0.3.0-windows-x64.exe",
+    "bytes": 115075328,
+    "sha256": "df8ee8c7e7e887930837acc16e9ea12a7f31d415107b6ea77ecd5ba5721c9951"
+  },
+  {
+    "file": "Inkstone-0.3.0-windows-x64.zip",
+    "bytes": 159582148,
+    "sha256": "229539fb5dd526406fa0b97a920c385b6ba23cf4e6ee061b429cfd1be20a54be"
+  },
+  {
+    "file": "Inkstone-0.3.0.AppImage",
+    "bytes": 132998669,
+    "sha256": "a46c1cfa53f1d21c327d30a759d0a465c06aa8a234fb00b0e5d5eb22c34aba96"
+  },
+  {
+    "file": "inkstone-editor_0.3.0_amd64.deb",
+    "bytes": 106785544,
+    "sha256": "fc2bf9b3bf80a5736d2b7d58eb4c8ef8f43fe2e59eaaa8e8b039174c3945a7fd"
+  },
+  {
+    "file": "inkstone-editor-0.3.0.tar.gz",
+    "bytes": 126442025,
+    "sha256": "fd43c1d1ddb55a8bce1689f6f075ea41a59797860023ea1aefd425719567fe58"
+  },
+  {
+    "file": "extensions/inkstone-open-0.3.0.vsix",
+    "bytes": 38578,
+    "sha256": "d03d7960d9fd579c6ca713ff2da9f0b17e2a471deb84a49272936b70621a0ac1"
+  }
+]

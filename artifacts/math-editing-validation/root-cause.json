@@ -1,0 +1,28 @@
+{
+  "reproducedBeforeFix": [
+    {
+      "document": "Start\n\nBefore $\\frac{x}{y}$ after.\n\nEnd",
+      "action": "Actual Chromium mouse click on rendered KaTeX fraction, then keyboard type Q",
+      "observedCaret": 7,
+      "expectedFormulaBodyStart": 15,
+      "observedDocument": "Start\n\nQBefore $\\frac{x}{y}$ after.\n\nEnd"
+    },
+    {
+      "document": "Start\n\n$$\n\\qty(\\frac{x}{y})\n$$\n\nEnd",
+      "action": "Actual Chromium mouse click on MathJax SVG, then keyboard type Q",
+      "observedCaret": 7,
+      "expectedFormulaBodyStart": 10,
+      "observedDocument": "Start\n\nQ$$\n\\qty(\\frac{x}{y})\n$$\n\nEnd"
+    }
+  ],
+  "cause": "Widget hit testing searched rendered text inside raw Markdown. Formula glyphs/SVG do not map reversibly to TeX; failure fell back to block start, so typing modified prose or opening delimiters. Native vertical navigation also skipped replaced blocks.",
+  "fix": "Parser-recorded inline math spans, actual pointer event target, body-bounded fence/math positions, same-editor inline source and block source with live preview, double-click body selection, adjacent-block arrow-key entry. No document serialization or modal editor.",
+  "verification": "results.json contains actual mouse/keyboard, cross-block dragging, clipboard, undo/redo, mixed source bytes, mode switches and CDP IME checks. Native Windows IME remains platform validation.",
+  "officialInteractionReference": "https://support.typora.io/Math/",
+  "codeMirrorReference": "https://github.com/codemirror/view/blob/main/src/docview.ts",
+  "fullApplicationHitBox": {
+    "reproduction": "Normal-sandbox Electron with full application CSS: clicking .cm-live-block .math-inline repeatedly timed out because its inline box could hit the parent paragraph in formula glyph whitespace.",
+    "fix": "The editor math-inline wrapper now uses inline-block to establish a rectangular hit target, for both inactive blocks and active inline widgets.",
+    "validation": "Actual normal-sandbox Electron reproduction failed before the style, then the same non-force click passed after applying it. The 10-group regression now loads full styles.css and clicks formula wrappers."
+  }
+}

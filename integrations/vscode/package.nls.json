@@ -1,0 +1,5 @@
+{
+  "command.openFile": "Open in Inkstone",
+  "setting.executablePath": "Inkstone executable path for Windows or Linux (not a shell command). Empty uses the Windows per-user installation or Linux PATH. Workspace overrides are ignored.",
+  "setting.args": "Additional arguments, one exact string per array entry. The absolute Markdown file path is appended automatically. No shell expansion is performed."
+}

@@ -1,0 +1,15 @@
+  • electron-builder  version=26.18.0 os=6.17.0-14-generic
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=45.2.3 arch=x64 buildFromSource=false workspaceRoot=/home/zhuowei/software/Open-Typora projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=45.2.3 appOutDir=release/win-unpacked
+  • using custom electronDist directory  electronDist=/home/zhuowei/.cache/electron/8f3ac71e340a9b80141ce76e61a0af56be8beee5aed0cf501a00bd07792a0295
+  • searching for node modules  pm=npm searchDir=/home/zhuowei/software/Open-Typora
+  • updating asar integrity executable resource  executablePath=release/win-unpacked/Inkstone.exe
+  • no code signing certificate configured, signing is skipped  path=release/win-unpacked/Inkstone.exe
+  • building        target=zip arch=x64 file=release/Inkstone-0.3.0-windows-x64.zip
+  • building        target=nsis file=release/Inkstone-0.3.0-windows-x64.exe archs=x64 oneClick=false perMachine=false
+  • no code signing certificate configured, signing is skipped  path=/tmp/t-o6uaPw/elevate-staging-1/resources/elevate.exe
+  • no code signing certificate configured, signing is skipped  path=release/Inkstone-0.3.0-windows-x64.__uninstaller.exe
+  • no code signing certificate configured, signing is skipped  path=release/Inkstone-0.3.0-windows-x64.exe

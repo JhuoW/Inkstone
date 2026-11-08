@@ -1,0 +1,2111 @@
+{
+  "version": "0.4.0",
+  "stage": "after",
+  "generatedAt": "2026-11-08T10:32:13.085Z",
+  "host": "linux",
+  "normalSandbox": false,
+  "desktopIPC": "real Electron",
+  "display": ":91",
+  "zoomScope": "150% Electron UI zoom; not physical Windows DPI or a Windows runtime test",
+  "sourceSHA256": "b890d64fa5c8b0fb0ded430063727fe32f94c1a6990096cd98e8b0f83da34940",
+  "sourceBytes": 993,
+  "sourcePreserved": true,
+  "modeSelectionPreserved": true,
+  "executeCommands": [
+    "clearRecent",
+    "close",
+    "codeFence",
+    "codeLanguage",
+    "collectImages",
+    "commands",
+    "convertEncoding",
+    "copyCode",
+    "copyHTML",
+    "copyMathML",
+    "copyPath",
+    "copyPlain",
+    "copyRich",
+    "downloadImage",
+    "export",
+    "fileOperation",
+    "focus",
+    "followLink",
+    "footnote",
+    "format",
+    "fullscreen",
+    "globalSearch",
+    "highlight",
+    "history",
+    "import",
+    "insertImage",
+    "insertImageURL",
+    "manageImages",
+    "math",
+    "new",
+    "newFile",
+    "newFolder",
+    "newWindow",
+    "open",
+    "openFolder",
+    "outline",
+    "pageBreak",
+    "pinFolder",
+    "print",
+    "quickOpen",
+    "quit",
+    "readOnly",
+    "recovery",
+    "refresh",
+    "reopenClosed",
+    "repeatExport",
+    "resizeImage",
+    "save",
+    "saveAs",
+    "settings",
+    "sidebar",
+    "source",
+    "statistics",
+    "sub",
+    "sup",
+    "table",
+    "tableAction",
+    "tableEdit",
+    "toc",
+    "typewriter",
+    "undoFileOperation",
+    "zoomIn",
+    "zoomOut",
+    "zoomReset"
+  ],
+  "editorCommands": [
+    "bold",
+    "bullet",
+    "clearFormatting",
+    "code",
+    "codeBlock",
+    "codeLanguage",
+    "deleteBlock",
+    "deleteLine",
+    "deleteSentence",
+    "deleteStyle",
+    "deleteWord",
+    "editTableCell",
+    "find",
+    "footnote",
+    "format",
+    "heading",
+    "highlight",
+    "hr",
+    "image",
+    "indent",
+    "italic",
+    "language",
+    "link",
+    "math",
+    "mathBlock",
+    "moveParagraphDown",
+    "moveParagraphUp",
+    "ordered",
+    "outdent",
+    "paragraph",
+    "quote",
+    "redo",
+    "refresh",
+    "replace",
+    "selectAll",
+    "strike",
+    "subscript",
+    "superscript",
+    "table",
+    "tableAction",
+    "tableAddColumn",
+    "tableAddRow",
+    "tableAlign",
+    "tableColumnLeft",
+    "tableColumnRight",
+    "tableDeleteColumn",
+    "tableDeleteRow",
+    "tableRowDown",
+    "tableRowUp",
+    "task",
+    "toc",
+    "undo"
+  ],
+  "snippetCommands": [
+    {
+      "id": "snippet:date",
+      "en": "Insert snippet: date",
+      "zh": "插入片段：date"
+    },
+    {
+      "id": "snippet:note",
+      "en": "Insert snippet: note",
+      "zh": "插入片段：note"
+    }
+  ],
+  "nativeActionKeys": [
+    "id:bold",
+    "id:bullet",
+    "id:code",
+    "id:codeFence",
+    "id:commands",
+    "id:export",
+    "id:find",
+    "id:focus",
+    "id:format",
+    "id:globalSearch",
+    "id:heading1",
+    "id:heading2",
+    "id:heading3",
+    "id:heading4",
+    "id:heading5",
+    "id:heading6",
+    "id:highlight",
+    "id:history",
+    "id:import",
+    "id:insertImage",
+    "id:insertImageURL",
+    "id:italic",
+    "id:link",
+    "id:math",
+    "id:new",
+    "id:open",
+    "id:openFolder",
+    "id:ordered",
+    "id:outline",
+    "id:print",
+    "id:quickOpen",
+    "id:quit",
+    "id:quote",
+    "id:redo",
+    "id:save",
+    "id:saveAs",
+    "id:settings",
+    "id:sidebar",
+    "id:source",
+    "id:statistics",
+    "id:strike",
+    "id:table",
+    "id:task",
+    "id:typewriter",
+    "id:undo",
+    "id:zoomIn",
+    "id:zoomOut",
+    "id:zoomReset",
+    "role:close",
+    "role:copy",
+    "role:cut",
+    "role:paste",
+    "role:pasteandmatchstyle",
+    "role:selectall",
+    "role:togglefullscreen"
+  ],
+  "paletteCommands": [
+    {
+      "id": "new",
+      "zh": "新建文档",
+      "en": "New document"
+    },
+    {
+      "id": "open",
+      "zh": "打开文档",
+      "en": "Open document"
+    },
+    {
+      "id": "openFolder",
+      "zh": "打开文件夹",
+      "en": "Open folder"
+    },
+    {
+      "id": "newFile",
+      "zh": "在文件夹中创建文档",
+      "en": "Create file in folder"
+    },
+    {
+      "id": "newFolder",
+      "zh": "新建子文件夹",
+      "en": "New subfolder"
+    },
+    {
+      "id": "save",
+      "zh": "保存",
+      "en": "Save"
+    },
+    {
+      "id": "saveAs",
+      "zh": "另存为",
+      "en": "Save as"
+    },
+    {
+      "id": "convertEncoding",
+      "zh": "转换文件编码",
+      "en": "Convert file encoding"
+    },
+    {
+      "id": "reopenClosed",
+      "zh": "重新打开上一个文档",
+      "en": "Reopen previous document"
+    },
+    {
+      "id": "quickOpen",
+      "zh": "快速打开",
+      "en": "Quick open"
+    },
+    {
+      "id": "import",
+      "zh": "导入文档（Pandoc）",
+      "en": "Import (Pandoc)"
+    },
+    {
+      "id": "export",
+      "zh": "导出文档",
+      "en": "Export"
+    },
+    {
+      "id": "repeatExport",
+      "zh": "重复上次导出",
+      "en": "Repeat last export"
+    },
+    {
+      "id": "print",
+      "zh": "打印",
+      "en": "Print"
+    },
+    {
+      "id": "newWindow",
+      "zh": "新窗口",
+      "en": "New window"
+    },
+    {
+      "id": "close",
+      "zh": "关闭窗口",
+      "en": "Close window"
+    },
+    {
+      "id": "quit",
+      "zh": "退出 Inkstone",
+      "en": "Quit Inkstone"
+    },
+    {
+      "id": "source",
+      "zh": "切换源码模式",
+      "en": "Toggle source"
+    },
+    {
+      "id": "focus",
+      "zh": "切换专注模式",
+      "en": "Toggle focus"
+    },
+    {
+      "id": "typewriter",
+      "zh": "切换打字机模式",
+      "en": "Toggle typewriter"
+    },
+    {
+      "id": "fullscreen",
+      "zh": "全屏",
+      "en": "Full screen"
+    },
+    {
+      "id": "sidebar",
+      "zh": "切换侧边栏",
+      "en": "Toggle sidebar"
+    },
+    {
+      "id": "zoomIn",
+      "zh": "放大",
+      "en": "Zoom in"
+    },
+    {
+      "id": "zoomOut",
+      "zh": "缩小",
+      "en": "Zoom out"
+    },
+    {
+      "id": "zoomReset",
+      "zh": "重置缩放",
+      "en": "Reset zoom"
+    },
+    {
+      "id": "find",
+      "zh": "查找 / 正则",
+      "en": "Find / Regex"
+    },
+    {
+      "id": "replace",
+      "zh": "替换",
+      "en": "Replace"
+    },
+    {
+      "id": "undo",
+      "zh": "撤销",
+      "en": "Undo"
+    },
+    {
+      "id": "redo",
+      "zh": "重做",
+      "en": "Redo"
+    },
+    {
+      "id": "deleteBlock",
+      "zh": "删除当前段落或块",
+      "en": "Delete current paragraph or block"
+    },
+    {
+      "id": "deleteSentence",
+      "zh": "删除当前句子",
+      "en": "Delete current sentence"
+    },
+    {
+      "id": "deleteWord",
+      "zh": "删除当前词",
+      "en": "Delete current word"
+    },
+    {
+      "id": "clearFormatting",
+      "zh": "移除文本格式",
+      "en": "Clear formatting"
+    },
+    {
+      "id": "moveParagraphUp",
+      "zh": "上移当前段落",
+      "en": "Move paragraph up"
+    },
+    {
+      "id": "moveParagraphDown",
+      "zh": "下移当前段落",
+      "en": "Move paragraph down"
+    },
+    {
+      "id": "bold",
+      "zh": "加粗",
+      "en": "Bold"
+    },
+    {
+      "id": "italic",
+      "zh": "斜体",
+      "en": "Italic"
+    },
+    {
+      "id": "strike",
+      "zh": "删除线",
+      "en": "Strikethrough"
+    },
+    {
+      "id": "highlight",
+      "zh": "高亮",
+      "en": "Highlight"
+    },
+    {
+      "id": "sup",
+      "zh": "上标",
+      "en": "Superscript"
+    },
+    {
+      "id": "sub",
+      "zh": "下标",
+      "en": "Subscript"
+    },
+    {
+      "id": "quote",
+      "zh": "引用",
+      "en": "Quote"
+    },
+    {
+      "id": "bullet",
+      "zh": "无序列表",
+      "en": "Bullet list"
+    },
+    {
+      "id": "ordered",
+      "zh": "有序列表",
+      "en": "Numbered list"
+    },
+    {
+      "id": "task",
+      "zh": "任务列表",
+      "en": "Task list"
+    },
+    {
+      "id": "link",
+      "zh": "插入链接",
+      "en": "Insert link"
+    },
+    {
+      "id": "insertImage",
+      "zh": "插入本地图片",
+      "en": "Insert local image"
+    },
+    {
+      "id": "insertImageURL",
+      "zh": "从 URL 插入图片",
+      "en": "Insert image from URL"
+    },
+    {
+      "id": "resizeImage",
+      "zh": "调整图片尺寸",
+      "en": "Resize image"
+    },
+    {
+      "id": "collectImages",
+      "zh": "归集图片到资源目录",
+      "en": "Collect images into asset folder"
+    },
+    {
+      "id": "manageImages",
+      "zh": "图片资源管理",
+      "en": "Manage image resources"
+    },
+    {
+      "id": "table",
+      "zh": "创建表格",
+      "en": "Create table"
+    },
+    {
+      "id": "tableEdit",
+      "zh": "表格编辑工具",
+      "en": "Table tools"
+    },
+    {
+      "id": "codeFence",
+      "zh": "插入代码块",
+      "en": "Code fence"
+    },
+    {
+      "id": "codeLanguage",
+      "zh": "代码块语言",
+      "en": "Code language"
+    },
+    {
+      "id": "copyCode",
+      "zh": "复制当前代码块",
+      "en": "Copy current code block"
+    },
+    {
+      "id": "copyPath",
+      "zh": "复制文档路径",
+      "en": "Copy document path"
+    },
+    {
+      "id": "clearRecent",
+      "zh": "清除最近文档记录",
+      "en": "Clear recent documents"
+    },
+    {
+      "id": "math",
+      "zh": "插入数学公式",
+      "en": "Math block"
+    },
+    {
+      "id": "toc",
+      "zh": "插入目录",
+      "en": "Table of contents"
+    },
+    {
+      "id": "footnote",
+      "zh": "插入脚注",
+      "en": "Footnote"
+    },
+    {
+      "id": "hr",
+      "zh": "分隔线",
+      "en": "Horizontal rule"
+    },
+    {
+      "id": "pageBreak",
+      "zh": "分页符",
+      "en": "Page break"
+    },
+    {
+      "id": "copyRich",
+      "zh": "复制为富文本",
+      "en": "Copy as rich text"
+    },
+    {
+      "id": "copyHTML",
+      "zh": "复制 HTML",
+      "en": "Copy HTML"
+    },
+    {
+      "id": "copyPlain",
+      "zh": "复制纯文本",
+      "en": "Copy plain text"
+    },
+    {
+      "id": "format",
+      "zh": "整理 Markdown",
+      "en": "Format Markdown"
+    },
+    {
+      "id": "outline",
+      "zh": "大纲",
+      "en": "Outline"
+    },
+    {
+      "id": "globalSearch",
+      "zh": "全局搜索",
+      "en": "Search in folder"
+    },
+    {
+      "id": "history",
+      "zh": "版本历史",
+      "en": "Version history"
+    },
+    {
+      "id": "recovery",
+      "zh": "恢复草稿",
+      "en": "Recovery drafts"
+    },
+    {
+      "id": "readOnly",
+      "zh": "切换只读模式",
+      "en": "Toggle read-only"
+    },
+    {
+      "id": "refresh",
+      "zh": "刷新公式与图表",
+      "en": "Refresh math and diagrams"
+    },
+    {
+      "id": "copyMathML",
+      "zh": "复制当前公式 MathML",
+      "en": "Copy current formula as MathML"
+    },
+    {
+      "id": "statistics",
+      "zh": "文档统计",
+      "en": "Document statistics"
+    },
+    {
+      "id": "settings",
+      "zh": "偏好设置",
+      "en": "Preferences"
+    },
+    {
+      "id": "heading1",
+      "zh": "标题 1",
+      "en": "Heading 1"
+    },
+    {
+      "id": "heading2",
+      "zh": "标题 2",
+      "en": "Heading 2"
+    },
+    {
+      "id": "heading3",
+      "zh": "标题 3",
+      "en": "Heading 3"
+    },
+    {
+      "id": "heading4",
+      "zh": "标题 4",
+      "en": "Heading 4"
+    },
+    {
+      "id": "heading5",
+      "zh": "标题 5",
+      "en": "Heading 5"
+    },
+    {
+      "id": "heading6",
+      "zh": "标题 6",
+      "en": "Heading 6"
+    }
+  ],
+  "commandQueries": [
+    {
+      "id": "new",
+      "results": [
+        "New documentCtrl+N",
+        "Create file in folder",
+        "New subfolder",
+        "New window"
+      ]
+    },
+    {
+      "id": "open",
+      "results": [
+        "Open documentCtrl+O",
+        "Open folder",
+        "Reopen previous document",
+        "Quick openCtrl+P"
+      ]
+    },
+    {
+      "id": "openFolder",
+      "results": [
+        "Open folder"
+      ]
+    },
+    {
+      "id": "newFile",
+      "results": [
+        "Create file in folder"
+      ]
+    },
+    {
+      "id": "newFolder",
+      "results": [
+        "New subfolder"
+      ]
+    },
+    {
+      "id": "save",
+      "results": [
+        "SaveCtrl+S",
+        "Save asCtrl+Shift+S"
+      ]
+    },
+    {
+      "id": "saveAs",
+      "results": [
+        "Save asCtrl+Shift+S"
+      ]
+    },
+    {
+      "id": "convertEncoding",
+      "results": [
+        "Convert file encoding"
+      ]
+    },
+    {
+      "id": "reopenClosed",
+      "results": [
+        "Reopen previous document"
+      ]
+    },
+    {
+      "id": "quickOpen",
+      "results": [
+        "Quick openCtrl+P"
+      ]
+    },
+    {
+      "id": "import",
+      "results": [
+        "Import (Pandoc)"
+      ]
+    },
+    {
+      "id": "export",
+      "results": [
+        "ExportCtrl+Shift+E",
+        "Repeat last export"
+      ]
+    },
+    {
+      "id": "repeatExport",
+      "results": [
+        "Repeat last export"
+      ]
+    },
+    {
+      "id": "print",
+      "results": [
+        "Print"
+      ]
+    },
+    {
+      "id": "newWindow",
+      "results": [
+        "New window"
+      ]
+    },
+    {
+      "id": "close",
+      "results": [
+        "Reopen previous document",
+        "Close windowCtrl+W"
+      ]
+    },
+    {
+      "id": "quit",
+      "results": [
+        "Quit InkstoneCtrl+Q"
+      ]
+    },
+    {
+      "id": "source",
+      "results": [
+        "Toggle sourceCtrl+/",
+        "Manage image resources"
+      ]
+    },
+    {
+      "id": "focus",
+      "results": [
+        "Toggle focusF8"
+      ]
+    },
+    {
+      "id": "typewriter",
+      "results": [
+        "Toggle typewriterF9"
+      ]
+    },
+    {
+      "id": "fullscreen",
+      "results": [
+        "Full screenF11"
+      ]
+    },
+    {
+      "id": "sidebar",
+      "results": [
+        "Toggle sidebar"
+      ]
+    },
+    {
+      "id": "zoomIn",
+      "results": [
+        "Zoom in"
+      ]
+    },
+    {
+      "id": "zoomOut",
+      "results": [
+        "Zoom out"
+      ]
+    },
+    {
+      "id": "zoomReset",
+      "results": [
+        "Reset zoom"
+      ]
+    },
+    {
+      "id": "find",
+      "results": [
+        "Find / Regex"
+      ]
+    },
+    {
+      "id": "replace",
+      "results": [
+        "Replace"
+      ]
+    },
+    {
+      "id": "undo",
+      "results": [
+        "Undo file move or rename",
+        "Undo"
+      ]
+    },
+    {
+      "id": "redo",
+      "results": [
+        "Redo"
+      ]
+    },
+    {
+      "id": "deleteBlock",
+      "results": [
+        "Delete current paragraph or block"
+      ]
+    },
+    {
+      "id": "deleteSentence",
+      "results": [
+        "Delete current sentence"
+      ]
+    },
+    {
+      "id": "deleteWord",
+      "results": [
+        "Delete current word"
+      ]
+    },
+    {
+      "id": "clearFormatting",
+      "results": [
+        "Clear formatting"
+      ]
+    },
+    {
+      "id": "moveParagraphUp",
+      "results": [
+        "Move paragraph up"
+      ]
+    },
+    {
+      "id": "moveParagraphDown",
+      "results": [
+        "Move paragraph down"
+      ]
+    },
+    {
+      "id": "bold",
+      "results": [
+        "Bold"
+      ]
+    },
+    {
+      "id": "italic",
+      "results": [
+        "Italic"
+      ]
+    },
+    {
+      "id": "strike",
+      "results": [
+        "Strikethrough"
+      ]
+    },
+    {
+      "id": "highlight",
+      "results": [
+        "Highlight"
+      ]
+    },
+    {
+      "id": "sup",
+      "results": [
+        "Superscript"
+      ]
+    },
+    {
+      "id": "sub",
+      "results": [
+        "New subfolder",
+        "Subscript"
+      ]
+    },
+    {
+      "id": "quote",
+      "results": [
+        "Quote"
+      ]
+    },
+    {
+      "id": "bullet",
+      "results": [
+        "Bullet list"
+      ]
+    },
+    {
+      "id": "ordered",
+      "results": [
+        "Numbered list"
+      ]
+    },
+    {
+      "id": "task",
+      "results": [
+        "Task list"
+      ]
+    },
+    {
+      "id": "link",
+      "results": [
+        "Insert link"
+      ]
+    },
+    {
+      "id": "insertImage",
+      "results": [
+        "Insert local image",
+        "Insert image from URL"
+      ]
+    },
+    {
+      "id": "insertImageURL",
+      "results": [
+        "Insert image from URL"
+      ]
+    },
+    {
+      "id": "resizeImage",
+      "results": [
+        "Resize image"
+      ]
+    },
+    {
+      "id": "collectImages",
+      "results": [
+        "Collect images into asset folder"
+      ]
+    },
+    {
+      "id": "manageImages",
+      "results": [
+        "Manage image resources"
+      ]
+    },
+    {
+      "id": "table",
+      "results": [
+        "Create table",
+        "Table tools",
+        "Table of contents"
+      ]
+    },
+    {
+      "id": "tableEdit",
+      "results": [
+        "Table tools"
+      ]
+    },
+    {
+      "id": "codeFence",
+      "results": [
+        "Code fence"
+      ]
+    },
+    {
+      "id": "codeLanguage",
+      "results": [
+        "Code language"
+      ]
+    },
+    {
+      "id": "copyCode",
+      "results": [
+        "Copy current code block"
+      ]
+    },
+    {
+      "id": "copyPath",
+      "results": [
+        "Copy document path"
+      ]
+    },
+    {
+      "id": "clearRecent",
+      "results": [
+        "Clear recent documents"
+      ]
+    },
+    {
+      "id": "math",
+      "results": [
+        "Math block",
+        "Refresh math and diagrams",
+        "Copy current formula as MathML"
+      ]
+    },
+    {
+      "id": "toc",
+      "results": [
+        "Table of contents"
+      ]
+    },
+    {
+      "id": "footnote",
+      "results": [
+        "Footnote"
+      ]
+    },
+    {
+      "id": "hr",
+      "results": [
+        "Strikethrough",
+        "Horizontal rule"
+      ]
+    },
+    {
+      "id": "pageBreak",
+      "results": [
+        "Page break"
+      ]
+    },
+    {
+      "id": "copyRich",
+      "results": [
+        "Copy as rich text"
+      ]
+    },
+    {
+      "id": "copyHTML",
+      "results": [
+        "Copy HTML"
+      ]
+    },
+    {
+      "id": "copyPlain",
+      "results": [
+        "Copy plain text"
+      ]
+    },
+    {
+      "id": "format",
+      "results": [
+        "Clear formatting",
+        "Format Markdown"
+      ]
+    },
+    {
+      "id": "outline",
+      "results": [
+        "Outline"
+      ]
+    },
+    {
+      "id": "globalSearch",
+      "results": [
+        "Search in folder"
+      ]
+    },
+    {
+      "id": "history",
+      "results": [
+        "Version history"
+      ]
+    },
+    {
+      "id": "recovery",
+      "results": [
+        "Recovery drafts"
+      ]
+    },
+    {
+      "id": "readOnly",
+      "results": [
+        "Toggle read-only"
+      ]
+    },
+    {
+      "id": "refresh",
+      "results": [
+        "Refresh math and diagrams"
+      ]
+    },
+    {
+      "id": "copyMathML",
+      "results": [
+        "Copy current formula as MathML"
+      ]
+    },
+    {
+      "id": "statistics",
+      "results": [
+        "Document statistics"
+      ]
+    },
+    {
+      "id": "settings",
+      "results": [
+        "PreferencesCtrl+,"
+      ]
+    },
+    {
+      "id": "heading1",
+      "results": [
+        "Heading 1"
+      ]
+    },
+    {
+      "id": "heading2",
+      "results": [
+        "Heading 2"
+      ]
+    },
+    {
+      "id": "heading3",
+      "results": [
+        "Heading 3"
+      ]
+    },
+    {
+      "id": "heading4",
+      "results": [
+        "Heading 4"
+      ]
+    },
+    {
+      "id": "heading5",
+      "results": [
+        "Heading 5"
+      ]
+    },
+    {
+      "id": "heading6",
+      "results": [
+        "Heading 6"
+      ]
+    },
+    {
+      "id": "snippet:date",
+      "results": [
+        "Insert snippet: date"
+      ]
+    },
+    {
+      "id": "snippet:note",
+      "results": [
+        "Insert snippet: note"
+      ]
+    }
+  ],
+  "nativeMenu": [
+    {
+      "label": "File",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "new",
+          "label": "New document",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+N",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "New window",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+N",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "open",
+          "label": "Open…",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+O",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "openFolder",
+          "label": "Open folder…",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+O",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "save",
+          "label": "Save",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+S",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "saveAs",
+          "label": "Save as…",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+S",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "import",
+          "label": "Import…",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "export",
+          "label": "Export…",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+E",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "print",
+          "label": "Print…",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Close window",
+          "role": "close",
+          "type": "normal",
+          "accelerator": "CommandOrControl+W",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "quit",
+          "label": "Quit",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Q",
+          "enabled": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Edit",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "undo",
+          "label": "Undo",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Z",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "redo",
+          "label": "Redo",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+Z",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Cut",
+          "role": "cut",
+          "type": "normal",
+          "accelerator": "CommandOrControl+X",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Copy",
+          "role": "copy",
+          "type": "normal",
+          "accelerator": "CommandOrControl+C",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Paste",
+          "role": "paste",
+          "type": "normal",
+          "accelerator": "CommandOrControl+V",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Paste as plain text",
+          "role": "pasteandmatchstyle",
+          "type": "normal",
+          "accelerator": "Shift+CommandOrControl+V",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Select all",
+          "role": "selectall",
+          "type": "normal",
+          "accelerator": "CommandOrControl+A",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "find",
+          "label": "Find / replace",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+F",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "globalSearch",
+          "label": "Search in folder",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+F",
+          "enabled": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Paragraph",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "heading1",
+          "label": "Heading 1",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+1",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "heading2",
+          "label": "Heading 2",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+2",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "heading3",
+          "label": "Heading 3",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+3",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "heading4",
+          "label": "Heading 4",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+4",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "heading5",
+          "label": "Heading 5",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+5",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "heading6",
+          "label": "Heading 6",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+6",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "quote",
+          "label": "Quote",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "bullet",
+          "label": "Bullet list",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "ordered",
+          "label": "Numbered list",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "task",
+          "label": "Task list",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "table",
+          "label": "Table",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "codeFence",
+          "label": "Code fence",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "math",
+          "label": "Math block",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Format",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "bold",
+          "label": "Bold",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+B",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "italic",
+          "label": "Italic",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+I",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "strike",
+          "label": "Strikethrough",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "highlight",
+          "label": "Highlight",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "code",
+          "label": "Inline code",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+`",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "link",
+          "label": "Link",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+K",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "insertImage",
+          "label": "Image…",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "insertImageURL",
+          "label": "Insert image from URL",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "View",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "source",
+          "label": "Source mode",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+/",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "sidebar",
+          "label": "Sidebar",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+L",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "outline",
+          "label": "Outline",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "quickOpen",
+          "label": "Quick open",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+P",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "commands",
+          "label": "Command palette",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Shift+P",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "focus",
+          "label": "Focus mode",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "typewriter",
+          "label": "Typewriter mode",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "zoomReset",
+          "label": "Reset zoom",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+0",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "zoomIn",
+          "label": "Zoom in",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+Plus",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "zoomOut",
+          "label": "Zoom out",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+-",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "Toggle fullscreen",
+          "role": "togglefullscreen",
+          "type": "normal",
+          "accelerator": "F11",
+          "enabled": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Tools",
+      "role": null,
+      "type": "submenu",
+      "accelerator": null,
+      "enabled": true,
+      "children": [
+        {
+          "id": "settings",
+          "label": "Preferences…",
+          "role": null,
+          "type": "normal",
+          "accelerator": "Ctrl+,",
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "history",
+          "label": "Version history…",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "format",
+          "label": "Format Markdown",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "id": "statistics",
+          "label": "Statistics",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "",
+          "role": null,
+          "type": "separator",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        },
+        {
+          "label": "About Inkstone",
+          "role": null,
+          "type": "normal",
+          "accelerator": null,
+          "enabled": true,
+          "children": []
+        }
+      ]
+    }
+  ],
+  "toolbarCommands": [
+    "bold",
+    "bullet",
+    "code",
+    "commands",
+    "copyHTML",
+    "export",
+    "focus",
+    "heading",
+    "insertImage",
+    "italic",
+    "link",
+    "newFile",
+    "openFolder",
+    "pinFolder",
+    "quickOpen",
+    "quote",
+    "settings",
+    "sidebar",
+    "source",
+    "statistics",
+    "strike",
+    "table",
+    "task",
+    "typewriter",
+    "zoomReset"
+  ],
+  "preferences": [
+    "autoPair",
+    "autoPairMarkdown",
+    "autoSave",
+    "autoSaveDelay",
+    "cjkEmphasis",
+    "codeWrap",
+    "contentWidth",
+    "customCSS",
+    "defaultCodeLanguage",
+    "excludeGlobs",
+    "exportSoftBreaks",
+    "fileSort",
+    "focusMode",
+    "foldersFirst",
+    "fontFamily",
+    "fontSize",
+    "imageFolder",
+    "includeGlobs",
+    "lineHeight",
+    "lineNumbers",
+    "locale",
+    "mathNumbering",
+    "outlineNumbering",
+    "pandocPath",
+    "recordRecent",
+    "sequenceTheme",
+    "shortcuts",
+    "showAllFiles",
+    "showHidden",
+    "smartPunctuation",
+    "smartPunctuationInput",
+    "snippets",
+    "softBreaks",
+    "sortDescending",
+    "spellcheck",
+    "strictMarkdown",
+    "tabSize",
+    "theme",
+    "typewriterMode",
+    "wheelZoom"
+  ],
+  "exportControls": [
+    "afterExport",
+    "appearance",
+    "args",
+    "bookmarks",
+    "footer",
+    "format",
+    "header",
+    "landscape",
+    "margins",
+    "numberSections",
+    "pageSize",
+    "profile",
+    "quality",
+    "toc",
+    "width"
+  ],
+  "exportFormats": [
+    {
+      "id": "pdf",
+      "label": "PDF"
+    },
+    {
+      "id": "html",
+      "label": "HTML (styled)"
+    },
+    {
+      "id": "html-plain",
+      "label": "HTML (plain)"
+    },
+    {
+      "id": "png",
+      "label": "PNG image"
+    },
+    {
+      "id": "jpeg",
+      "label": "JPEG image"
+    },
+    {
+      "id": "docx",
+      "label": "Word (.docx)"
+    },
+    {
+      "id": "odt",
+      "label": "OpenDocument (.odt)"
+    },
+    {
+      "id": "rtf",
+      "label": "Rich Text (.rtf)"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB"
+    },
+    {
+      "id": "latex",
+      "label": "LaTeX"
+    },
+    {
+      "id": "mediawiki",
+      "label": "MediaWiki"
+    },
+    {
+      "id": "dokuwiki",
+      "label": "DokuWiki"
+    },
+    {
+      "id": "rst",
+      "label": "reStructuredText"
+    },
+    {
+      "id": "textile",
+      "label": "Textile"
+    },
+    {
+      "id": "org",
+      "label": "Org-mode"
+    },
+    {
+      "id": "opml",
+      "label": "OPML"
+    },
+    {
+      "id": "pptx",
+      "label": "PowerPoint"
+    },
+    {
+      "id": "revealjs",
+      "label": "Reveal.js"
+    },
+    {
+      "id": "beamer",
+      "label": "Beamer"
+    },
+    {
+      "id": "asciidoc",
+      "label": "AsciiDoc"
+    },
+    {
+      "id": "json",
+      "label": "Pandoc JSON"
+    },
+    {
+      "id": "gfm",
+      "label": "GFM Markdown"
+    },
+    {
+      "id": "commonmark",
+      "label": "CommonMark"
+    },
+    {
+      "id": "markdown",
+      "label": "Pandoc Markdown"
+    },
+    {
+      "id": "markdown_strict",
+      "label": "Strict Markdown"
+    },
+    {
+      "id": "markdown_mmd",
+      "label": "MultiMarkdown"
+    },
+    {
+      "id": "pandoc-pdf",
+      "label": "PDF (Pandoc + TeX)"
+    }
+  ],
+  "screenshots": [
+    "writing-light-1280.png",
+    "outline-light-1280.png",
+    "preferences-light-1280.png",
+    "export-light-1280.png",
+    "commands-light-1280.png",
+    "math-edit-light-1280.png",
+    "source-light-1280.png",
+    "structures-light-1280.png",
+    "writing-dark-1280.png",
+    "preferences-dark-1280.png",
+    "writing-dark-800.png",
+    "writing-light-800.png",
+    "preferences-light-800.png",
+    "writing-light-zoom150.png",
+    "writing-zh-1280.png"
+  ],
+  "screenshotGeometry": [
+    {
+      "name": "writing-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "outline-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "preferences-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "export-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "commands-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "math-edit-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "source-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "structures-light-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "writing-dark-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "preferences-dark-1280",
+      "width": 1280,
+      "height": 900,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "writing-dark-800",
+      "width": 800,
+      "height": 800,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "writing-light-800",
+      "width": 800,
+      "height": 800,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "preferences-light-800",
+      "width": 800,
+      "height": 800,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    },
+    {
+      "name": "writing-light-zoom150",
+      "width": 853,
+      "height": 600,
+      "devicePixelRatio": 1.5,
+      "sidebarWidth": 256,
+      "zoomFactor": 1.5000000000000004
+    },
+    {
+      "name": "writing-zh-1280",
+      "width": 1280,
+      "height": 899,
+      "devicePixelRatio": 1,
+      "sidebarWidth": 256,
+      "zoomFactor": 1
+    }
+  ],
+  "browserErrors": [],
+  "sourceHashes": {
+    "src/app.js": "bc436ec565d9dac1547c51ec27a9e25a96af84e5ab4715154f9f51080a5032e2",
+    "src/styles.css": "d72798e482262e58dc46eb6f95aaaadba3bd88c31bae0e9f1995e716e429ea12",
+    "src/editor.css": "77e341fa5a90f8229d170d213466dee25a8ad4e9cbf854f543ff77475086103c",
+    "src/editor.js": "ee35cb542eb81a771eb0dea06058502ef35a33041d2c6d9fc8e1032ab1de1008",
+    "src/preferences.js": "b29af65284baedeed1c34aaeb2dc0c5547d97b1748e35743031de714e7eb75f6",
+    "src/export.js": "77729a8f30189531e3592a68b287a9ca882e21d2e24d4e3ef39d07333c809f93",
+    "src/ui.js": "e971652200744b9ec7ee4ddb26dd40efcb630f2b28f996cea91ed35cb6f7803a",
+    "electron/main.cjs": "35a428cc0211f4537c5bbccb5c17b90b78587a99bd8f3e140e67b62569e3d3c1",
+    "dist/index.html": "d197e19757276adede62595a04348f04282f605edfbaf2570338d2def8871b7b"
+  },
+  "preservation": {
+    "missingExecuteCommands": [],
+    "missingEditorCommands": [],
+    "missingNativeActions": [],
+    "missingPreferences": [],
+    "missingExportControls": [],
+    "missingExportFormats": []
+  }
+}

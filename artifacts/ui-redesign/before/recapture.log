@@ -1,0 +1,10 @@
+{
+  "stage": "before",
+  "screenshots": 15,
+  "paletteCommands": 82,
+  "executeCommands": 64,
+  "preferences": 40,
+  "exportFormats": 27,
+  "sourcePreserved": true,
+  "browserErrors": []
+}

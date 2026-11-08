@@ -1,0 +1,50 @@
+name: Windows and Linux local editor
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    name: Windows x64 primary
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node node_modules/electron/install.js
+      - run: npm test
+      - run: npm ci --prefix integrations/vscode
+      - run: npm test --prefix integrations/vscode
+      - run: npm run licenses
+      - run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Run the actual packaged Windows application
+        run: npm run test:native
+        env:
+          INKSTONE_EXECUTABLE: release/win-unpacked/Inkstone.exe
+  linux:
+    name: Linux x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node node_modules/electron/install.js
+      - run: npm test
+      - run: npm run licenses
+      - run: npm run dist:linux
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Run the actual Linux application
+        run: xvfb-run -a npm run test:native
+      - name: Extract and validate each Linux package
+        run: xvfb-run -a npm run verify:packages

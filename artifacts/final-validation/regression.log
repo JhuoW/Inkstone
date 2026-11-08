@@ -1,0 +1,698 @@
+
+> inkstone-editor@0.3.0 test:all
+> npm test && npm run test:editor && npm run test:math && npm run test:ui && npm run test:e2e
+
+
+> inkstone-editor@0.3.0 test
+> node scripts/test-unit.mjs
+
+TAP version 13
+# Subtest: quit cancellation retains every window including already approved clean windows
+ok 1 - quit cancellation retains every window including already approved clean windows
+  ---
+  duration_ms: 1.828558
+  type: 'test'
+  ...
+# Subtest: commit persistence failure preserves all windows and a later quit can succeed
+ok 2 - commit persistence failure preserves all windows and a later quit can succeed
+  ---
+  duration_ms: 0.441979
+  type: 'test'
+  ...
+# Subtest: early close waits for renderer readiness and repeated quit shares one transaction
+ok 3 - early close waits for renderer readiness and repeated quit shares one transaction
+  ---
+  duration_ms: 0.26441
+  type: 'test'
+  ...
+# Subtest: unready timeout requests a native decision and never discards without explicit approval
+ok 4 - unready timeout requests a native decision and never discards without explicit approval
+  ---
+  duration_ms: 40.835333
+  type: 'test'
+  ...
+# Subtest: normal save decisions have no readiness deadline after the renderer is ready
+ok 5 - normal save decisions have no readiness deadline after the renderer is ready
+  ---
+  duration_ms: 20.729834
+  type: 'test'
+  ...
+# Subtest: Sankey Unicode CSV maps repeated and quoted nodes without modifying source
+ok 6 - Sankey Unicode CSV maps repeated and quoted nodes without modifying source
+  ---
+  duration_ms: 0.874133
+  type: 'test'
+  ...
+# Subtest: ASCII, other diagrams and malformed CSV use original upstream validation
+ok 7 - ASCII, other diagrams and malformed CSV use original upstream validation
+  ---
+  duration_ms: 0.595411
+  type: 'test'
+  ...
+# Subtest: Sankey mapping preserves directives and numeric values; label markup stays literal
+ok 8 - Sankey mapping preserves directives and numeric values; label markup stays literal
+  ---
+  duration_ms: 0.1452
+  type: 'test'
+  ...
+# Subtest: document image configuration reads quoted Unicode strings without changing source
+ok 9 - document image configuration reads quoted Unicode strings without changing source
+  ---
+  duration_ms: 3.808885
+  type: 'test'
+  ...
+# Subtest: only allowlisted scalar string settings are accepted
+ok 10 - only allowlisted scalar string settings are accepted
+  ---
+  duration_ms: 2.245609
+  type: 'test'
+  ...
+# Subtest: invalid, duplicate, unclosed and oversized metadata fails closed
+ok 11 - invalid, duplicate, unclosed and oversized metadata fails closed
+  ---
+  duration_ms: 0.550493
+  type: 'test'
+  ...
+# Subtest: unmodified source is identical including BOM, CRLF, YAML, unknown syntax and HTML
+ok 12 - unmodified source is identical including BOM, CRLF, YAML, unknown syntax and HTML
+  ---
+  duration_ms: 1.559891
+  type: 'test'
+  ...
+# Subtest: local editing preserves all unaffected original bytes and mixed line endings
+ok 13 - local editing preserves all unaffected original bytes and mixed line endings
+  ---
+  duration_ms: 0.340054
+  type: 'test'
+  ...
+# Subtest: undo restores exact mixed-EOL source after multiline replacement
+ok 14 - undo restores exact mixed-EOL source after multiline replacement
+  ---
+  duration_ms: 0.186783
+  type: 'test'
+  ...
+# Subtest: multiple simultaneous replacements use old source coordinates
+ok 15 - multiple simultaneous replacements use old source coordinates
+  ---
+  duration_ms: 0.232101
+  type: 'test'
+  ...
+# Subtest: Chinese and English statistics handle characters without treating Chinese as one word
+ok 16 - Chinese and English statistics handle characters without treating Chinese as one word
+  ---
+  duration_ms: 2.380693
+  type: 'test'
+  ...
+# Subtest: table cells preserve escaped pipes and inline code pipes
+ok 17 - table cells preserve escaped pipes and inline code pipes
+  ---
+  duration_ms: 0.55517
+  type: 'test'
+  ...
+# Subtest: table operation modifies only table source range
+ok 18 - table operation modifies only table source range
+  ---
+  duration_ms: 0.545996
+  type: 'test'
+  ...
+# Subtest: table alignment and row reordering are real source edits
+ok 19 - table alignment and row reordering are real source edits
+  ---
+  duration_ms: 0.28443
+  type: 'test'
+  ...
+# Subtest: TSV paste grows rows and columns and escapes raw pipes
+ok 20 - TSV paste grows rows and columns and escapes raw pipes
+  ---
+  duration_ms: 0.347646
+  type: 'test'
+  ...
+# Subtest: Tab skips table delimiter and appends final row
+ok 21 - Tab skips table delimiter and appends final row
+  ---
+  duration_ms: 0.342388
+  type: 'test'
+  ...
+# Subtest: table creation is bounded and valid
+ok 22 - table creation is bounded and valid
+  ---
+  duration_ms: 0.183728
+  type: 'test'
+  ...
+# Subtest: mixed LF/CRLF/CR metadata restores arbitrary inserted ranges without full-text snapshots
+ok 23 - mixed LF/CRLF/CR metadata restores arbitrary inserted ranges without full-text snapshots
+  ---
+  duration_ms: 0.153092
+  type: 'test'
+  ...
+# Subtest: visual table source spans retain whitespace, escaped pipes and code spans
+ok 24 - visual table source spans retain whitespace, escaped pipes and code spans
+  ---
+  duration_ms: 0.309909
+  type: 'test'
+  ...
+# Subtest: inactive inline syntax is hidden without changing source ranges
+ok 25 - inactive inline syntax is hidden without changing source ranges
+  ---
+  duration_ms: 3.658196
+  type: 'test'
+  ...
+# Subtest: cursor or non-empty selection reveals each intersecting inline token
+ok 26 - cursor or non-empty selection reveals each intersecting inline token
+  ---
+  duration_ms: 0.861333
+  type: 'test'
+  ...
+# Subtest: heading marker remains available at its source location
+ok 27 - heading marker remains available at its source location
+  ---
+  duration_ms: 0.379735
+  type: 'test'
+  ...
+# Subtest: TeX emphasis-like symbols are protected from prose inline decorations
+ok 28 - TeX emphasis-like symbols are protected from prose inline decorations
+  ---
+  duration_ms: 0.282158
+  type: 'test'
+  ...
+# Subtest: strict and relaxed headings follow official examples without altering source or token lines
+ok 29 - strict and relaxed headings follow official examples without altering source or token lines
+  ---
+  duration_ms: 4.326699
+  type: 'test'
+  ...
+# Subtest: loose list accepts two-space second paragraphs while strict requires marker alignment
+ok 30 - loose list accepts two-space second paragraphs while strict requires marker alignment
+  ---
+  duration_ms: 0.715072
+  type: 'test'
+  ...
+# Subtest: loose long ordered marker nests two-space lists and keeps every source character
+ok 31 - loose long ordered marker nests two-space lists and keeps every source character
+  ---
+  duration_ms: 0.965031
+  type: 'test'
+  ...
+# Subtest: relaxed parsing leaves fenced and indented code, quotes, references and tasks intact
+ok 32 - relaxed parsing leaves fenced and indented code, quotes, references and tasks intact
+  ---
+  duration_ms: 1.64484
+  type: 'test'
+  ...
+# Subtest: independent editor/export soft-break policies preserve hard breaks and code
+ok 33 - independent editor/export soft-break policies preserve hard breaks and code
+  ---
+  duration_ms: 0.643724
+  type: 'test'
+  ...
+# Subtest: opt-in CJK emphasis handles adjacent punctuation without changing English identifiers or code
+ok 34 - opt-in CJK emphasis handles adjacent punctuation without changing English identifiers or code
+  ---
+  duration_ms: 1.476495
+  type: 'test'
+  ...
+# Subtest: policies are isolated per parser and repeated configuration does not install duplicate rules
+ok 35 - policies are isolated per parser and repeated configuration does not install duplicate rules
+  ---
+  duration_ms: 0.392574
+  type: 'test'
+  ...
+# Subtest: relaxed marker indentation retains tabs, empty items, and indented code content
+ok 36 - relaxed marker indentation retains tabs, empty items, and indented code content
+  ---
+  duration_ms: 0.557043
+  type: 'test'
+  ...
+# Subtest: formula source spans identify repeated formulas, headings and nested prose without matching code examples
+ok 37 - formula source spans identify repeated formulas, headings and nested prose without matching code examples
+  ---
+  duration_ms: 12.856608
+  type: 'test'
+  ...
+# Subtest: GFM and extra inline syntax render together
+ok 38 - GFM and extra inline syntax render together
+  ---
+  duration_ms: 25.625033
+  type: 'test'
+  ...
+# Subtest: TOC uses unique Chinese and duplicate heading anchors
+ok 39 - TOC uses unique Chinese and duplicate heading anchors
+  ---
+  duration_ms: 5.76814
+  type: 'test'
+  ...
+# Subtest: YAML, reference links, HTML media, alerts and footnotes render
+ok 40 - YAML, reference links, HTML media, alerts and footnotes render
+  ---
+  duration_ms: 9.790137
+  type: 'test'
+  ...
+# Subtest: math renders chemical equations, labels and equation references with error feedback
+ok 41 - math renders chemical equations, labels and equation references with error feedback
+  ---
+  duration_ms: 28.677853
+  type: 'test'
+  ...
+# Subtest: untrusted Markdown cannot install script handlers, embedded forms or javascript links
+ok 42 - untrusted Markdown cannot install script handlers, embedded forms or javascript links
+  ---
+  duration_ms: 6.106632
+  type: 'test'
+  ...
+# Subtest: relative paths preserve Unicode and parent traversal for backend authorization
+ok 43 - relative paths preserve Unicode and parent traversal for backend authorization
+  ---
+  duration_ms: 0.285953
+  type: 'test'
+  ...
+# Subtest: block ranges preserve nested lists as a single editing region and retain raw source
+ok 44 - block ranges preserve nested lists as a single editing region and retain raw source
+  ---
+  duration_ms: 0.365373
+  type: 'test'
+  ...
+# Subtest: live block rendering shares reference links, footnotes, equation numbering and heading IDs
+ok 45 - live block rendering shares reference links, footnotes, equation numbering and heading IDs
+  ---
+  duration_ms: 16.307321
+  type: 'test'
+  ...
+# Subtest: math fences and backslash delimiters share display numbering and labels
+ok 46 - math fences and backslash delimiters share display numbering and labels
+  ---
+  duration_ms: 6.592056
+  type: 'test'
+  ...
+# Subtest: embedded frames always receive a restrictive sandbox after HTML parsing
+ok 47 - embedded frames always receive a restrictive sandbox after HTML parsing
+  ---
+  duration_ms: 1.375552
+  type: 'test'
+  ...
+# Subtest: offline MathJax fallback renders physics, bbox, AMS and chemistry with real glyph paths
+ok 48 - offline MathJax fallback renders physics, bbox, AMS and chemistry with real glyph paths
+  ---
+  duration_ms: 47.979956
+  type: 'test'
+  ...
+# Subtest: unknown TeX and runtime extension loading still report explicit errors
+ok 49 - unknown TeX and runtime extension loading still report explicit errors
+  ---
+  duration_ms: 10.738402
+  type: 'test'
+  ...
+# Subtest: Azure TOC alias and relative video subtitle tracks render
+ok 50 - Azure TOC alias and relative video subtitle tracks render
+  ---
+  duration_ms: 3.170979
+  type: 'test'
+  ...
+# Subtest: YAML image roots resolve per document in full and live block rendering
+ok 51 - YAML image roots resolve per document in full and live block rendering
+  ---
+  duration_ms: 6.678888
+  type: 'test'
+  ...
+# Subtest: explicit equation tags render once while labels retain the explicit reference number
+ok 52 - explicit equation tags render once while labels retain the explicit reference number
+  ---
+  duration_ms: 4.014576
+  type: 'test'
+  ...
+# Subtest: HTML media resolves single, double, unquoted and poster resource attributes after HTML parsing
+ok 53 - HTML media resolves single, double, unquoted and poster resource attributes after HTML parsing
+  ---
+  duration_ms: 5.64257
+  type: 'test'
+  ...
+# Subtest: every intermediate mixed-EOL state survives undo and redo beyond the former full-snapshot budget
+ok 54 - every intermediate mixed-EOL state survives undo and redo beyond the former full-snapshot budget
+  ---
+  duration_ms: 227.025907
+  type: 'test'
+  ...
+# Subtest: grouped history restores the final inverse EOL map and can redo the entire group
+ok 55 - grouped history restores the final inverse EOL map and can redo the entire group
+  ---
+  duration_ms: 1.000013
+  type: 'test'
+  ...
+# Subtest: character-only edits share a compact immutable EOL map
+ok 56 - character-only edits share a compact immutable EOL map
+  ---
+  duration_ms: 129.29896
+  type: 'test'
+  ...
+# Subtest: multiline reordering with an identical EOL map still records an inverse restore
+ok 57 - multiline reordering with an identical EOL map still records an inverse restore
+  ---
+  duration_ms: 0.416731
+  type: 'test'
+  ...
+# Subtest: discarded document recovery cannot return from pending or late writes
+ok 58 - discarded document recovery cannot return from pending or late writes
+  ---
+  duration_ms: 10.907178
+  type: 'test'
+  ...
+# Subtest: ordinary recovery cleanup after saving still permits recovery of subsequent edits
+ok 59 - ordinary recovery cleanup after saving still permits recovery of subsequent edits
+  ---
+  duration_ms: 2.822021
+  type: 'test'
+  ...
+# Subtest: first language defaults to English and installer language never replaces saved preferences
+ok 60 - first language defaults to English and installer language never replaces saved preferences
+  ---
+  duration_ms: 1.423885
+  type: 'test'
+  ...
+# Subtest: invalid JSON with a failed backup blocks subsequent state writes and preserves the original bytes
+ok 61 - invalid JSON with a failed backup blocks subsequent state writes and preserves the original bytes
+  ---
+  duration_ms: 4.583186
+  type: 'test'
+  ...
+# Subtest: untouched UTF-8 BOM and CRLF document is byte exact, no mtime update
+ok 62 - untouched UTF-8 BOM and CRLF document is byte exact, no mtime update
+  ---
+  duration_ms: 5.549108
+  type: 'test'
+  ...
+# Subtest: local edit preserves BOM, mixed line endings and unrelated content
+ok 63 - local edit preserves BOM, mixed line endings and unrelated content
+  ---
+  duration_ms: 4.900125
+  type: 'test'
+  ...
+# Subtest: external changes and deleted file cannot be silently overwritten
+ok 64 - external changes and deleted file cannot be silently overwritten
+  ---
+  duration_ms: 1.555094
+  type: 'test'
+  ...
+# Subtest: parallel saves with same revision serialize and detect conflict
+ok 65 - parallel saves with same revision serialize and detect conflict
+  ---
+  duration_ms: 4.497797
+  type: 'test'
+  ...
+# Subtest: history restores content without touching live document
+ok 66 - history restores content without touching live document
+  ---
+  duration_ms: 5.3914
+  type: 'test'
+  ...
+# Subtest: atomic write failure leaves original and no temporary file
+ok 67 - atomic write failure leaves original and no temporary file
+  ---
+  duration_ms: 1.456865
+  type: 'test'
+  ...
+# Subtest: recovery drafts survive restart and can be explicitly dismissed
+ok 68 - recovery drafts survive restart and can be explicitly dismissed
+  ---
+  duration_ms: 1.567091
+  type: 'test'
+  ...
+# Subtest: unsafe encoding and missing revisions are rejected
+ok 69 - unsafe encoding and missing revisions are rejected
+  ---
+  duration_ms: 1.867236
+  type: 'test'
+  ...
+# Subtest: line endings in an inserted block follow the source convention
+ok 70 - line endings in an inserted block follow the source convention
+  ---
+  duration_ms: 0.081534
+  type: 'test'
+  ...
+# Subtest: concurrent preference writes retain the most recently submitted state
+ok 71 - concurrent preference writes retain the most recently submitted state
+  ---
+  duration_ms: 12.192673
+  type: 'test'
+  ...
+# Subtest: discard queued after a recovery write cannot resurrect the draft
+ok 72 - discard queued after a recovery write cannot resurrect the draft
+  ---
+  duration_ms: 1.950853
+  type: 'test'
+  ...
+# Subtest: Save As rebases only local link destination spans, preserving code and all surrounding source
+ok 73 - Save As rebases only local link destination spans, preserving code and all surrounding source
+  ---
+  duration_ms: 1.241299
+  type: 'test'
+  ...
+# Subtest: Save As with custom YAML root reports review requirement without guessing links
+ok 74 - Save As with custom YAML root reports review requirement without guessing links
+  ---
+  duration_ms: 0.109926
+  type: 'test'
+  ...
+# Subtest: utf16le explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 75 - utf16le explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 7.266227
+  type: 'test'
+  ...
+# Subtest: utf16be explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 76 - utf16be explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 4.73762
+  type: 'test'
+  ...
+# Subtest: gb18030 explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 77 - gb18030 explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 13.593643
+  type: 'test'
+  ...
+# Subtest: windows1252 explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 78 - windows1252 explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 4.26166
+  type: 'test'
+  ...
+# Subtest: shiftjis explicitly opens, preserves exact bytes and encodes edits/history safely
+ok 79 - shiftjis explicitly opens, preserves exact bytes and encodes edits/history safely
+  ---
+  duration_ms: 8.226321
+  type: 'test'
+  ...
+# Subtest: unrepresentable legacy characters refuse saving, while explicit UTF-8 conversion succeeds
+ok 80 - unrepresentable legacy characters refuse saving, while explicit UTF-8 conversion succeeds
+  ---
+  duration_ms: 3.840663
+  type: 'test'
+  ...
+# Subtest: image spans cover raw HTML and all reference forms while excluding YAML and code examples
+ok 81 - image spans cover raw HTML and all reference forms while excluding YAML and code examples
+  ---
+  duration_ms: 5.323296
+  type: 'test'
+  ...
+# Subtest: prepared image rename updates destination spans only and commits document before retiring original
+ok 82 - prepared image rename updates destination spans only and commits document before retiring original
+  ---
+  duration_ms: 12.333506
+  type: 'test'
+  ...
+# Subtest: resource batch refuses document/source/destination races and rolls back only newly published files
+ok 83 - resource batch refuses document/source/destination races and rolls back only newly published files
+  ---
+  duration_ms: 13.521875
+  type: 'test'
+  ...
+# Subtest: unlink removes image occurrences but preserves a shared link definition and original resource
+ok 84 - unlink removes image occurrences but preserves a shared link definition and original resource
+  ---
+  duration_ms: 4.389203
+  type: 'test'
+  ...
+# Subtest: retired preference migration removes service keys and bindings without mutating document-like values
+ok 85 - retired preference migration removes service keys and bindings without mutating document-like values
+  ---
+  duration_ms: 0.606849
+  type: 'test'
+  ...
+# Subtest: offline dictionary installation preserves cached dictionaries and user words without network access
+ok 86 - offline dictionary installation preserves cached dictionaries and user words without network access
+  ---
+  duration_ms: 8.016783
+  type: 'test'
+  ...
+# Subtest: moving a nested block retains its exact internal source and caret offset
+ok 87 - moving a nested block retains its exact internal source and caret offset
+  ---
+  duration_ms: 0.862656
+  type: 'test'
+  ...
+# Subtest: block deletion preserves neighboring blocks without joining their text
+ok 88 - block deletion preserves neighboring blocks without joining their text
+  ---
+  duration_ms: 0.141564
+  type: 'test'
+  ...
+# Subtest: word and sentence deletion stay inside the current block
+ok 89 - word and sentence deletion stay inside the current block
+  ---
+  duration_ms: 6.493738
+  type: 'test'
+  ...
+# Subtest: clear formatting preserves nested text and URLs unless the link style is selected
+ok 90 - clear formatting preserves nested text and URLs unless the link style is selected
+  ---
+  duration_ms: 3.21155
+  type: 'test'
+  ...
+1..90
+# tests 90
+# suites 0
+# pass 90
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1098.962035
+
+> inkstone-editor@0.3.0 test:editor
+> node tests/editor-browser.mjs
+
+PASS Mode switches preserve original text, selection and undo history 77ms
+PASS Continuous keyboard typing and nested-list Enter/Tab retain all text 17ms
+PASS Chromium IME composition commits Chinese without dropped or duplicate text 98ms
+PASS Cross-block selection, clipboard copy/paste and undo preserve Markdown 32ms
+PASS Real mouse dragging from rendered blocks selects across paragraphs and copies complete Markdown 1177ms
+PASS Table keyboard navigation, TSV paste, alignment and reordering change source 23ms
+PASS Active paragraphs and headings reveal only the selected inline syntax 112ms
+PASS Direct visual table cells edit exact source spans with IME, undo, Tab and row growth 114ms
+PASS Live blocks preserve global links, footnotes, math labels and duplicate heading anchors 26ms
+PASS Mermaid and legacy diagrams retain Chinese SVG labels, errors are visible 625ms
+PASS Native legacy grammars render conditional flow styles, notes, aliases and all arrow types 210ms
+PASS Offline sequence hand theme retains CJK labels and hand-drawn SVG geometry 177ms
+PASS Incremental paragraph edits keep following block clicks and references correct 33ms
+PASS Optional Markdown pairing and input typography preserve source-mode text 36ms
+PASS Offline MathJax physics fallback and SVG glyphs survive browser rendering and export 222ms
+PASS Read-only mode blocks edits and retains copy, find, links, and explicit refresh 40ms
+PASS Grouped undo/redo restores every intermediate BOM and mixed LF/CRLF/CR layout 7ms
+PASS Source structural commands preserve mixed EOL, nested blocks and one-step undo 35ms
+PASS Code wrapping preference changes layout without modifying code source 22ms
+PASS Strict heading and CJK punctuation settings agree between active and inactive rendering 21ms
+PASS Visual cells support formatting shortcuts and safe plain-text or TSV clipboard paste 70ms
+PERFORMANCE {"characters":888890,"bytes":1158890,"lines":10001,"openMs":115.60000228881836,"liveEditSamplesMs":[29.900001525878906,28.299999237060547,27.400001525878906,34.29999923706055,10.400001525878906,9,8.199996948242188,11.700000762939453,10.900001525878906,9.39999771118164],"modeRoundTripMs":37.10000228881836,"sourceSwitchAndEditMs":6}
+
+> inkstone-editor@0.3.0 test:math
+> node tests/math-editing-browser.mjs
+
+PASS Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo 155ms
+PASS Repeated formulas, backslash delimiters and active-paragraph widgets map independently 131ms
+PASS Double-click selects only formula content in the same editor 118ms
+PASS Block math and math fences reopen inside delimiters, update preview and recover errors 397ms
+PASS Arrow navigation enters inline math source; repeated mode switches keep exact text and selection 85ms
+PASS Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers 1106ms
+PASS Composition near math survives preview updates and explicit finish without duplicate Chinese 119ms
+PASS Finishing an active IME composition commits prose and visual table cells before locking 176ms
+PASS Dragging from inline math across blocks copies source once and paste/undo preserves it 254ms
+PASS Settings no-op preserves widgets, selection and history; read-only math stays non-editable 191ms
+
+> inkstone-editor@0.3.0 test:ui
+> node tests/ui-polish-browser.mjs
+
+PASS Dialog primary Enter, Escape/cancel, close icon, backdrop and restored focus
+PASS Dialog padding is not backdrop; busy and IME cancellation protect the active operation
+PASS English and Chinese prompt labels, selected value, explicit Cancel and Enter submission
+PASS Notifications are accessible, safely render literal text, and dismiss from keyboard
+PASS Table dialog keyboard edits remain local and English controls reflect available operations
+PASS Resource selection count, empty state, and cancel during preparation never commit
+PASS Export freezes editable options while working, then reports success and restores controls
+PASS Preferences have readable fields and keep footer actions inside the dialog
+PASS English/Chinese light/dark chrome preserves original brand and stays usable at narrow widths
+{"passed":9,"pageErrors":[]}
+
+> inkstone-editor@0.3.0 test:e2e
+> playwright test
+
+
+Running 67 tests using 1 worker
+
+(node:475173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/backend-e2e.spec.js:44:3 › desktop persistence, resource and export integration › native menus and file dialogs follow the persisted English or Chinese choice (369ms)
+  ✓   2 tests/backend-e2e.spec.js:175:3 › desktop persistence, resource and export integration › discarding one document's recoveries excludes other live windows and rejects late resurrection (527ms)
+  ✓   3 tests/backend-e2e.spec.js:237:3 › desktop persistence, resource and export integration › unready renderer close waits for an explicit native choice and blocks unchecked new windows (832ms)
+  ✓   4 tests/backend-e2e.spec.js:349:3 › desktop persistence, resource and export integration › startup and new-window files load once and retain edits made before preferences finish (2.7s)
+  ✓   5 tests/backend-e2e.spec.js:535:3 › desktop persistence, resource and export integration › isolated bridge rejects ungranted files and symlink escapes (12ms)
+  ✓   6 tests/backend-e2e.spec.js:555:3 › desktop persistence, resource and export integration › native save preserves untouched bytes, detects external change, stores history (20ms)
+  ✓   7 tests/backend-e2e.spec.js:579:3 › desktop persistence, resource and export integration › file operations, search and hidden filtering reach real filesystem (74ms)
+  ✓   8 tests/backend-e2e.spec.js:629:3 › desktop persistence, resource and export integration › preferences, sessions and recovery roundtrip persist to disk (34ms)
+  ✓   9 tests/backend-e2e.spec.js:673:3 › desktop persistence, resource and export integration › native menu shortcuts replace default accelerators and reject invalid bindings (37ms)
+  ✓  10 tests/backend-e2e.spec.js:693:3 › desktop persistence, resource and export integration › invalid settings types preserve original bytes and boot with defaults plus a warning (1.6s)
+
+  ✓  11 tests/backend-e2e.spec.js:753:3 › desktop persistence, resource and export integration › clipboard-style image input deduplicates and exports self-contained HTML, paginated PDF and PNG (2.4s)
+  ✓  12 tests/backend-e2e.spec.js:846:3 › desktop persistence, resource and export integration › real Pandoc detection, DOCX export/import, formatting and missing-tool error (137ms)
+  ✓  13 tests/backend-e2e.spec.js:888:3 › desktop persistence, resource and export integration › each advertised Pandoc family produces a readable output; archive images survive import (1.1s)
+  ✓  14 tests/backend-e2e.spec.js:1013:3 › desktop persistence, resource and export integration › explicit URL download and native clipboard remain while retired service IPC is unavailable (70ms)
+  ✓  15 tests/backend-e2e.spec.js:1094:3 › desktop persistence, resource and export integration › legacy service settings are removed on startup and updates without touching local documents or assets (730ms)
+  ✓  16 tests/backend-e2e.spec.js:1193:3 › desktop persistence, resource and export integration › invalid JSON remains untouched when startup backup fails and a later explicit retry recovers it (707ms)
+  ✓  17 tests/backend-e2e.spec.js:1266:3 › desktop persistence, resource and export integration › failed invalid-settings backup cannot be bypassed by service migration (728ms)
+  ✓  18 tests/backend-e2e.spec.js:1367:3 › desktop persistence, resource and export integration › include and exclude globs filter tree and global search consistently (76ms)
+  ✓  19 tests/backend-e2e.spec.js:1387:3 › desktop persistence, resource and export integration › export sanitizes direct bridge HTML and preserves SVG/MathML without executable content (221ms)
+  ✓  20 tests/backend-e2e.spec.js:1448:3 › desktop persistence, resource and export integration › Save As preserves BOM and rebases local image/link spans through the native save flow (11ms)
+  ✓  21 tests/backend-e2e.spec.js:1487:3 › desktop persistence, resource and export integration › polling detects external atomic replacement and deletion without inotify (1.2s)
+  ✓  22 tests/backend-e2e.spec.js:1529:3 › desktop persistence, resource and export integration › explicit encoding retry reuses the chosen file and legacy saves keep byte fidelity (47ms)
+  ✓  23 tests/backend-e2e.spec.js:1573:3 › desktop persistence, resource and export integration › opening an export calls the OS opener only for an authorized document path (51ms)
+  ✓  24 tests/backend-e2e.spec.js:1608:3 › desktop persistence, resource and export integration › export eagerly loads an image below the initial viewport (100ms)
+  ✓  25 tests/backend-e2e.spec.js:1627:3 › desktop persistence, resource and export integration › inactive file watchers are released and active folders notice external new files (986ms)
+  ✓  26 tests/backend-e2e.spec.js:1681:3 › desktop persistence, resource and export integration › Pandoc embeds supplied diagram PNGs in DOCX while keeping Markdown source intact (85ms)
+  ✓  27 tests/backend-e2e.spec.js:1747:3 › desktop persistence, resource and export integration › custom CSS local font resources are embedded into exported HTML (144ms)
+  ✓  28 tests/backend-e2e.spec.js:1767:3 › desktop persistence, resource and export integration › unstyled HTML contains one native MathML formula and retains diagram SVG (132ms)
+  ✓  29 tests/backend-e2e.spec.js:1814:3 › desktop persistence, resource and export integration › image resource transactions copy, rename, unlink and trash with exact source patches (92ms)
+  ✓  30 tests/backend-e2e.spec.js:1907:3 › desktop persistence, resource and export integration › image resource downloads batch atomically and refuse failed fetch or stale document commit (104ms)
+  ✓  31 tests/backend-e2e.spec.js:1985:3 › desktop persistence, resource and export integration › new appearance settings and file sort controls persist with type checks (75ms)
+  ✓  32 tests/backend-e2e.spec.js:2062:3 › desktop persistence, resource and export integration › global search supports Unicode whole words and cancels an expensive worker (573ms)
+  ✓  33 tests/backend-e2e.spec.js:2107:3 › desktop persistence, resource and export integration › image insertion honors document image roots and escapes spaces, parentheses and Chinese paths (23ms)
+  ✓  34 tests/backend-e2e.spec.js:2173:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests (1.2s)
+  ✓  35 tests/desktop.spec.js:50:1 › launches real offline desktop with rendered Markdown, math, diagram, and isolated Node (192ms)
+  ✓  36 tests/desktop.spec.js:70:1 › untouched save preserves bytes and mtime; local edit and undo preserve source (62ms)
+  ✓  37 tests/desktop.spec.js:94:1 › continuous Chinese editing, cross-block selection, undo and source switch retain state (105ms)
+  ✓  38 tests/desktop.spec.js:126:1 › formatting toolbar, table edits, snippets, regex find, and persistent preferences work (486ms)
+  ✓  39 tests/desktop.spec.js:166:1 › visual table grid edits, pastes TSV, reorders cells, and cancels without changing source (228ms)
+  ✓  40 tests/desktop.spec.js:210:1 › HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats (70ms)
+  ✓  41 tests/desktop.spec.js:243:1 › read-only, math copy, theme import, sidebar persistence, and export presets have real effects (558ms)
+  ✓  42 tests/desktop.spec.js:314:1 › external edit conflict keeps unsaved text and disk contents (992ms)
+  ✓  43 tests/desktop.spec.js:341:1 › real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated math and Mermaid (2.0s)
+  ✓  44 tests/desktop.spec.js:404:1 › Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back (405ms)
+  ✓  45 tests/desktop.spec.js:447:1 › complete offline acceptance sample renders native legacy diagrams and advanced math in the desktop CSP (684ms)
+Document performance: {
+  characters: 564000,
+  utf8Bytes: 1188000,
+  openMs: 246.0999984741211,
+  editMs: 31.200000762939453,
+  switchMs: 97.89999771118164
+}
+  ✓  46 tests/desktop.spec.js:483:1 › one-megabyte document editing and switching produce measured performance evidence (400ms)
+  ✓  47 tests/desktop.spec.js:520:1 › Save As rebases relative resources and keeps live content synchronized with the new file (54ms)
+  ✓  48 tests/desktop.spec.js:546:1 › process termination recovers the unsaved draft on restart without modifying the source file (1.8s)
+  ✓  49 tests/enhancements.spec.js:66:1 › file tree supports roving keyboard navigation, collapse, parent, filename search and rename (304ms)
+  ✓  50 tests/enhancements.spec.js:102:1 › strict parsing, CJK emphasis, code defaults, outline numbering and saved CSS themes apply and persist (865ms)
+  ✓  51 tests/enhancements.spec.js:159:1 › resource manager copies all Markdown, reference and HTML image occurrences without altering fenced examples or mixed EOL (185ms)
+  ✓  52 tests/enhancements.spec.js:179:1 › local-only preferences and commands omit cloud services while URL images render and preserve their URLs (270ms)
+  ✓  53 tests/enhancements.spec.js:225:1 › real clipboard image paste saves only a local asset and never sends file contents to a service (146ms)
+  ✓  54 tests/enhancements.spec.js:262:1 › production desktop exports all 25 Mermaid types offline including ZenUML and Chinese Sankey (3.8s)
+  ✓  55 tests/ux.spec.js:78:1 › startup folder scanning keeps the welcome editor locked until the initial document is loaded (699ms)
+  ✓  56 tests/ux.spec.js:136:1 › late clipboard images cannot edit an approved window and commit rejects any later unexpected edit (1.5s)
+  ✓  57 tests/ux.spec.js:224:1 › native close offers exactly Save / Don't Save / Cancel, saves current file, and Enter activates Save (692ms)
+  ✓  58 tests/ux.spec.js:238:1 › untitled Save As cancellation and write errors keep text editable; a successful retry saves before closing (1.1s)
+  ✓  59 tests/ux.spec.js:274:1 › Don't Save discards document recovery drafts, preserves disk bytes, and does not resurrect changes on restart (1.3s)
+  ✓  60 tests/ux.spec.js:304:1 › Cancel, Escape and repeated close requests preserve edits, restore typing, and clean windows close without a prompt (918ms)
+  ✓  61 tests/ux.spec.js:329:1 › multi-window Quit is atomic on Cancel; Save and Don't Save commit only after every window agrees (1.3s)
+  ✓  62 tests/ux.spec.js:368:1 › closing during an in-flight save preserves later edits until the user decides what to discard (988ms)
+  ✓  63 tests/ux.spec.js:397:1 › fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo (981ms)
+  ✓  64 tests/ux.spec.js:449:1 › typing during an asynchronous external reload is preserved and becomes a visible conflict (1.7s)
+  ✓  65 tests/ux.spec.js:479:1 › canceling Open never discards a draft; pending navigation locks editing and unlocks after loading (1.2s)
+  ✓  66 tests/ux.spec.js:529:1 › desktop math edits stay inline, render in the sandbox, and survive Save and reopen with CRLF intact (845ms)
+  ✓  67 tests/ux.spec.js:586:1 › native File Quit and Ctrl+W use the same cancelable save decision (842ms)
+
+  67 passed (47.5s)

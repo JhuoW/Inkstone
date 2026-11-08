@@ -1,0 +1,57 @@
+{
+  "browser": "143.0.7499.4",
+  "checks": [
+    {
+      "name": "Clicking rendered inline fractions targets TeX source, preserves BOM/CRLF and undo",
+      "result": "passed",
+      "ms": 127
+    },
+    {
+      "name": "Repeated formulas, backslash delimiters and active-paragraph widgets map independently",
+      "result": "passed",
+      "ms": 141
+    },
+    {
+      "name": "Double-click selects only formula content in the same editor",
+      "result": "passed",
+      "ms": 131
+    },
+    {
+      "name": "Block math and math fences reopen inside delimiters, update preview and recover errors",
+      "result": "passed",
+      "ms": 367
+    },
+    {
+      "name": "Arrow navigation enters inline math source; repeated mode switches keep exact text and selection",
+      "result": "passed",
+      "ms": 83
+    },
+    {
+      "name": "Mermaid and code blocks use body-safe click and double-click targets; diagram preview recovers",
+      "result": "passed",
+      "ms": 1092
+    },
+    {
+      "name": "Composition near math survives preview updates and explicit finish without duplicate Chinese",
+      "result": "passed",
+      "ms": 117
+    },
+    {
+      "name": "Finishing an active IME composition commits prose and visual table cells before locking",
+      "result": "passed",
+      "ms": 190
+    },
+    {
+      "name": "Dragging from inline math across blocks copies source once and paste/undo preserves it",
+      "result": "passed",
+      "ms": 256
+    },
+    {
+      "name": "Settings no-op preserves widgets, selection and history; read-only math stays non-editable",
+      "result": "passed",
+      "ms": 190
+    }
+  ],
+  "browserErrors": [],
+  "scope": "Actual Chromium mouse/keyboard and CDP composition. Native Windows OS IME remains platform validation."
+}

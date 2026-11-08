@@ -1,0 +1,30 @@
+{
+  "repository": "https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/",
+  "commit": "00f6e69c905b30fdf701cdcef6a517582d7e0028",
+  "files": [
+    {
+      "file": "en-US-10-2.bdic",
+      "sha256": "b0d80e6b6c5491879365e176ecbd98074602a663429bcfcfb0a5a8375c051f13",
+      "size": 451982,
+      "url": "https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/00f6e69c905b30fdf701cdcef6a517582d7e0028/en-US-10-2.bdic?format=TEXT"
+    },
+    {
+      "file": "README_en_US.txt",
+      "sha256": "168b4c01cb841f766a72f310b065c04d09cff46376c37a81d799593ce751c371",
+      "size": 15732,
+      "url": "https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/00f6e69c905b30fdf701cdcef6a517582d7e0028/README_en_US.txt?format=TEXT"
+    },
+    {
+      "file": "LICENSE",
+      "sha256": "d63c6240d6f6330a025aade63d317d7ff04f95fc3325fe6aea3848ca452f64ea",
+      "size": 108158,
+      "url": "https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/00f6e69c905b30fdf701cdcef6a517582d7e0028/LICENSE?format=TEXT"
+    },
+    {
+      "file": "README.chromium",
+      "sha256": "f4c82af87deb731d2f6ecb7f29a96e037e4aed961e7bbe9bf0b7baae68da899c",
+      "size": 11378,
+      "url": "https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/00f6e69c905b30fdf701cdcef6a517582d7e0028/README.chromium?format=TEXT"
+    }
+  ]
+}

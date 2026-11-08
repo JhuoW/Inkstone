@@ -1,0 +1,390 @@
+{
+  "engine": "IBus table:cangjie3",
+  "input": "XTest through xdotool; no CDP composition injection",
+  "sandboxDisabled": true,
+  "display": ":92",
+  "passed": true,
+  "version": "0.4.0",
+  "lifecycleChecks": [
+    {
+      "name": "Live/source switches during native Chinese preedit",
+      "passed": true
+    },
+    {
+      "name": "Close during native preedit, Cancel, continue typing, undo/redo",
+      "passed": true
+    },
+    {
+      "name": "Visual table preedit commits before Close and survives Cancel",
+      "passed": true
+    },
+    {
+      "name": "Close during native preedit, Save, actual window closes with exact disk content",
+      "passed": true
+    }
+  ],
+  "browserErrors": [],
+  "text": "# IBus 验收\n\n月\n\n| 候选 | 内容 |\n| --- | --- |\n| 月 | 留白 |\n\n日月日月日",
+  "events": [
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "月"
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": "日月日"
+    },
+    {
+      "type": "compositionupdate",
+      "data": "月"
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": "原字"
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "月"
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": "日"
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "月"
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionupdate",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": ""
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertText",
+      "isComposing": false
+    },
+    {
+      "type": "compositionstart",
+      "data": "日"
+    },
+    {
+      "type": "compositionupdate",
+      "data": "月"
+    },
+    {
+      "type": "beforeinput",
+      "data": "月",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": "月"
+    },
+    {
+      "type": "compositionstart",
+      "data": ""
+    },
+    {
+      "type": "compositionupdate",
+      "data": "日"
+    },
+    {
+      "type": "beforeinput",
+      "data": "日",
+      "inputType": "insertCompositionText",
+      "isComposing": true
+    },
+    {
+      "type": "compositionend",
+      "data": "日"
+    }
+  ],
+  "autosaveDefersComposition": true,
+  "selectionReplace": true,
+  "tableCell": true,
+  "escapeCancel": true,
+  "undoRedo": true,
+  "sourceMode": true
+}

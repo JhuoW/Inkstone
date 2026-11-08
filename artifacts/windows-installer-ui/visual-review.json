@@ -1,0 +1,23 @@
+{
+  "version": "0.3.0",
+  "installerSHA256": "df8ee8c7e7e887930837acc16e9ea12a7f31d415107b6ea77ecd5ba5721c9951",
+  "reviewed": true,
+  "englishFirstPageReadable": true,
+  "simplifiedChineseFirstPageReadable": true,
+  "simplifiedChineseSelectionReadable": true,
+  "providedBrandVisible": true,
+  "nativeWindows": false,
+  "fontFixture": {
+    "source": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "family": "Noto Sans CJK SC",
+    "sha256": "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a",
+    "scope": "Temporary Wine prefix only; neither installer nor application fonts were changed"
+  },
+  "notes": "Original Wine prefix lacked CJK font fallback; the test copies installed Noto Sans CJK into its temporary prefix and maps dialog font aliases. Installer bytes remain unchanged. Screenshots reviewed after this fixture setup.",
+  "screenshots": {
+    "en-first-page.png": "44cf35a00748d817ac3c7e0fb017361c391e4e5f5701b9ae037253d4d6ad208b",
+    "zh-CN-first-page.png": "af6de365f1eab37bc220c0763845100f0a98e755a44706d3b249d59d1f6afbc5",
+    "zh-CN-selected.png": "4fdf36abf0d4efc37eba43abf8cfb9f40be76cf0f3c675fef3a7e49d21369f2c"
+  },
+  "reviewedAt": "2026-11-08T09:50:51.434Z"
+}

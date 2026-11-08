@@ -1,0 +1,86 @@
+
+Running 5 tests using 1 worker
+
+(node:594566) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/5] tests/design-system-desktop.spec.js:213:1 › all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo
+  1) tests/design-system-desktop.spec.js:213:1 › all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo 
+
+    TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.
+
+      171 |   pageErrors = [];
+      172 |   page.on("pageerror", (error) => pageErrors.push(error.message));
+    > 173 |   await page.waitForFunction(
+          |              ^
+      174 |     () =>
+      175 |       window.__inkstone?.getDocument().path?.endsWith("Desk.md") &&
+      176 |       !__inkstone.editor.view.state.readOnly,
+        at /home/zhuowei/software/Open-Typora/tests/design-system-desktop.spec.js:173:14
+
+    Error Context: artifacts/ui-redesign/desktop-targets/design-system-desktop-all--4bfe4-ng-preserve-source-and-undo/error-context.md
+
+    Error Context: artifacts/ui-redesign/desktop-targets/design-system-desktop-all--4bfe4-ng-preserve-source-and-undo/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/ui-redesign/desktop-targets/design-system-desktop-all--4bfe4-ng-preserve-source-and-undo/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/ui-redesign/desktop-targets/design-system-desktop-all--4bfe4-ng-preserve-source-and-undo/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:596502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/5] tests/design-system-desktop.spec.js:254:1 › Insert menu toggles, navigates with keys, restores focus on Escape, and applies a selected format in place
+[3/5] tests/design-system-desktop.spec.js:299:1 › sidebar tabs use arrow, Home and End navigation with one selected keyboard stop
+  2) tests/design-system-desktop.spec.js:299:1 › sidebar tabs use arrow, Home and End navigation with one selected keyboard stop 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#global-search input')
+    Expected: visible
+    Error: strict mode violation: locator('#global-search input') resolved to 4 elements:
+        1) <input required="" name="query" autocomplete="off" aria-label="Search folder" placeholder="Search folder…"/> aka getByRole('textbox', { name: 'Search folder' })
+        2) <input name="regex" type="checkbox"/> aka getByRole('checkbox', { name: 'Regex' })
+        3) <input name="case" type="checkbox"/> aka getByRole('checkbox', { name: 'Aa' })
+        4) <input type="checkbox" name="wholeWord"/> aka getByRole('checkbox', { name: 'Whole word' })
+
+    Call log:
+      - Expect "toBeVisible" locator('#global-search input') with timeout 5000ms
+      - waiting for locator('#global-search input')
+
+
+      307 |   await page.keyboard.press("End");
+      308 |   await expect(tabs.nth(2)).toBeFocused();
+    > 309 |   await expect(page.locator("#global-search input")).toBeVisible();
+          |                                                      ^
+      310 |   await page.keyboard.press("Home");
+      311 |   await expect(tabs.nth(0)).toBeFocused();
+      312 |   await page.keyboard.press("ArrowLeft");
+        at /home/zhuowei/software/Open-Typora/tests/design-system-desktop.spec.js:309:54
+
+    Error Context: artifacts/ui-redesign/desktop-targets/design-system-desktop-side-e36b8--one-selected-keyboard-stop/error-context.md
+
+    Error Context: artifacts/ui-redesign/desktop-targets/design-system-desktop-side-e36b8--one-selected-keyboard-stop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/ui-redesign/desktop-targets/design-system-desktop-side-e36b8--one-selected-keyboard-stop/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/ui-redesign/desktop-targets/design-system-desktop-side-e36b8--one-selected-keyboard-stop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:597274) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/5] tests/design-system-desktop.spec.js:328:1 › command palette advertises shortcuts, maintains combobox selection, executes the keyboard choice and honors customization
+[5/5] tests/design-system-desktop.spec.js:458:1 › light and dark chrome provide readable text contrast while preserving source and settings actions
+  2 failed
+    tests/design-system-desktop.spec.js:213:1 › all eleven original toolbar commands remain accessible; formatting and mode switching preserve source and undo 
+    tests/design-system-desktop.spec.js:299:1 › sidebar tabs use arrow, Home and End navigation with one selected keyboard stop 
+  3 passed (35.2s)

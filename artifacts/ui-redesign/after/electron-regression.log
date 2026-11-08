@@ -1,0 +1,86 @@
+
+> inkstone-editor@0.4.0 test:e2e
+> playwright test
+
+
+Running 67 tests using 1 worker
+
+(node:575286) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/backend-e2e.spec.js:44:3 › desktop persistence, resource and export integration › native menus and file dialogs follow the persisted English or Chinese choice (423ms)
+  ✓   2 tests/backend-e2e.spec.js:175:3 › desktop persistence, resource and export integration › discarding one document's recoveries excludes other live windows and rejects late resurrection (495ms)
+  ✓   3 tests/backend-e2e.spec.js:237:3 › desktop persistence, resource and export integration › unready renderer close waits for an explicit native choice and blocks unchecked new windows (827ms)
+  ✓   4 tests/backend-e2e.spec.js:349:3 › desktop persistence, resource and export integration › startup and new-window files load once and retain edits made before preferences finish (2.7s)
+  ✓   5 tests/backend-e2e.spec.js:535:3 › desktop persistence, resource and export integration › isolated bridge rejects ungranted files and symlink escapes (9ms)
+  ✓   6 tests/backend-e2e.spec.js:555:3 › desktop persistence, resource and export integration › native save preserves untouched bytes, detects external change, stores history (19ms)
+  ✓   7 tests/backend-e2e.spec.js:579:3 › desktop persistence, resource and export integration › file operations, search and hidden filtering reach real filesystem (69ms)
+  ✓   8 tests/backend-e2e.spec.js:629:3 › desktop persistence, resource and export integration › preferences, sessions and recovery roundtrip persist to disk (31ms)
+  ✓   9 tests/backend-e2e.spec.js:673:3 › desktop persistence, resource and export integration › native menu shortcuts replace default accelerators and reject invalid bindings (27ms)
+  ✓  10 tests/backend-e2e.spec.js:693:3 › desktop persistence, resource and export integration › invalid settings types preserve original bytes and boot with defaults plus a warning (1.4s)
+
+  ✓  11 tests/backend-e2e.spec.js:753:3 › desktop persistence, resource and export integration › clipboard-style image input deduplicates and exports self-contained HTML, paginated PDF and PNG (2.3s)
+  ✓  12 tests/backend-e2e.spec.js:846:3 › desktop persistence, resource and export integration › real Pandoc detection, DOCX export/import, formatting and missing-tool error (138ms)
+  ✓  13 tests/backend-e2e.spec.js:888:3 › desktop persistence, resource and export integration › each advertised Pandoc family produces a readable output; archive images survive import (1.1s)
+  ✓  14 tests/backend-e2e.spec.js:1013:3 › desktop persistence, resource and export integration › explicit URL download and native clipboard remain while retired service IPC is unavailable (68ms)
+  ✓  15 tests/backend-e2e.spec.js:1094:3 › desktop persistence, resource and export integration › legacy service settings are removed on startup and updates without touching local documents or assets (736ms)
+  ✓  16 tests/backend-e2e.spec.js:1193:3 › desktop persistence, resource and export integration › invalid JSON remains untouched when startup backup fails and a later explicit retry recovers it (661ms)
+  ✓  17 tests/backend-e2e.spec.js:1266:3 › desktop persistence, resource and export integration › failed invalid-settings backup cannot be bypassed by service migration (723ms)
+  ✓  18 tests/backend-e2e.spec.js:1367:3 › desktop persistence, resource and export integration › include and exclude globs filter tree and global search consistently (69ms)
+  ✓  19 tests/backend-e2e.spec.js:1387:3 › desktop persistence, resource and export integration › export sanitizes direct bridge HTML and preserves SVG/MathML without executable content (206ms)
+  ✓  20 tests/backend-e2e.spec.js:1448:3 › desktop persistence, resource and export integration › Save As preserves BOM and rebases local image/link spans through the native save flow (11ms)
+  ✓  21 tests/backend-e2e.spec.js:1487:3 › desktop persistence, resource and export integration › polling detects external atomic replacement and deletion without inotify (1.2s)
+  ✓  22 tests/backend-e2e.spec.js:1529:3 › desktop persistence, resource and export integration › explicit encoding retry reuses the chosen file and legacy saves keep byte fidelity (43ms)
+  ✓  23 tests/backend-e2e.spec.js:1573:3 › desktop persistence, resource and export integration › opening an export calls the OS opener only for an authorized document path (53ms)
+  ✓  24 tests/backend-e2e.spec.js:1608:3 › desktop persistence, resource and export integration › export eagerly loads an image below the initial viewport (107ms)
+  ✓  25 tests/backend-e2e.spec.js:1627:3 › desktop persistence, resource and export integration › inactive file watchers are released and active folders notice external new files (998ms)
+  ✓  26 tests/backend-e2e.spec.js:1681:3 › desktop persistence, resource and export integration › Pandoc embeds supplied diagram PNGs in DOCX while keeping Markdown source intact (85ms)
+  ✓  27 tests/backend-e2e.spec.js:1747:3 › desktop persistence, resource and export integration › custom CSS local font resources are embedded into exported HTML (36ms)
+  ✓  28 tests/backend-e2e.spec.js:1767:3 › desktop persistence, resource and export integration › unstyled HTML contains one native MathML formula and retains diagram SVG (281ms)
+  ✓  29 tests/backend-e2e.spec.js:1814:3 › desktop persistence, resource and export integration › image resource transactions copy, rename, unlink and trash with exact source patches (76ms)
+  ✓  30 tests/backend-e2e.spec.js:1907:3 › desktop persistence, resource and export integration › image resource downloads batch atomically and refuse failed fetch or stale document commit (91ms)
+  ✓  31 tests/backend-e2e.spec.js:1985:3 › desktop persistence, resource and export integration › new appearance settings and file sort controls persist with type checks (94ms)
+  ✓  32 tests/backend-e2e.spec.js:2062:3 › desktop persistence, resource and export integration › global search supports Unicode whole words and cancels an expensive worker (159ms)
+  ✓  33 tests/backend-e2e.spec.js:2107:3 › desktop persistence, resource and export integration › image insertion honors document image roots and escapes spaces, parentheses and Chinese paths (20ms)
+  ✓  34 tests/backend-e2e.spec.js:2173:3 › desktop persistence, resource and export integration › bundled spelling works on a fresh profile with only local dictionary requests (1.2s)
+  ✓  35 tests/desktop.spec.js:50:1 › launches real offline desktop with rendered Markdown, math, diagram, and isolated Node (197ms)
+  ✓  36 tests/desktop.spec.js:70:1 › untouched save preserves bytes and mtime; local edit and undo preserve source (69ms)
+  ✓  37 tests/desktop.spec.js:94:1 › continuous Chinese editing, cross-block selection, undo and source switch retain state (110ms)
+  ✓  38 tests/desktop.spec.js:126:1 › formatting toolbar, table edits, snippets, regex find, and persistent preferences work (433ms)
+  ✓  39 tests/desktop.spec.js:166:1 › visual table grid edits, pastes TSV, reorders cells, and cancels without changing source (125ms)
+  ✓  40 tests/desktop.spec.js:210:1 › HTML clipboard paste converts structure to Markdown and rich copy writes both MIME formats (63ms)
+  ✓  41 tests/desktop.spec.js:243:1 › read-only, math copy, theme import, sidebar persistence, and export presets have real effects (414ms)
+  ✓  42 tests/desktop.spec.js:314:1 › external edit conflict keeps unsaved text and disk contents (388ms)
+  ✓  43 tests/desktop.spec.js:341:1 › real UI exports self-contained Chinese HTML, PDF, and PNG with hydrated math and Mermaid (1.8s)
+  ✓  44 tests/desktop.spec.js:404:1 › Pandoc DOCX contains a rasterized Mermaid diagram and can be imported back (263ms)
+  ✓  45 tests/desktop.spec.js:447:1 › complete offline acceptance sample renders native legacy diagrams and advanced math in the desktop CSP (589ms)
+Document performance: {
+  characters: 564000,
+  utf8Bytes: 1188000,
+  openMs: 235.70000076293945,
+  editMs: 33.39999771118164,
+  switchMs: 86.5
+}
+  ✓  46 tests/desktop.spec.js:483:1 › one-megabyte document editing and switching produce measured performance evidence (378ms)
+  ✓  47 tests/desktop.spec.js:520:1 › Save As rebases relative resources and keeps live content synchronized with the new file (59ms)
+  ✓  48 tests/desktop.spec.js:546:1 › process termination recovers the unsaved draft on restart without modifying the source file (1.8s)
+  ✓  49 tests/enhancements.spec.js:66:1 › file tree supports roving keyboard navigation, collapse, parent, filename search and rename (271ms)
+  ✓  50 tests/enhancements.spec.js:102:1 › strict parsing, CJK emphasis, code defaults, outline numbering and saved CSS themes apply and persist (430ms)
+  ✓  51 tests/enhancements.spec.js:159:1 › resource manager copies all Markdown, reference and HTML image occurrences without altering fenced examples or mixed EOL (111ms)
+  ✓  52 tests/enhancements.spec.js:179:1 › local-only preferences and commands omit cloud services while URL images render and preserve their URLs (170ms)
+  ✓  53 tests/enhancements.spec.js:225:1 › real clipboard image paste saves only a local asset and never sends file contents to a service (145ms)
+  ✓  54 tests/enhancements.spec.js:262:1 › production desktop exports all 25 Mermaid types offline including ZenUML and Chinese Sankey (3.8s)
+  ✓  55 tests/ux.spec.js:78:1 › startup folder scanning keeps the welcome editor locked until the initial document is loaded (660ms)
+  ✓  56 tests/ux.spec.js:136:1 › late clipboard images cannot edit an approved window and commit rejects any later unexpected edit (1.3s)
+  ✓  57 tests/ux.spec.js:224:1 › native close offers exactly Save / Don't Save / Cancel, saves current file, and Enter activates Save (695ms)
+  ✓  58 tests/ux.spec.js:238:1 › untitled Save As cancellation and write errors keep text editable; a successful retry saves before closing (933ms)
+  ✓  59 tests/ux.spec.js:274:1 › Don't Save discards document recovery drafts, preserves disk bytes, and does not resurrect changes on restart (1.2s)
+  ✓  60 tests/ux.spec.js:304:1 › Cancel, Escape and repeated close requests preserve edits, restore typing, and clean windows close without a prompt (802ms)
+  ✓  61 tests/ux.spec.js:329:1 › multi-window Quit is atomic on Cancel; Save and Don't Save commit only after every window agrees (1.3s)
+  ✓  62 tests/ux.spec.js:368:1 › closing during an in-flight save preserves later edits until the user decides what to discard (959ms)
+  ✓  63 tests/ux.spec.js:397:1 › fresh profiles default to English; first-run and preferences switch all UI while preserving text, selection and undo (925ms)
+  ✓  64 tests/ux.spec.js:449:1 › typing during an asynchronous external reload is preserved and becomes a visible conflict (1.7s)
+  ✓  65 tests/ux.spec.js:479:1 › canceling Open never discards a draft; pending navigation locks editing and unlocks after loading (1.1s)
+  ✓  66 tests/ux.spec.js:529:1 › desktop math edits stay inline, render in the sandbox, and survive Save and reopen with CRLF intact (848ms)
+  ✓  67 tests/ux.spec.js:586:1 › native File Quit and Ctrl+W use the same cancelable save decision (761ms)
+
+  67 passed (44.0s)

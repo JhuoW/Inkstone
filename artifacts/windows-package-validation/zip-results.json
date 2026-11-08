@@ -1,0 +1,9 @@
+{
+  "version": "0.4.0",
+  "file": "release/Inkstone-0.4.0-windows-x64.zip",
+  "zipCRCValid": true,
+  "asarMatchesUnpacked": true,
+  "asarSHA256": "0faf828c31f042ba5fc5b05e967ebc377294bf2f04d5497e90ec2709c664ba20",
+  "fileCount": 76,
+  "nativeWindowsRun": false
+}

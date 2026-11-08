@@ -1,0 +1,15 @@
+node_modules/
+dist/
+/release/
+.tools/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+
+# Validation logs referenced by the delivery documentation
+!artifacts/**/*.log
+
+# Generated Python caches
+__pycache__/
+*.pyc

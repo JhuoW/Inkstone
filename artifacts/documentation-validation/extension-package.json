@@ -1,0 +1,16 @@
+{
+  "version": "0.3.0",
+  "passed": true,
+  "file": "release/extensions/inkstone-open-0.3.0.vsix",
+  "bytes": 38578,
+  "sha256": "d03d7960d9fd579c6ca713ff2da9f0b17e2a471deb84a49272936b70621a0ac1",
+  "zipCRC": true,
+  "originalBrandIcon": true,
+  "platforms": [
+    "win32",
+    "linux"
+  ],
+  "behaviorTests": 13,
+  "extensionHostVerified": false,
+  "windowsLaunchVerified": false
+}

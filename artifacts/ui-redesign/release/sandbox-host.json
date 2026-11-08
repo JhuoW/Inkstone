@@ -1,0 +1,6 @@
+{
+  "returncode": -5,
+  "stderr": "[634406:1108/183414.581695:FATAL:sandbox/linux/suid/client/setuid_sandbox_host.cc:172] The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now. You need to make sure that /home/zhuowei/software/Open-Typora/.tools/linux-0.4-build/linux-unpacked/chrome-sandbox is owned by root and has mode 4755.\n",
+  "apparmor_restrict_unprivileged_userns": "1",
+  "productFlagsAdded": false
+}

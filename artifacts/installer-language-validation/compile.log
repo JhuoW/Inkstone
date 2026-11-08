@@ -1,0 +1,17 @@
+Command line defined: "INKSTONE_REPO=/home/zhuowei/software/Open-Typora"
+Command line defined: "OUTPUT_EXE=/home/zhuowei/software/Open-Typora/.tools/installer-locale-I0WSNl/locale-hook.exe"
+Processing script file: "/home/zhuowei/software/Open-Typora/tests/fixtures/installer-language.nsi" (UTF8)
+
+Processed 1 file, writing output (x86-unicode):
+
+Output: "/home/zhuowei/software/Open-Typora/.tools/installer-locale-I0WSNl/locale-hook.exe"
+Install: 0 pages (0 bytes), 1 section (32792 bytes), 49 instructions (1372 bytes), 159 strings (1260 bytes), 1 language table (158 bytes).
+
+Using zlib compression.
+
+EXE header size:               37888 / 39424 bytes
+Install code:                    905 / 19526 bytes
+Install data:                      0 / 0 bytes
+CRC (0x4A49C5D5):                  4 / 4 bytes
+
+Total size:                    38797 / 58954 bytes (65.8%)

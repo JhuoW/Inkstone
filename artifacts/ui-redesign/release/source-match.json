@@ -1,0 +1,19 @@
+{
+  "version": "0.4.0",
+  "results": [
+    {
+      "file": "release/win-unpacked/resources/app.asar",
+      "version": "0.4.0",
+      "matchedRuntimeFiles": 299,
+      "asarSHA256": "0faf828c31f042ba5fc5b05e967ebc377294bf2f04d5497e90ec2709c664ba20",
+      "passed": true
+    },
+    {
+      "file": "release/linux-unpacked/resources/app.asar",
+      "version": "0.4.0",
+      "matchedRuntimeFiles": 299,
+      "asarSHA256": "0faf828c31f042ba5fc5b05e967ebc377294bf2f04d5497e90ec2709c664ba20",
+      "passed": true
+    }
+  ]
+}

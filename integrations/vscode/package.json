@@ -1,0 +1,101 @@
+{
+  "name": "inkstone-open",
+  "displayName": "Open in Inkstone 墨石",
+  "description": "Open local Markdown files in Inkstone for Windows and Linux.",
+  "version": "0.3.0",
+  "publisher": "inkstone-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.96.0",
+    "node": ">=22"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "inkstone",
+    "offline"
+  ],
+  "main": "./src/extension.cjs",
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onCommand:inkstone.openFile"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "Inkstone opens local files on this computer."
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "inkstone.openFile",
+        "title": "%command.openFile%",
+        "category": "Inkstone"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "inkstone.openFile",
+          "when": "resourceScheme == file && resourceExtname =~ /\\.(md|markdown|mdown|mkd)$/i",
+          "group": "navigation@30"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "inkstone.openFile",
+          "when": "resourceScheme == file && resourceLangId == markdown",
+          "group": "navigation@30"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "inkstone.openFile",
+          "when": "editorLangId == markdown",
+          "group": "navigation@30"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Inkstone",
+      "properties": {
+        "inkstone.executablePath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "%setting.executablePath%"
+        },
+        "inkstone.args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "scope": "machine",
+          "description": "%setting.args%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/extension.test.cjs",
+    "package": "node scripts/package.cjs"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^4.1.0"
+  },
+  "overrides": {
+    "@vscode/vsce": {
+      "minimatch": "^11.0.1"
+    }
+  },
+  "icon": "resources/icon.png"
+}
