@@ -1,0 +1,7 @@
+Noto Sans SC: © 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.
+Noto Serif SC: © 2017-2023 Adobe (http://www.adobe.com/).
+
+Subsets of the installed Noto SC variable fonts, renamed Inkstone Website Sans / Serif.
+Only glyphs used by index.html and zh.html plus printable ASCII are retained.
+Font license: SIL Open Font License 1.1 (OFL.txt).
+Upstream: https://github.com/notofonts/noto-cjk

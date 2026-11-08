@@ -26,6 +26,10 @@ body {
 a { color: inherit; text-decoration: none; }
 .wrap { width: 1200px; margin: 0 auto; }
 .mono { font-family: var(--mono); }
+/* official wordmark (inkstone-brand/logo/svg/inkstone-wordmark.svg) wherever the name appears:
+   1em of text = 200 SVG units; its baseline sits 8 units above the bottom edge */
+.wm { height: .9834em; width: auto; vertical-align: -.04em; }
+.vbar { display: inline-block; width: 1px; height: .95em; margin: 0 .5em; vertical-align: -.12em; background: var(--stone); opacity: .75; }
 .ms { font-style: normal; font-family: "Segoe UI", Arial, sans-serif; margin: 0 .4em; color: var(--stone); }
 
 /* ---------- Navigation ---------- */
@@ -66,6 +70,7 @@ h1 .name { color: var(--ink); }
 h1 .tag { color: var(--stone); }
 .hero-grid { margin-top: 44px; display: grid; grid-template-columns: 680px 1fr; column-gap: 80px; align-items: start; }
 .lede { font-size: 21px; line-height: 1.8; color: var(--ink-80); letter-spacing: .01em; }
+.lede strong { font-weight: 600; color: var(--ink); }
 .cta { margin-top: 44px; display: flex; gap: 16px; }
 .alt { margin-top: 26px; display: flex; align-items: center; gap: 18px; font-size: 14px; color: var(--stone); }
 .alt a { color: var(--ink); font-size: 15px; font-weight: 500; border-bottom: 1px solid var(--rule-strong); padding-bottom: 3px; }

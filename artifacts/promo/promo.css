@@ -1,0 +1,72 @@
+/* Inkstone promotional card — 1280 × 640 (2:1: GitHub social preview, Open Graph, social posts) */
+:root {
+  --paper: #F4F0E6;
+  --ink: #1C1A21;
+  --stone: #76717D;
+  --vermilion: #C8402B;
+  --ink-80: rgba(28, 26, 33, .80);
+  --rule: rgba(28, 26, 33, .14);
+  --rule-strong: rgba(28, 26, 33, .26);
+  --serif: "Noto Serif SC", "Source Han Serif SC", serif;
+  --sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1280px; height: 640px; overflow: hidden; background: var(--paper); }
+body {
+  position: relative;
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .11  0 0 0 0 .10  0 0 0 0 .13  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Copy column ---------- */
+.copy {
+  position: absolute; left: 72px; top: 0; bottom: 0; width: 440px;
+  display: flex; flex-direction: column; padding: 60px 0 54px;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-left: -4px; }
+.brand .icon { width: 50px; height: 50px; display: block; }
+.brand .lockup { height: 26px; width: auto; display: block; margin-top: 2px; }
+/* official wordmark used inline wherever the name appears; same face (Noto Serif SC 600) as the headline,
+   so 1em of text = 200 units of the SVG; its baseline sits 8 units above the bottom edge */
+.wm { height: .9834em; width: auto; vertical-align: -.04em; }
+h1 {
+  margin-top: 30px;
+  font-family: var(--serif); font-weight: 600;
+  font-size: 58px; line-height: 1.1; letter-spacing: -.015em;
+  margin-left: -3px;
+}
+h1 .name { color: var(--ink); }
+h1 .tag { color: var(--stone); }
+.lede { margin-top: 22px; font-size: 16.5px; line-height: 1.65; color: var(--ink-80); }
+.lede strong { font-weight: 600; color: var(--ink); }
+.tags { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 7px; }
+.tags span {
+  font-family: var(--mono); font-size: 12px; line-height: 1; color: var(--ink);
+  padding: 6px 9px 6px; border: 1px solid var(--rule-strong); border-radius: 2px;
+  background: rgba(252, 252, 250, .45);
+}
+.foot { margin-top: auto; display: flex; align-items: center; gap: 14px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.foot img { width: 34px; height: 34px; display: block; flex: none; }
+.foot b { display: block; font-size: 14px; font-weight: 500; }
+.foot span { display: block; margin-top: 2px; font-family: var(--mono); font-size: 12px; color: var(--stone); }
+.ms { font-style: normal; font-family: "Segoe UI", Arial, sans-serif; margin: 0 .38em; color: var(--stone); font-weight: 400; }
+
+/* ---------- Product window (bleeds off the right and bottom edges) ---------- */
+.window {
+  position: absolute; left: 566px; top: 70px;
+  border-radius: 10px 0 0 0; overflow: hidden; background: #FCFCFA;
+  border: 1px solid rgba(28, 26, 33, .18); border-right: 0; border-bottom: 0;
+  box-shadow: 0 1px 2px rgba(28,26,33,.06), -24px 30px 70px -30px rgba(28,26,33,.40), -6px 10px 24px -14px rgba(28,26,33,.18);
+}
+.titlebar { height: 30px; display: flex; align-items: center; background: #EEEDE9; font-family: "Segoe UI", var(--sans); font-size: 11.5px; color: #2b2930; }
+.titlebar img { width: 14px; height: 14px; margin: 0 9px 0 12px; }
+.menubar { height: 22px; display: flex; align-items: center; padding-left: 4px; background: #F7F7F5; border-bottom: 1px solid #E2E1DD; font-family: "Segoe UI", "Microsoft YaHei UI", var(--sans); font-size: 11px; color: #2b2930; }
+.menubar span { padding: 0 8px; }
+.window img.shot { display: block; }
+
+/* ---------- Chinese typesetting ---------- */
+:lang(zh) h1 { font-size: 60px; line-height: 1.22; letter-spacing: .04em; margin-left: -4px; }
+:lang(zh) .lede { font-size: 16.5px; line-height: 1.75; letter-spacing: .01em; }
