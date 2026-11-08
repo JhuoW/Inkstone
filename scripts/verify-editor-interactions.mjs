@@ -148,12 +148,26 @@ try {
       { value, selectAll },
     );
   const openClipboardMenu = async () => {
-    const point = await page.evaluate(() => {
-      const selection = __inkstone.editor.view.state.selection.main;
-      const bounds = __inkstone.editor.view.coordsAtPos(selection.from + 2);
-      return { x: bounds.left + 1, y: (bounds.top + bounds.bottom) / 2 };
+    const needle = await page.evaluate(() => {
+      const view = __inkstone.editor.view;
+      return view.state.doc
+        .lineAt(view.state.selection.main.from)
+        .text.slice(0, 4);
     });
-    await page.mouse.click(point.x, point.y, { button: "right" });
+    // Wait for the line to settle after CodeMirror's queued selection scrolling.
+    // Raw coordinates read immediately after replacing a document can be stale.
+    const line = page
+      .locator(".cm-content .cm-line")
+      .filter({ hasText: needle })
+      .first();
+    await line.scrollIntoViewIfNeeded();
+    await line.click({
+      button: "right",
+      position: {
+        x: 8,
+        y: await line.evaluate((node) => node.clientHeight / 2),
+      },
+    });
     await rootMenu.waitFor({ state: "visible" });
   };
   const waitForMarkdown = async () =>
@@ -164,6 +178,13 @@ try {
     );
   for (const action of ["Copy", "Cut"]) {
     await loadClipboardDocument(clipboardSource, true);
+    // A previous copy already has the expected value; require a fresh write
+    // before replacing the document used by the asynchronous copy command.
+    await page.evaluate(() =>
+      __inkstone.invoke("writeClipboard", {
+        text: "Waiting for fresh fixture copy",
+      }),
+    );
     await openClipboardMenu();
     await rootMenu.getByRole("menuitem", { name: action, exact: true }).click();
     await waitForMarkdown();
@@ -196,15 +217,31 @@ try {
     );
   }
   await loadClipboardDocument(clipboardSource, true);
+  await page.evaluate(() =>
+    __inkstone.invoke("writeClipboard", {
+      text: "Waiting for fresh fixture copy",
+    }),
+  );
   await page.keyboard.press("Control+c");
   await waitForMarkdown();
   await loadClipboardDocument(clipboardTarget);
   await openClipboardMenu();
   await rootMenu.getByRole("menuitem", { name: "Paste", exact: true }).click();
-  await page.waitForFunction(
-    (expected) => __inkstone.editor.getText() === expected,
-    expectedPaste,
-  );
+  await page
+    .waitForFunction(
+      (expected) => __inkstone.editor.getText() === expected,
+      expectedPaste,
+    )
+    .catch(async (error) => {
+      console.error(
+        "Final fixture state:",
+        await page.evaluate(() => ({
+          text: __inkstone.editor.getText(),
+          selection: __inkstone.editor.getSelection(),
+        })),
+      );
+      throw error;
+    });
   assert.equal(await fs.readFile(file, "utf8"), original + "$a = b+c$");
   await restoreClipboard();
   assert.deepEqual(errors, []);
