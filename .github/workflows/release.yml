@@ -28,7 +28,7 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - name: Test the packaged application
-        run: node node_modules/playwright/cli.js test tests/code-fences.spec.js tests/system-integration.spec.js -g "code|Code|context Insert|Branding|About|unfinished"
+        run: node node_modules/playwright/cli.js test tests/code-fences.spec.js tests/system-integration.spec.js tests/native-context.spec.js -g "code|Code|context Insert|Branding|About|unfinished|native-context"
         env:
           INKSTONE_EXECUTABLE: release/win-unpacked/Inkstone.exe
       - name: Verify installer and source identity

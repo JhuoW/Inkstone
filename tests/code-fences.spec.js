@@ -111,6 +111,26 @@ test("Insert code block focuses typing, language selection highlights Python, an
   await expect(page.locator(".cm-code-line")).toHaveCount(2);
 });
 
+test("Empty native clipboard is restored after code paste", async () => {
+  await withPreservedClipboard(application, async () => {
+    await application.evaluate(({ clipboard }) => clipboard.clear());
+    await withPreservedClipboard(application, async () => {
+      await load("```python\n\n```\n\nTail");
+      await select("```python", 10);
+      await page.evaluate(() =>
+        __inkstone.invoke("writeClipboard", { text: "print('墨石')" }),
+      );
+      await page.keyboard.press("Control+v");
+      await expect.poll(text).toBe("```python\nprint('墨石')\n```\n\nTail");
+    });
+    expect(
+      await application.evaluate(async ({ clipboard }) =>
+        (await clipboard.read()).every((item) => item.types.length === 0),
+      ),
+    ).toBe(true);
+  });
+});
+
 test("Native and context paste keep code text, indentation and literal fences with undo", async () => {
   await withPreservedClipboard(application, async () => {
     const original = "\uFEFF```javascript\r\n\r\n```\r\n\r\nTail";

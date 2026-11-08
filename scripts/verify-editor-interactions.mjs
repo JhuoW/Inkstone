@@ -4,10 +4,11 @@ import path from "node:path";
 import os from "node:os";
 import assert from "node:assert/strict";
 import { artifactPath } from "./artifact-path.mjs";
+import { captureClipboard } from "../tests/helpers/clipboard.mjs";
 
 const root = process.cwd();
-const temp = await fs.mkdtemp(
-  path.join(os.tmpdir(), "inkstone-interactive-中文-"),
+const temp = await fs.realpath(
+  await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-interactive-中文-")),
 );
 const profile = path.join(temp, "profile");
 await fs.mkdir(profile);
@@ -38,17 +39,14 @@ const executablePath = process.env.INKSTONE_EXECUTABLE
 const errors = [];
 let app,
   page,
-  clipboardCaptured = false;
+  restoreSnapshot = null;
 async function restoreClipboard() {
-  if (!app || !clipboardCaptured) return;
+  if (!app || !restoreSnapshot) return;
   await page
     ?.evaluate(() => __inkstone.invoke("readClipboard"))
     .catch(() => {});
-  await app.evaluate(async ({ clipboard }) => {
-    await clipboard.write(global.__interactiveClipboardSnapshot);
-    delete global.__interactiveClipboardSnapshot;
-  });
-  clipboardCaptured = false;
+  await restoreSnapshot();
+  restoreSnapshot = null;
 }
 try {
   app = await electron.launch({
@@ -127,24 +125,7 @@ try {
   );
   await page.evaluate(() => __inkstone.execute("save"));
   assert.equal(await fs.readFile(file, "utf8"), original + "$a = b+c$");
-  await app.evaluate(async ({ clipboard, ClipboardItem }) => {
-    global.__interactiveClipboardSnapshot = await Promise.all(
-      (await clipboard.read()).map(
-        async (item) =>
-          new ClipboardItem(
-            Object.fromEntries(
-              await Promise.all(
-                item.types.map(async (type) => [
-                  type,
-                  await item.getType(type),
-                ]),
-              ),
-            ),
-          ),
-      ),
-    );
-  });
-  clipboardCaptured = true;
+  restoreSnapshot = await captureClipboard(app);
   const clipboardSource =
     "Text <!-- keep --> tail.\r\n\r\nReference [site][ref].\r\n\r\n[ref]: https://example.com\r\n\r\nFootnote[^n].\r\n\r\n[^n]: note\r\n\r\n| A | B |\r\n| --- | --- |\r\n| x\\|y | neighbor |";
   const clipboardTarget = "Before\r\n\r\nTARGET\r\n\r\nAfter";

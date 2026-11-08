@@ -4,6 +4,9 @@ import os from "node:os";
 import path from "node:path";
 
 let app, page, temp;
+const executablePath = process.env.INKSTONE_EXECUTABLE
+  ? path.resolve(process.env.INKSTONE_EXECUTABLE)
+  : undefined;
 test.beforeEach(async () => {
   temp = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-native-context-"));
   const profile = path.join(temp, "profile");
@@ -21,7 +24,8 @@ test.beforeEach(async () => {
   const env = { ...process.env, INKSTONE_USER_DATA: profile };
   delete env.ELECTRON_RUN_AS_NODE;
   app = await electron.launch({
-    args: [process.cwd(), file],
+    executablePath,
+    args: executablePath ? [file] : [process.cwd(), file],
     env,
     chromiumSandbox: true,
   });
@@ -101,42 +105,69 @@ test("source-mode context hit testing reparses edited offsets and excludes fence
   expect(result.real.table.col).toBe(1);
 });
 
-test("native context dispatch uses the custom editor menu at 150 percent zoom", async () => {
-  const window = await app.browserWindow(page);
-  await window.evaluate((window) => window.webContents.setZoomFactor(1.5));
-  await app.evaluate(({ BrowserWindow, Menu }) => {
-    global.__zoomContext = { native: 0, custom: 0 };
-    Menu.prototype.popup = function () {
-      global.__zoomContext.native++;
-    };
-    const contents = BrowserWindow.getAllWindows()[0].webContents;
-    const send = contents.send.bind(contents);
-    contents.send = (channel, ...args) => {
-      if (channel === "inkstone:context-menu-details")
-        global.__zoomContext.custom++;
-      return send(channel, ...args);
-    };
+for (const zoom of [0.75, 1.5, 2]) {
+  test(`native context dispatch uses CSS coordinates at ${zoom * 100} percent zoom before the DOM menu opens`, async () => {
+    const window = await app.browserWindow(page);
+    await window.evaluate(
+      (window, zoom) => window.webContents.setZoomFactor(zoom),
+      zoom,
+    );
+    await app.evaluate(({ BrowserWindow, Menu }) => {
+      global.__zoomContext = { native: 0, custom: 0 };
+      Menu.prototype.popup = function () {
+        global.__zoomContext.native++;
+      };
+      const contents = BrowserWindow.getAllWindows()[0].webContents;
+      const send = contents.send.bind(contents);
+      contents.send = (channel, ...args) => {
+        if (channel === "inkstone:context-menu-details") {
+          global.__zoomContext.custom++;
+          global.__zoomContext.details = args[0];
+        }
+        return send(channel, ...args);
+      };
+    });
+    await page.evaluate(() => {
+      __inkstone.editor.setMode("source");
+      // Exercise native hit testing even when the renderer menu opens first.
+      const query = document.querySelector.bind(document);
+      document.querySelector = (selector) =>
+        selector ===
+        '[data-inkstone-context-menu="true"][role="menu"]:not([hidden])'
+          ? null
+          : query(selector);
+      document.addEventListener(
+        "contextmenu",
+        (event) => {
+          window.__testContextPoint = { x: event.clientX, y: event.clientY };
+        },
+        true,
+      );
+    });
+    await page
+      .locator(".cm-line")
+      .filter({ hasText: "Editor text." })
+      .click({ button: "right" });
+    await expect(
+      page.locator('.editor-context-menu[data-context-depth="0"]'),
+    ).toBeVisible();
+    await expect
+      .poll(() =>
+        app.evaluate(
+          () => global.__zoomContext.custom + global.__zoomContext.native,
+        ),
+      )
+      .toBe(1);
+    const dispatched = await app.evaluate(() => global.__zoomContext);
+    expect(dispatched).toMatchObject({
+      native: 0,
+      custom: 1,
+    });
+    const point = await page.evaluate(() => window.__testContextPoint);
+    expect(Math.abs(dispatched.details.x - point.x)).toBeLessThan(2);
+    expect(Math.abs(dispatched.details.y - point.y)).toBeLessThan(2);
   });
-  await page.evaluate(() => __inkstone.editor.setMode("source"));
-  await page
-    .locator(".cm-line")
-    .filter({ hasText: "Editor text." })
-    .click({ button: "right" });
-  await expect(
-    page.locator('.editor-context-menu[data-context-depth="0"]'),
-  ).toBeVisible();
-  await expect
-    .poll(() =>
-      app.evaluate(
-        () => global.__zoomContext.custom + global.__zoomContext.native,
-      ),
-    )
-    .toBe(1);
-  expect(await app.evaluate(() => global.__zoomContext)).toEqual({
-    native: 0,
-    custom: 1,
-  });
-});
+}
 
 test("native dictionary additions reject empty, multiword and oversized input", async () => {
   for (const word of ["", "two words", "word\nnext", "x".repeat(257)])

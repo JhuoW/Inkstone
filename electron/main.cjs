@@ -1901,15 +1901,19 @@ function createWindow(file) {
   });
   win.webContents.on("context-menu", (_event, params) => {
     void (async () => {
+      // Native context coordinates include page zoom; DOM hit testing and
+      // renderer spelling suggestions use unzoomed CSS coordinates.
+      const zoom = win.webContents.getZoomFactor();
+      const point = { x: params.x / zoom, y: params.y / zoom };
       let custom = false;
       try {
-        custom = await usesEditorContextMenu(win, params);
+        custom = await usesEditorContextMenu(win, point);
       } catch {}
       if (win.isDestroyed()) return;
       if (custom)
         send(win, "context-menu-details", {
-          x: params.x,
-          y: params.y,
+          x: point.x,
+          y: point.y,
           misspelledWord: params.misspelledWord || "",
           dictionarySuggestions: (params.dictionarySuggestions || []).slice(
             0,

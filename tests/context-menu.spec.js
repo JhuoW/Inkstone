@@ -3,12 +3,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { artifactPath } from "../scripts/artifact-path.mjs";
+import { captureClipboard } from "./helpers/clipboard.mjs";
 
-let app,
-  page,
-  directory,
-  file,
-  clipboardCaptured = false;
+let app, page, directory, file, restoreClipboard;
 const original =
   "# Context menu\r\n\r\nAlpha selected words and untouched text.\r\n\r\n| First | Second |\r\n| --- | --- |\r\n| alpha middle omega | cell two |\r\n| next row | last cell |\r\n\r\nTail paragraph.\r\n";
 const rootMenu = () =>
@@ -18,7 +15,7 @@ const submenu = () =>
 const text = () => page.evaluate(() => __inkstone.editor.getText());
 
 test.beforeEach(async () => {
-  clipboardCaptured = false;
+  restoreClipboard = null;
   directory = await fs.mkdtemp(
     path.join(os.tmpdir(), "inkstone-context-menu-"),
   );
@@ -48,33 +45,11 @@ test.beforeEach(async () => {
       window.__inkstone?.getDocument().path?.endsWith("Context 文稿.md") &&
       !__inkstone.editor.view.state.readOnly,
   );
-  await app.evaluate(async ({ clipboard, ClipboardItem }) => {
-    const items = await clipboard.read();
-    global.__contextOriginalClipboard = await Promise.all(
-      items.map(
-        async (item) =>
-          new ClipboardItem(
-            Object.fromEntries(
-              await Promise.all(
-                item.types.map(async (type) => [
-                  type,
-                  await item.getType(type),
-                ]),
-              ),
-            ),
-          ),
-      ),
-    );
-  });
-  clipboardCaptured = true;
+  restoreClipboard = await captureClipboard(app);
 });
 test.afterEach(async () => {
   try {
-    if (app && clipboardCaptured)
-      await app.evaluate(async ({ clipboard }) => {
-        await clipboard.write(global.__contextOriginalClipboard);
-        delete global.__contextOriginalClipboard;
-      });
+    if (app && restoreClipboard) await restoreClipboard();
   } finally {
     if (app) {
       await app.evaluate(({ app }) => app.exit(0)).catch(() => {});
@@ -744,13 +719,21 @@ test("keyboard submenus and Escape work at the viewport edge; read-only keeps co
   await page.keyboard.press("End");
   await page.keyboard.press("ArrowRight");
   await expect(submenu()).toBeVisible();
-  await expect(submenu().getByRole("menuitem", { name: "Image…", exact: true })).toBeFocused();
+  await expect(
+    submenu().getByRole("menuitem", { name: "Image…", exact: true }),
+  ).toBeFocused();
   // Chromium can emit pointerenter when a new popover paints below a cursor
   // that has not moved. Keyboard navigation must keep its branch and focus.
-  await rootMenu().locator('[data-context-submenu="paragraph"]').evaluate((button) =>
-    button.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" })),
-  );
-  await expect(submenu().getByRole("menuitem", { name: "Image…", exact: true })).toBeFocused();
+  await rootMenu()
+    .locator('[data-context-submenu="paragraph"]')
+    .evaluate((button) =>
+      button.dispatchEvent(
+        new PointerEvent("pointerenter", { pointerType: "mouse" }),
+      ),
+    );
+  await expect(
+    submenu().getByRole("menuitem", { name: "Image…", exact: true }),
+  ).toBeFocused();
   const geometry = await page
     .locator(".editor-context-menu")
     .evaluateAll((menus) =>
@@ -783,11 +766,22 @@ test("keyboard submenus and Escape work at the viewport edge; read-only keeps co
   await expect(rootMenu()).toBeVisible();
   await page.keyboard.press("End");
   await page.keyboard.press("ArrowRight");
-  await expect(submenu().getByRole("menuitem", { name: "Image…", exact: true })).toBeFocused();
-  const paragraph = await rootMenu().locator('[data-context-submenu="paragraph"]').boundingBox();
-  await page.mouse.move(paragraph.x + paragraph.width / 2, paragraph.y + paragraph.height / 2);
-  await expect(submenu().getByRole("menuitem", { name: "Heading 1", exact: true })).toBeVisible();
-  await expect(submenu().getByRole("menuitem", { name: "Paragraph", exact: true })).toBeFocused();
+  await expect(
+    submenu().getByRole("menuitem", { name: "Image…", exact: true }),
+  ).toBeFocused();
+  const paragraph = await rootMenu()
+    .locator('[data-context-submenu="paragraph"]')
+    .boundingBox();
+  await page.mouse.move(
+    paragraph.x + paragraph.width / 2,
+    paragraph.y + paragraph.height / 2,
+  );
+  await expect(
+    submenu().getByRole("menuitem", { name: "Heading 1", exact: true }),
+  ).toBeVisible();
+  await expect(
+    submenu().getByRole("menuitem", { name: "Paragraph", exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(submenu()).toHaveCount(0);
   await expect(rootMenu()).toBeVisible();

@@ -8,8 +8,9 @@ let app, page, temp, file;
 const original = "# Windows 文件操作\r\n\r\nOriginal text.\r\n";
 
 async function launch(nested = false) {
-  temp = await fs.mkdtemp(
-    path.join(os.tmpdir(), "inkstone-windows-regression-"),
+  // Match the canonical paths used by the real file tree, even when TEMP is 8.3.
+  temp = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-windows-regression-")),
   );
   const profile = path.join(temp, "profile");
   const folder = nested ? path.join(temp, "原始 文件夹") : temp;
@@ -23,7 +24,11 @@ async function launch(nested = false) {
   );
   const env = { ...process.env, INKSTONE_USER_DATA: profile };
   delete env.ELECTRON_RUN_AS_NODE;
-  app = await electron.launch({ args: [process.cwd(), temp, file], env });
+  app = await electron.launch({
+    args: [process.cwd(), temp, file],
+    env,
+    chromiumSandbox: true,
+  });
   page = await app.firstWindow();
   await page.waitForFunction(() => window.__inkstone?.editor);
   await expect(page.locator("#document-title")).toHaveText(path.basename(file));
