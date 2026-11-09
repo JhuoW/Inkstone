@@ -10,7 +10,10 @@ const {
   streamCompletion,
   listModels,
   safeError,
+  providerDefaults,
+  catalog,
 } = require("./ai-provider.cjs");
+const { getProvider } = require("./ai-catalog.cjs");
 
 class AIService {
   constructor({
@@ -24,6 +27,7 @@ class AIService {
     this.platform = platform;
     this.fetch = fetchImpl;
     this.settings = { ...defaults };
+    this.profiles = {};
     this.keys = {};
     this.active = new Map();
     this.closed = new Set();
@@ -35,14 +39,34 @@ class AIService {
       const read = async (name) => {
         try {
           const bytes = await fs.readFile(path.join(this.directory, name));
-          if (bytes.length > 65536) throw Error();
+          if (bytes.length > 1024 * 1024) throw Error();
           return JSON.parse(bytes);
         } catch (e) {
           if (e.code === "ENOENT") return {};
           throw e;
         }
       };
-      this.settings = validateSettings(await read("ai-models.json"));
+      const stored = await read("ai-models.json");
+      if (stored.schemaVersion === 2) {
+        if (
+          !stored.profiles ||
+          typeof stored.profiles !== "object" ||
+          Array.isArray(stored.profiles)
+        )
+          throw Error();
+        for (const [provider, profile] of Object.entries(stored.profiles)) {
+          const settings = validateSettings({ ...profile, provider });
+          this.profiles[settings.provider] = settings;
+        }
+        if (!getProvider(stored.activeProvider)) throw Error();
+        this.settings =
+          this.profiles[stored.activeProvider] ||
+          providerDefaults(stored.activeProvider);
+      } else {
+        this.settings = validateSettings(stored);
+        if (Object.keys(stored).length)
+          this.profiles[this.settings.provider] = this.settings;
+      }
       const keys = await read("ai-credentials.json");
       if (
         !keys ||
@@ -53,7 +77,25 @@ class AIService {
         )
       )
         throw Error();
-      this.keys = keys;
+      this.keys = { ...keys };
+      // Previous releases keyed cloud credentials only by provider. Migrate only
+      // to that provider's official endpoint, never to a configured proxy.
+      for (const provider of ["openai", "anthropic"]) {
+        if (keys[provider]) {
+          const slot = this.slot(providerDefaults(provider));
+          this.keys[slot] ||= keys[provider];
+          delete this.keys[provider];
+        }
+      }
+      for (const [slot, encrypted] of Object.entries(keys)) {
+        if (!slot.startsWith("local:")) continue;
+        const settings = validateSettings({
+          provider: "local",
+          endpoint: slot.slice(6),
+        });
+        this.keys[this.slot(settings)] ||= encrypted;
+        delete this.keys[slot];
+      }
     } catch {
       this.loadFailed = true;
     }
@@ -73,21 +115,76 @@ class AIService {
     }
   }
   slot(settings = this.settings) {
-    return settings.provider === "local"
-      ? `local:${settings.endpoint}`
-      : settings.provider;
+    return `${settings.provider}:${settings.endpoint}`;
   }
-  async getSettings() {
+  candidate(payload = {}) {
+    if (!payload || typeof payload !== "object" || Array.isArray(payload))
+      throw new AIError("AI: Invalid model configuration.");
+    const provider = payload.provider || this.settings.provider;
+    const prior =
+      this.profiles[provider] ||
+      (provider === this.settings.provider
+        ? this.settings
+        : provider === "local"
+          ? defaults
+          : providerDefaults(provider));
+    return validateSettings(payload, prior);
+  }
+  validateKey(payload) {
+    if (
+      Object.hasOwn(payload, "apiKey") &&
+      (typeof payload.apiKey !== "string" ||
+        payload.apiKey.length > 4096 ||
+        /[\r\n\0]/.test(payload.apiKey))
+    )
+      throw new AIError("AI: Invalid API key.");
+  }
+  async getSettings(payload = {}) {
     await this.ready;
     if (this.loadFailed)
       throw new AIError(
         "AI: Model configuration is damaged or unreadable. Restore ai-models.json / ai-credentials.json from a backup; existing files were preserved.",
       );
+    const settings = this.candidate(payload);
+    const secureStorageAvailable = await this.secureAvailable();
+    const hasKey = !!this.keys[this.slot(settings)];
+    const profiles = Object.fromEntries(
+      catalog.map((definition) => {
+        const profile =
+          this.profiles[definition.id] || providerDefaults(definition.id);
+        return [
+          definition.id,
+          {
+            ...profile,
+            hasKey: !!this.keys[this.slot(profile)],
+            profileSaved: Object.hasOwn(this.profiles, definition.id),
+          },
+        ];
+      }),
+    );
     return {
-      ...this.settings,
-      hasKey: !!this.keys[this.slot()],
-      secureStorageAvailable: await this.secureAvailable(),
+      ...settings,
+      profileSaved: Object.hasOwn(this.profiles, settings.provider),
+      hasKey,
+      secureStorageAvailable,
+      ready: !!(
+        settings.endpoint &&
+        settings.model &&
+        (!getProvider(settings.provider).requiresKey || hasKey) &&
+        (!hasKey || secureStorageAvailable)
+      ),
+      providers: catalog,
+      profiles,
     };
+  }
+  async resolveDraft(payload = {}) {
+    await this.getSettings();
+    this.validateKey(payload);
+    const settings = this.candidate(payload);
+    const key = payload.clearKey
+      ? ""
+      : payload.apiKey?.trim() || (await this.key(settings));
+    return { settings, key };
   }
   async key(settings) {
     const encrypted = this.keys[this.slot(settings)];
@@ -110,16 +207,10 @@ class AIService {
   saveSettings(payload) {
     const work = this.queue.then(async () => {
       await this.getSettings();
-      const settings = validateSettings(payload, this.settings),
+      const settings = this.candidate(payload),
         keys = { ...this.keys },
         slot = this.slot(settings);
-      if (
-        Object.hasOwn(payload, "apiKey") &&
-        (typeof payload.apiKey !== "string" ||
-          payload.apiKey.length > 4096 ||
-          /[\r\n\0]/.test(payload.apiKey))
-      )
-        throw new AIError("AI: Invalid API key.");
+      this.validateKey(payload);
       if (payload.clearKey) delete keys[slot];
       else if (payload.apiKey?.trim()) {
         if (!(await this.secureAvailable()))
@@ -144,11 +235,17 @@ class AIService {
           JSON.stringify(keys),
         );
         this.keys = keys;
+        const profiles = { ...this.profiles, [settings.provider]: settings };
         await atomicWrite(
           path.join(this.directory, "ai-models.json"),
-          JSON.stringify(settings, null, 2),
+          JSON.stringify(
+            { schemaVersion: 2, activeProvider: settings.provider, profiles },
+            null,
+            2,
+          ),
         );
         this.settings = settings;
+        this.profiles = profiles;
       } catch {
         throw new AIError(
           "AI: Model settings could not be saved. Check disk space and permissions.",
@@ -229,19 +326,22 @@ class AIService {
     });
     return { id: request.id };
   }
-  async models(owner) {
-    await this.ready;
-    await this.queue;
-    const settings = { ...(await this.getSettings()) };
-    const item = this.begin(
-      owner,
-      "models",
-      Math.min(settings.timeoutMs, 30000),
-    );
+  async models(owner, payload = {}) {
+    const item = this.begin(owner, "models", 30000);
     try {
+      await this.ready;
+      await this.queue;
+      const { settings, key } = await this.resolveDraft(payload);
+      clearTimeout(item.timer);
+      item.timer = setTimeout(
+        () => item.controller.abort("timeout"),
+        Math.min(settings.timeoutMs, 30000),
+      );
+      item.timer.unref?.();
+      item.controller.signal.throwIfAborted();
       return await listModels(
         settings,
-        await this.key(settings),
+        key,
         item.controller.signal,
         this.fetch,
       );
@@ -251,15 +351,23 @@ class AIService {
       this.end(owner, item);
     }
   }
-  async test(owner) {
-    await this.ready;
-    await this.queue;
-    const settings = { ...(await this.getSettings()), maxTokens: 64 };
-    const item = this.begin(owner, "test", Math.min(settings.timeoutMs, 30000));
+  async test(owner, payload = {}) {
+    const item = this.begin(owner, "test", 60000);
     try {
+      await this.ready;
+      await this.queue;
+      const { settings, key } = await this.resolveDraft(payload);
+      settings.maxTokens = Math.max(2048, Math.min(settings.maxTokens, 4096));
+      clearTimeout(item.timer);
+      item.timer = setTimeout(
+        () => item.controller.abort("timeout"),
+        Math.min(settings.timeoutMs, 60000),
+      );
+      item.timer.unref?.();
+      item.controller.signal.throwIfAborted();
       await streamCompletion(
         settings,
-        await this.key(settings),
+        key,
         {
           task: "chat",
           text: "Connection test.",
@@ -267,6 +375,7 @@ class AIService {
           history: [],
           locale: "en",
           documentType: "general",
+          connectionTest: true,
         },
         item.controller.signal,
         () => {},

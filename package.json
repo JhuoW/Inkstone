@@ -1,7 +1,7 @@
 {
   "name": "inkstone-editor",
   "productName": "Inkstone",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Inkstone 墨石 — a local-first, source-preserving Markdown editor for Windows and Linux",
   "author": {
     "name": "Wei Zhuo",

@@ -247,3 +247,115 @@
     gap: 12px;
   }
 }
+@container editor-pane (max-width: 500px) {
+  .ai-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .ai-header > strong {
+    flex-basis: 100%;
+  }
+  .ai-model-label {
+    display: none;
+  }
+  .ai-header > [data-ai-close] {
+    margin-left: auto;
+  }
+}
+
+/* Model setup keeps the primary path short; provider-specific details stay
+   beside their fields, with optional controls under Advanced settings. */
+.ai-settings-dialog .modal-body {
+  padding: 20px 24px;
+}
+.ai-settings-dialog .ai-model-form {
+  gap: 12px;
+}
+.ai-settings-dialog .ai-setup-intro {
+  margin: 0 0 4px;
+  line-height: 1.6;
+}
+.ai-settings-dialog .setting-row {
+  grid-template-columns: minmax(108px, 0.28fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.ai-settings-dialog .ai-endpoint-control,
+.ai-settings-dialog .ai-model-choice-control {
+  display: flex;
+  min-width: 0;
+  gap: 6px;
+}
+.ai-settings-dialog .ai-endpoint-control input,
+.ai-settings-dialog .ai-model-choice-control select {
+  flex: 1;
+  width: 0;
+}
+.ai-settings-dialog .ai-endpoint-control button,
+.ai-settings-dialog .ai-model-choice-control button {
+  flex: 0 0 auto;
+}
+.ai-settings-dialog .setting-help {
+  margin: -4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.ai-settings-dialog .ai-provider-note,
+.ai-settings-dialog .ai-key-status,
+.ai-settings-dialog .ai-model-list-status {
+  padding-left: calc(21.875% + 9px);
+}
+.ai-settings-dialog .ai-clear-key {
+  justify-self: end;
+  font-size: 12px;
+}
+.ai-settings-dialog .ai-model-advanced {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.ai-settings-dialog .ai-model-advanced summary {
+  cursor: pointer;
+  color: var(--muted);
+  padding: 2px 0;
+}
+.ai-settings-dialog .ai-model-advanced summary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.ai-settings-dialog .ai-model-advanced > div {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+}
+.ai-settings-dialog .ai-settings-status:empty {
+  display: none;
+}
+.ai-settings-dialog .ai-model-privacy {
+  margin-top: 0;
+}
+.ai-settings-dialog .ai-model-form footer {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  justify-content: flex-end;
+}
+.ai-settings-dialog [data-model-test] {
+  margin-right: auto;
+}
+@media (max-width: 560px) {
+  .ai-settings-dialog .modal-body {
+    padding: 14px;
+  }
+  .ai-settings-dialog .setting-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .ai-settings-dialog .ai-provider-note,
+  .ai-settings-dialog .ai-key-status,
+  .ai-settings-dialog .ai-model-list-status {
+    padding-left: 0;
+  }
+  .ai-settings-dialog .ai-clear-key {
+    justify-self: start;
+  }
+}

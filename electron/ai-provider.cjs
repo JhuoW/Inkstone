@@ -1,24 +1,53 @@
 "use strict";
 // Transport adapters deliberately have no file/editor access and never execute model output.
 const MAX_OUTPUT = 512 * 1024;
+const { catalog, getProvider } = require("./ai-catalog.cjs");
 class AIError extends Error {}
 const fail = (message) => {
   throw new AIError(message);
 };
-const defaults = Object.freeze({
-  provider: "local",
-  endpoint: "http://127.0.0.1:11434/v1",
-  model: "",
+const options = Object.freeze({
   temperature: 0.3,
   maxTokens: 4096,
   timeoutMs: 120000,
+  workspace: "",
 });
+function providerDefaults(provider) {
+  const definition = getProvider(provider);
+  if (!definition) fail("AI: Choose a supported provider.");
+  return {
+    ...options,
+    provider,
+    endpoint: definition.endpoint,
+    model: definition.defaultModel || "",
+  };
+}
+const defaults = Object.freeze(providerDefaults("ollama"));
+function legacyProvider(endpoint = defaults.endpoint) {
+  try {
+    const url = new URL(endpoint);
+    if (url.port === "11434") return "ollama";
+    if (url.port === "1234") return "lmstudio";
+  } catch {}
+  return "custom";
+}
 function validateSettings(value = {}, previous = defaults) {
-  const next = { ...previous };
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    fail("AI: Invalid model configuration.");
+  let provider = value.provider ?? previous.provider ?? defaults.provider;
+  if (provider === "local")
+    provider = legacyProvider(value.endpoint || previous.endpoint);
+  const priorProvider =
+    previous.provider === "local"
+      ? legacyProvider(previous.endpoint)
+      : previous.provider;
+  const next = {
+    ...providerDefaults(provider),
+    ...(provider === priorProvider ? previous : {}),
+    provider,
+  };
   for (const key of Object.keys(defaults))
-    if (Object.hasOwn(value, key)) next[key] = value[key];
-  if (!["local", "openai", "anthropic"].includes(next.provider))
-    fail("AI: Choose a supported provider.");
+    if (key !== "provider" && Object.hasOwn(value, key)) next[key] = value[key];
   if (
     typeof next.model !== "string" ||
     next.model.length > 200 ||
@@ -26,6 +55,13 @@ function validateSettings(value = {}, previous = defaults) {
   )
     fail("AI: Invalid model name.");
   next.model = next.model.trim();
+  if (
+    typeof next.workspace !== "string" ||
+    next.workspace.length > 200 ||
+    /[\r\n\0]/.test(next.workspace)
+  )
+    fail("AI: Invalid Anthropic workspace ID.");
+  next.workspace = next.workspace.trim();
   for (const [key, min, max] of [
     ["temperature", 0, 1],
     ["maxTokens", 64, 32768],
@@ -40,39 +76,31 @@ function validateSettings(value = {}, previous = defaults) {
     )
       fail(`AI: Invalid ${key}.`);
   }
-  if (next.provider !== "local")
-    next.endpoint =
-      next.provider === "openai"
-        ? "https://api.openai.com/v1"
-        : "https://api.anthropic.com/v1";
-  else {
+  if (typeof next.endpoint !== "string" || next.endpoint.length > 2048)
+    fail("AI: Enter a valid API endpoint.");
+  next.endpoint = next.endpoint.trim();
+  if (next.endpoint) {
     let url;
     try {
       url = new URL(next.endpoint);
     } catch {
-      fail("AI: Enter a valid local API endpoint.");
+      fail("AI: Enter a valid API endpoint.");
     }
     if (
       !["http:", "https:"].includes(url.protocol) ||
-      !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) ||
       url.username ||
       url.password ||
       url.search ||
       url.hash
     )
       fail(
-        "AI: Local endpoints must use localhost, 127.0.0.1 or [::1], without credentials or query strings.",
+        "AI: Endpoints must use HTTP or HTTPS, without credentials, query strings or fragments.",
       );
-    if (
-      url.pathname !== "/v1" &&
-      url.pathname !== "/v1/" &&
-      url.pathname !== "/"
-    )
-      fail("AI: Use the local server's /v1 API base URL.");
     // Pin localhost to a numeric loopback address rather than trusting DNS resolution.
     if (url.hostname === "localhost") url.hostname = "127.0.0.1";
-    url.pathname = "/v1";
-    next.endpoint = url.toString().replace(/\/$/, "");
+    if (["ollama", "lmstudio"].includes(provider) && url.pathname === "/")
+      url.pathname = "/v1";
+    next.endpoint = url.toString().replace(/\/+$/, "");
   }
   return next;
 }
@@ -213,41 +241,62 @@ function parseAnalysis(text, source) {
   };
 }
 function headersFor(settings, key) {
-  if (settings.provider !== "local" && !key)
+  const definition = getProvider(settings.provider);
+  if (definition.requiresKey && !key)
     fail("AI: Configure an API key for this provider first.");
   return {
     "Content-Type": "application/json",
-    ...(settings.provider === "anthropic"
-      ? { "x-api-key": key, "anthropic-version": "2023-06-01" }
-      : key
-        ? { Authorization: `Bearer ${key}` }
-        : {}),
+    ...(definition.protocol === "anthropic"
+      ? {
+          "x-api-key": key,
+          "anthropic-version": "2026-10-21",
+          ...(settings.workspace
+            ? { "anthropic-workspace-id": settings.workspace }
+            : {}),
+        }
+      : definition.protocol === "gemini"
+        ? { "x-goog-api-key": key }
+        : key
+          ? { Authorization: `Bearer ${key}` }
+          : {}),
   };
 }
-const providers = {
-  local: {
-    route: "chat/completions",
-    body: (s, m) => ({
-      model: s.model,
-      messages: m,
-      temperature: s.temperature,
-      max_tokens: s.maxTokens,
-      stream: true,
-    }),
-    delta: (p) => p.choices?.[0]?.delta?.content || "",
-    done: (p) => !!p.choices?.[0]?.finish_reason,
-  },
+function geminiContents(messages) {
+  const contents = [];
+  for (const message of messages) {
+    const role = message.role === "assistant" ? "model" : "user";
+    const part = { text: message.content };
+    if (contents.at(-1)?.role === role) contents.at(-1).parts.push(part);
+    else contents.push({ role, parts: [part] });
+  }
+  return contents;
+}
+const adapters = {
   openai: {
     route: "chat/completions",
-    body: (s, m) => ({
+    body: (s, m, request) => ({
       model: s.model,
       messages: m,
-      max_completion_tokens: s.maxTokens,
+      ...(["openai", "groq", "xai"].includes(s.provider)
+        ? { max_completion_tokens: s.maxTokens }
+        : { max_tokens: s.maxTokens }),
+      ...(s.provider === "openai" ? { store: false } : {}),
+      ...(["ollama", "lmstudio", "custom"].includes(s.provider)
+        ? { temperature: s.temperature }
+        : {}),
+      ...(s.provider === "deepseek" && request.connectionTest
+        ? { thinking: { type: "disabled" } }
+        : {}),
+      ...(s.provider === "qwen" &&
+      request.connectionTest &&
+      ["qwen3.8-flash", "qwen3.8-max", "qwen3.7-plus"].includes(s.model)
+        ? { enable_thinking: false }
+        : {}),
       stream: true,
-      store: false,
     }),
     delta: (p) => p.choices?.[0]?.delta?.content || "",
     done: (p) => !!p.choices?.[0]?.finish_reason,
+    terminal: () => false,
   },
   anthropic: {
     route: "messages",
@@ -263,15 +312,77 @@ const providers = {
         ? p.delta.text
         : "",
     done: (p) => p.type === "message_stop",
+    terminal: (p) => p.type === "message_stop",
+  },
+  gemini: {
+    route: (s) => {
+      const model = s.model.replace(/^models\//, "");
+      if (!/^[\w.:-]+$/.test(model))
+        fail("AI: Invalid Gemini model ID. Use an ID from the model list.");
+      return `models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
+    },
+    body: (s, m, request) => ({
+      systemInstruction: { parts: [{ text: m[0].content }] },
+      contents: geminiContents(m.slice(1)),
+      generationConfig: {
+        maxOutputTokens: s.maxTokens,
+        ...(request.task === "analysis"
+          ? { responseMimeType: "application/json" }
+          : {}),
+        ...(request.connectionTest &&
+        ["gemini-3.6-flash", "gemini-3.8-flash"].includes(
+          s.model.replace(/^models\//, ""),
+        )
+          ? {
+              thinkingConfig: {
+                thinkingLevel: s.model.endsWith("3.6-flash")
+                  ? "MINIMAL"
+                  : "LOW",
+              },
+            }
+          : {}),
+      },
+    }),
+    delta: (p) =>
+      (p.candidates?.[0]?.content?.parts || [])
+        .filter((part) => !part.thought && typeof part.text === "string")
+        .map((part) => part.text)
+        .join(""),
+    done: (p) => p.candidates?.[0]?.finishReason === "STOP",
+    terminal: (p) => p.candidates?.[0]?.finishReason === "STOP",
   },
 };
 async function checkedFetch(fetchImpl, url, options) {
+  options.signal?.throwIfAborted();
   const response = await fetchImpl(url, { ...options, redirect: "error" });
   if (!response.ok) {
-    await response.body?.cancel().catch(() => {});
-    fail(
-      `AI: Provider returned HTTP ${response.status}. ${response.status === 401 || response.status === 403 ? "Check your API key and access." : response.status === 429 ? "Rate limit or quota reached; retry later." : "Check the endpoint, model and provider availability."}`,
-    );
+    let code = "";
+    try {
+      const body = JSON.parse(await readBounded(response, 32768));
+      code = body.error?.code || body.error?.type || body.error?.status || "";
+    } catch {}
+    const modelError = [
+      "model_not_found",
+      "model_not_available",
+      "model_deprecated",
+      "unsupported_model",
+      "model_not_supported",
+    ].includes(code);
+    const explanation =
+      modelError || response.status === 404
+        ? "The model or API route is unavailable, retired, or inaccessible to this account. Refresh the model list and check the endpoint."
+        : response.status === 401
+          ? "The API key is missing or invalid. Check the key for this provider and region."
+          : response.status === 403
+            ? "This account or key cannot access the selected model, workspace or region."
+            : response.status === 402
+              ? "The provider balance is insufficient. Check your API billing."
+              : response.status === 429
+                ? "Rate limit or quota reached. Check quota or retry later."
+                : response.status === 400
+                  ? "The provider rejected the model ID or request parameters. Choose an available chat model and check the endpoint."
+                  : "Check the endpoint, model and provider availability.";
+    fail(`AI: Provider returned HTTP ${response.status}. ${explanation}`);
   }
   return response;
 }
@@ -304,14 +415,21 @@ async function streamCompletion(
   fetchImpl = fetch,
 ) {
   if (!settings.model) fail("AI: Choose a model in AI / Models first.");
-  const adapter = providers[settings.provider];
+  if (!settings.endpoint) fail("AI: Configure an API endpoint first.");
+  const adapter = adapters[getProvider(settings.provider).protocol];
+  const route =
+    typeof adapter.route === "function"
+      ? adapter.route(settings)
+      : adapter.route;
   const response = await checkedFetch(
     fetchImpl,
-    `${settings.endpoint}/${adapter.route}`,
+    `${settings.endpoint}/${route}`,
     {
       method: "POST",
       headers: headersFor(settings, key),
-      body: JSON.stringify(adapter.body(settings, messagesFor(request))),
+      body: JSON.stringify(
+        adapter.body(settings, messagesFor(request), request),
+      ),
       signal,
     },
   );
@@ -324,6 +442,7 @@ async function streamCompletion(
     complete = false,
     terminal = false;
   function frame(value) {
+    signal?.throwIfAborted();
     const data = value
       .split(/\r?\n/)
       .filter((l) => l.startsWith("data:"))
@@ -349,14 +468,22 @@ async function streamCompletion(
       ["length", "content_filter"].includes(
         parsed.choices?.[0]?.finish_reason,
       ) ||
-      parsed.delta?.stop_reason === "max_tokens"
+      parsed.delta?.stop_reason === "max_tokens" ||
+      parsed.candidates?.[0]?.finishReason === "MAX_TOKENS"
     )
       fail(
         "AI: Response was truncated. Increase the output limit or review a shorter selection.",
       );
+    if (
+      parsed.promptFeedback?.blockReason ||
+      (parsed.candidates?.[0]?.finishReason &&
+        parsed.candidates[0].finishReason !== "STOP")
+    )
+      fail(
+        "AI: The provider could not complete this response. It may have been blocked by the model's content policy. Try a different selection or model.",
+      );
     complete ||= adapter.done(parsed);
-    terminal ||=
-      settings.provider === "anthropic" && parsed.type === "message_stop";
+    terminal ||= adapter.terminal(parsed);
     const delta = adapter.delta(parsed);
     if (typeof delta !== "string") fail("AI: Unexpected response content.");
     if (delta) {
@@ -396,24 +523,118 @@ async function streamCompletion(
   }
 }
 async function listModels(settings, key, signal, fetchImpl = fetch) {
-  const response = await checkedFetch(
-    fetchImpl,
-    `${settings.endpoint}/models`,
-    { headers: headersFor(settings, key), signal },
-  );
-  let result;
-  try {
-    result = JSON.parse(await readBounded(response));
-  } catch (error) {
-    if (error instanceof AIError) throw error;
-    fail("AI: Invalid model list from provider.");
+  if (!settings.endpoint) fail("AI: Configure an API endpoint first.");
+  const definition = getProvider(settings.provider);
+  const models = new Map(),
+    seen = new Set();
+  let cursor = "";
+  for (let page = 0; page < 20 && models.size < 1000; page++) {
+    let url = `${settings.endpoint}/models`;
+    if (definition.protocol === "gemini") {
+      url +=
+        "?pageSize=1000" +
+        (cursor ? `&pageToken=${encodeURIComponent(cursor)}` : "");
+    } else if (definition.protocol === "anthropic") {
+      url +=
+        "?limit=1000" +
+        (cursor ? `&after_id=${encodeURIComponent(cursor)}` : "");
+    } else if (
+      settings.provider === "qwen" &&
+      /\/compatible-mode\/v1$/.test(settings.endpoint)
+    ) {
+      url =
+        settings.endpoint.replace(/\/compatible-mode\/v1$/, "/api/v1/models") +
+        `?capabilities=TG&page_no=${page + 1}&page_size=100`;
+    }
+    const response = await checkedFetch(fetchImpl, url, {
+      headers: headersFor(settings, key),
+      signal,
+    });
+    let result;
+    try {
+      result = JSON.parse(await readBounded(response));
+    } catch (error) {
+      if (error instanceof AIError) throw error;
+      fail("AI: Invalid model list from provider.");
+    }
+    const data =
+      definition.protocol === "gemini"
+        ? result.models
+        : settings.provider === "qwen" && result.output
+          ? result.output.models
+          : Array.isArray(result)
+            ? result
+            : result.data;
+    if (!Array.isArray(data)) fail("AI: Provider did not return a model list.");
+    for (const model of data) {
+      if (
+        !model ||
+        model.lifecycle === "retired" ||
+        model.active === false ||
+        model.capabilities?.completion_chat === false
+      )
+        continue;
+      if (
+        definition.protocol === "gemini" &&
+        (!Array.isArray(model.supportedGenerationMethods) ||
+          !model.supportedGenerationMethods.includes("generateContent"))
+      )
+        continue;
+      const id =
+        definition.protocol === "gemini"
+          ? model.name?.replace(/^models\//, "")
+          : model.id || model.model || model.name;
+      if (
+        typeof id !== "string" ||
+        !id.trim() ||
+        id.length > 200 ||
+        /[\r\n\0]/.test(id)
+      )
+        continue;
+      if (
+        ["openai", "groq", "xai"].includes(settings.provider) &&
+        (/(?:embedding|moderation|whisper|(?:^|[-/])tts(?:[-/]|$)|dall-e|sora|realtime|transcrib|(?:^|[-/])audio(?:[-/]|$)|(?:^|[-/])image(?:[-/]|$)|(?:^|[-/])video(?:[-/]|$)|orpheus|^babbage|^davinci|^text-)/i.test(
+          id,
+        ) ||
+          (Array.isArray(model.output_modalities) &&
+            !model.output_modalities.includes("text")))
+      )
+        continue;
+      let label =
+        model.displayName ||
+        model.display_name ||
+        (settings.provider === "qwen" ? model.name : "");
+      if (
+        typeof label !== "string" ||
+        label.length > 200 ||
+        /[\r\n\0]/.test(label)
+      )
+        label = "";
+      if (model.lifecycle === "deprecated")
+        label = `${label || id} (deprecated)`;
+      models.set(id, label && label !== id ? { id, label } : { id });
+      if (models.size >= 1000) break;
+    }
+    let next =
+      definition.protocol === "gemini"
+        ? result.nextPageToken
+        : definition.protocol === "anthropic" && result.has_more
+          ? result.last_id
+          : "";
+    if (
+      settings.provider === "qwen" &&
+      result.output &&
+      Number(result.output.total) >
+        (page + 1) * (Number(result.output.page_size) || 100)
+    )
+      next = String(page + 1);
+    if (!next) break;
+    if (typeof next !== "string" || next.length > 2048 || seen.has(next))
+      fail("AI: Invalid model-list pagination from provider.");
+    seen.add(next);
+    cursor = next;
   }
-  if (!Array.isArray(result.data))
-    fail("AI: Provider did not return a model list.");
-  return result.data
-    .filter((m) => m && typeof m.id === "string" && m.id.length <= 200)
-    .slice(0, 1000)
-    .map((m) => ({ id: m.id }));
+  return [...models.values()];
 }
 function safeError(error, signal) {
   return signal?.aborted
@@ -434,4 +655,7 @@ module.exports = {
   listModels,
   safeError,
   messagesFor,
+  providerDefaults,
+  legacyProvider,
+  catalog,
 };

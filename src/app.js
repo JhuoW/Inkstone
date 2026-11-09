@@ -265,13 +265,19 @@ function shell() {
     t("本地文档", "Local document") +
     '</span><span>/</span><strong id="document-title">' +
     t("欢迎使用墨石", "Welcome to Inkstone") +
-    '</strong><span id="dirty-dot"></span></div><div id="save-state" role="status" aria-live="polite"></div><button class="command-launcher" data-command="commands" title="' +
+    '</strong><span id="dirty-dot"></span></div><div class="ai-entry-slot"><button class="ai-launcher" data-command="aiAssistant" aria-controls="ai-assistant-host" aria-expanded="false" title="' +
+    t("AI写作助手", "AI Writing Assistant") +
+    '">' +
+    icon.writingAssistant +
+    "<span>" +
+    t("AI写作助手", "AI Writing Assistant") +
+    '</span></button></div><div id="save-state" role="status" aria-live="polite"></div><div class="titlebar-actions"><button class="command-launcher" data-command="commands" title="' +
     t("全部命令", "All commands") +
     '">' +
     icon.command +
     "<span>" +
     t("命令", "Commands") +
-    "</span></button></header>" +
+    "</span></button></div></header>" +
     '<div class="toolbar"><div class="format-tools">' +
     [
       ["heading", "heading"],
@@ -308,7 +314,7 @@ function shell() {
     icon.code +
     "<span>" +
     t("源码", "Source") +
-    '</span></button><button data-command="aiAssistant" aria-controls="ai-assistant-host" aria-expanded="false">AI</button><button data-command="export">' +
+    '</span></button><button data-command="export">' +
     icon.export +
     "<span>" +
     t("导出", "Export") +
@@ -749,7 +755,7 @@ function makeAIAssistant() {
       );
       await updateSettings(patch);
     },
-    onConfigure: () => showAIModelSettings({ invoke, t }),
+    onConfigure: (options) => showAIModelSettings({ invoke, t, ...options }),
     locate: ({ from, to }) => {
       editor.setSelection({ anchor: from, head: to });
       editor.focus();
@@ -2188,7 +2194,7 @@ function commandList() {
     ["typewriter", "切换打字机模式", "Toggle typewriter"],
     ["fullscreen", "全屏", "Full screen"],
     ["sidebar", "切换侧边栏", "Toggle sidebar"],
-    ["aiAssistant", "切换 AI 助手", "Toggle AI Assistant"],
+    ["aiAssistant", "切换AI写作助手", "Toggle AI Writing Assistant"],
     ["aiModels", "AI / 模型设置", "AI / Models"],
     ["zoomIn", "放大", "Zoom in"],
     ["zoomOut", "缩小", "Zoom out"],

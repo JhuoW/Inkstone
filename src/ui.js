@@ -259,6 +259,9 @@ export const icon = {
   close: svg('<path d="m5 5 10 10M5 15 15 5"/>'),
   export: svg('<path d="M10 13V2m-4 4 4-4 4 4M4 11v6h12v-6"/>'),
   command: svg('<path d="m3 5 5 5-5 5M11 15h6"/>'),
+  writingAssistant: svg(
+    '<path d="m10 3 4 4-6 9-6 2 2-6Z M2 18l6-6"/><circle cx="8" cy="12" r="1"/><path d="m16 1 .8 2.2L19 4l-2.2.8L16 7l-.8-2.2L13 4l2.2-.8Z"/>',
+  ),
 };
 
 let activeMenu = null;

@@ -9,7 +9,7 @@
 <p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
 <p align="center"><a href="https://wei2hu0.github.io/inkstone-website/index.html">Visit the official website ↗</a></p>
 
-Inkstone is a local Markdown editor for focused writing. Your notes stay as ordinary files on your computer.
+Inkstone is an **AI-powered local Markdown editor** for focused writing, with LLM-based document analysis, scoring, and revision suggestions. Your notes stay as ordinary files on your computer.
 
 ![Inkstone — English interface](docs/images/main-en.png)
 
@@ -21,12 +21,18 @@ Run the installer to install or upgrade Inkstone. Choose it from **Open with** f
 
 ## Features
 
-- Optional [AI Writing Assistant](docs/AI_ASSISTANT.md): local models, OpenAI or Claude, document scoring, chat and reviewed revisions in a resizable bottom panel.
+- [AI Writing Assistant](docs/AI_ASSISTANT.md): 11 provider choices including local models, OpenAI, Claude, Gemini and DeepSeek; model discovery, document scoring, chat and reviewed revisions in a resizable bottom panel.
 - Live Markdown editing with a source mode that preserves selection and undo history.
 - Inline formulas, LaTeX math blocks, Mermaid diagrams, and editable tables.
 - Persistent code blocks with syntax highlighting and a language picker.
 - Local folders, search, autosave, recovery, and HTML/PDF export.
 - English and Simplified Chinese interfaces, light and dark themes.
+
+### AI Writing Assistant
+
+Analyze your document, view scores and suggestions, and review revisions before applying them.
+
+![AI Writing Assistant with document analysis, scoring and revision suggestions](docs/images/AI-demo-en.png)
 
 ### Math, as you write
 

@@ -1,18 +1,20 @@
 # AI Writing Assistant
 
-Use **AI** in the editor toolbar to open the bottom panel. Drag its top divider to resize it, or use the focused divider's arrow keys. The panel sits beneath the document, beside the file sidebar, and remembers its size and visibility.
+Use the highlighted **AI Writing Assistant** button (pen-nib icon), centered in the document titlebar's free space, to open the bottom panel. The Chinese interface labels it **AI写作助手**. The button's active appearance follows the panel's open state; click it again to collapse the panel. You can also press **Ctrl+Shift+P** and search for **AI**. Drag the panel's top divider to resize it, or use the focused divider's arrow keys. The panel sits beneath the document, beside the file sidebar, and remembers its size and visibility.
 
 ## Connect a model
 
-Open **Preferences → AI / Models** or the panel's model settings. Inkstone connects directly to the provider you choose; no Inkstone account or server is involved.
+Open **Preferences → AI / Models** or the panel's **Models** button. If you start analysis or chat without a configured model, **AI Model Setup** opens automatically. Test and save the configuration to continue the pending action. Cancel leaves your document and question untouched. If the document changes during setup, Inkstone asks you to start the action again instead of sending stale content.
 
-- **Local**: start Ollama or LM Studio with its OpenAI-compatible server enabled. Enter a loopback endpoint such as `http://localhost:11434/v1` (Ollama) or `http://localhost:1234/v1` (LM Studio), then select or type an installed model name. Download the model beforehand for offline use.
-- **OpenAI**: supply your API key and an available model ID.
-- **Claude**: supply your Anthropic API key and an available Claude model ID.
+- Choose **OpenAI**, **Anthropic (Claude)**, **Google (Gemini)**, **Alibaba Cloud (Qwen)**, **DeepSeek**, **xAI (Grok)**, **Mistral**, **Groq**, **Ollama**, **LM Studio**, or **Custom OpenAI-Compatible API**.
+- Known providers fill their official endpoint and a documented default model. Qwen also offers region selection; the region must match your API key. Endpoints remain editable for proxies or your own server. Each provider remembers its own saved endpoint, model and options.
+- Enter your API key where required. The model dropdown prefers models discovered from your account. Before authentication, or if discovery fails, documented reference models are explicitly labelled as a fallback; listing a model does not guarantee account access. You can always choose **Enter a custom model ID**.
+- For **Ollama** or **LM Studio**, start the local server. Inkstone discovers available models and selects one when none is configured. Their default addresses are `http://127.0.0.1:11434/v1` and `http://127.0.0.1:1234/v1`. Download/load a text model first; Inkstone does not download weights. Local inference can run fully offline.
+- **Test connection** tests the draft without saving it. **Test & save** (or **Save & continue**) verifies the selected model, encrypts any key, and saves. Cancelling setup does not commit its drafts. Advanced settings include request limits and an optional Anthropic workspace ID for organization-scoped keys.
 
-Save the configuration and test the connection. Model availability and API billing belong to your provider. Connection tests and model listing contact the selected provider; document content is sent only when you start analysis or chat. No document is automatically uploaded on opening the panel.
+Inkstone connects directly to your selected provider; no Inkstone account or server is involved. Model availability and API billing belong to that provider. Connection tests and model listing contact the selected endpoint; tests send only a short synthetic prompt. Document content is sent only when you start analysis or chat. Opening the panel does not upload the document. See the [official provider references](AI_PROVIDERS.md) for verified defaults, protocols and regional differences.
 
-Keys are encrypted through Electron's operating-system credential protection and kept separate from editor preferences. Existing keys are never returned to the renderer. On Linux, a working secure keyring is required to persist credentials; unencrypted fallback is refused. Local services without authentication need no stored key.
+Keys are encrypted through Electron's operating-system credential protection and kept separate from editor preferences. Credentials are scoped to a provider and exact normalized endpoint; changing an endpoint does not forward a key saved for another address. Existing keys are never returned to the renderer. On Linux, a working secure keyring is required to persist credentials; unencrypted fallback is refused. Local services without authentication need no stored key.
 
 ## Review and revise
 
@@ -24,8 +26,8 @@ Chat uses the current document or selection as context. Responses stream into th
 
 ## Privacy and limitations
 
-The main process handles network requests. Local endpoints are restricted to loopback; cloud endpoints use the official HTTPS service. The renderer has no access to stored keys, and responses are displayed as text rather than executable HTML. Requests, responses and history have explicit size limits and timeouts. Very long documents should be reviewed in selected sections.
+The main process handles network requests. Official cloud defaults use HTTPS; editable HTTP/HTTPS endpoints support local, proxy and self-hosted services. Redirects are refused. The renderer has no access to stored keys, and responses are displayed as text rather than executable HTML. Requests, responses and history have explicit size limits and timeouts. Very long documents should be reviewed in selected sections.
 
-Provider errors, unsupported models, malformed analysis, incomplete streams and connection loss are surfaced without automatically applying edits. Local model quality depends on the model and hardware. Tests use deterministic local servers; live paid OpenAI/Anthropic calls require the user's own credentials.
+Provider errors, unsupported models, malformed analysis, incomplete streams and connection loss are surfaced without automatically applying edits. Local model quality depends on the model and hardware. Automated protocol tests use deterministic local servers; real provider/model verification requires access and is reported separately from those tests.
 
 The in-editor review concept is inspired by [PaperDebugger](https://github.com/PaperDebugger/paperdebugger). The integration is implemented independently, using Inkstone's existing editor and Electron architecture.

@@ -19,6 +19,7 @@ export function createAIAssistant({
   let height =
     Number(initialLayout.height ?? initialLayout.aiPanelHeight) || 260;
   let active = null,
+    preparing = null,
     snapshot = null,
     history = [],
     disposed = false,
@@ -27,9 +28,9 @@ export function createAIAssistant({
     contextText,
     frame = 0;
   host.className = "ai-assistant";
-  host.setAttribute("aria-label", t("AI 写作助手", "AI Writing Assistant"));
+  host.setAttribute("aria-label", t("AI写作助手", "AI Writing Assistant"));
   host.innerHTML = `<div class="ai-resizer" role="separator" tabindex="0" aria-orientation="horizontal" aria-label="${t("AI 面板高度", "AI panel height")}"></div>
-    <header class="ai-header"><strong>AI Assistant</strong><span class="ai-model-label">${t("按需分析当前文档", "Review the current document on demand")}</span><button type="button" data-ai-clear-chat>${t("清空对话", "Clear chat")}</button><button type="button" data-ai-configure>${t("模型", "Models")}</button><button type="button" data-ai-close class="icon-button" aria-label="${t("收起 AI 面板", "Hide AI panel")}">${icon.close}</button></header>
+    <header class="ai-header"><strong>${t("AI写作助手", "AI Writing Assistant")}</strong><span class="ai-model-label">${t("按需分析当前文档", "Review the current document on demand")}</span><button type="button" data-ai-clear-chat>${t("清空对话", "Clear chat")}</button><button type="button" data-ai-configure>${t("模型", "Models")}</button><button type="button" data-ai-close class="icon-button" aria-label="${t("收起 AI 面板", "Hide AI panel")}">${icon.close}</button></header>
     <div class="ai-controls"><label><span class="sr-only">${t("分析范围", "Analysis scope")}</span><select data-ai-scope><option value="document">${t("整篇文档", "Whole document")}</option><option value="selection">${t("选中段落", "Selection")}</option></select></label><label><span class="sr-only">${t("文档类型", "Document type")}</span><select data-ai-type><option value="general">${t("一般写作", "General writing")}</option><option value="academic">${t("学术论文", "Academic paper")}</option><option value="technical">${t("技术文档", "Technical document")}</option></select></label><button type="button" data-ai-analyze class="primary">${t("分析与评分", "Analyze & score")}</button><button type="button" data-ai-cancel hidden>${t("取消", "Cancel")}</button><span class="ai-status" role="status" aria-live="polite"></span></div>
     <div class="ai-content" tabindex="0"><p class="ai-empty">${t("分析结构、逻辑与表达，或就当前文档提问。建议需由你确认后应用；AI 可能出错，请核实事实与引用。", "Review structure, reasoning and clarity, or ask about your document. You decide which revisions to apply. AI can make mistakes; verify facts and references.")}</p><div class="ai-results"></div><div class="ai-chat-log"></div><pre class="ai-stream" hidden></pre></div>
     <form class="ai-chat-form"><label class="sr-only" for="ai-chat-question">${t("询问当前文档", "Ask about this document")}</label><textarea id="ai-chat-question" rows="1" maxlength="8000" placeholder="${t("询问当前文档…", "Ask about this document…")}"></textarea><button type="submit">${t("发送", "Send")}</button></form>`;
@@ -67,6 +68,7 @@ export function createAIAssistant({
     host.setAttribute("aria-busy", String(value));
   }
   function cancel(note = t("已取消", "Cancelled")) {
+    preparing = null;
     const request = active;
     active = null;
     if (request) void invoke("aiCancel", { id: request.id }).catch(() => {});
@@ -101,8 +103,11 @@ export function createAIAssistant({
     void invoke("aiGetSettings")
       .then((settings) => {
         if (disposed) return;
+        const provider = settings.providers?.find(
+          (item) => item.id === settings.provider,
+        );
         $(".ai-model-label").textContent =
-          `${settings.provider === "local" ? t("本地", "Local") : settings.provider === "anthropic" ? "Claude" : "OpenAI"} · ${settings.model || t("未配置模型", "No model configured")}`;
+          `${provider?.label || (settings.provider === "local" ? t("本地", "Local") : settings.provider)} · ${settings.model || t("未配置模型", "No model configured")}`;
       })
       .catch(() => {});
   }
@@ -273,10 +278,10 @@ export function createAIAssistant({
     }
   }
   async function start(task, question = "") {
-    if (active || disposed) return;
+    if (active || preparing || disposed) return false;
     updateContext();
-    updateModelLabel();
     const context = current();
+    const documentType = $("[data-ai-type]").value;
     const selection = $("[data-ai-scope]").value === "selection";
     const from = selection
       ? Math.min(context.selection.from, context.selection.to)
@@ -302,6 +307,50 @@ export function createAIAssistant({
       );
       return;
     }
+    const pending = {};
+    preparing = pending;
+    $("[data-ai-analyze]").disabled = true;
+    $(".ai-chat-form button").disabled = true;
+    try {
+      const settings = await invoke("aiGetSettings");
+      if (disposed || preparing !== pending) return false;
+      if (!settings.ready) {
+        status(
+          t(
+            "配置模型后将继续当前操作",
+            "Set up a model to continue this request",
+          ),
+        );
+        const configured = await configure({ required: true });
+        if (disposed || preparing !== pending) return false;
+        if (!configured) {
+          status("");
+          return false;
+        }
+      }
+      if (
+        current().identity !== context.identity ||
+        current().text !== context.text
+      ) {
+        status(
+          t(
+            "文档已变化，请重新发起分析或提问",
+            "The document changed. Start the analysis or question again.",
+          ),
+        );
+        return false;
+      }
+    } catch (error) {
+      if (!disposed && preparing === pending) showError(error);
+      return false;
+    } finally {
+      if (preparing === pending) {
+        preparing = null;
+        if (!disposed) busy(false);
+      }
+    }
+    if (disposed || !open) return false;
+    updateModelLabel();
     contextIdentity = context.identity;
     contextText = context.text;
     snapshot = {
@@ -325,7 +374,7 @@ export function createAIAssistant({
         id,
         task,
         text: snapshot.source,
-        documentType: $("[data-ai-type]").value,
+        documentType,
         locale: t("zh-CN", "en"),
         question,
         history: boundAIHistory(history),
@@ -337,7 +386,9 @@ export function createAIAssistant({
         $(".ai-stream").hidden = true;
         showError(error);
       }
+      return false;
     }
+    return true;
   }
   const unsubscribe = on("ai-response", (event) => {
     const request = active;
@@ -381,12 +432,14 @@ export function createAIAssistant({
       showError(error);
     }
   });
-  function configure() {
-    return onConfigure ? onConfigure() : showAIModelSettings({ invoke, t });
+  function configure(options = {}) {
+    return onConfigure
+      ? onConfigure(options)
+      : showAIModelSettings({ invoke, t, ...options });
   }
   $("[data-ai-configure]").onclick = () => {
     cancel();
-    Promise.resolve(configure()).catch(showError);
+    Promise.resolve(configure()).then(updateModelLabel).catch(showError);
   };
   $("[data-ai-clear-chat]").onclick = () => {
     if (active?.task === "chat") cancel();
@@ -397,12 +450,14 @@ export function createAIAssistant({
   $("[data-ai-close]").onclick = () => setOpen(false);
   $("[data-ai-analyze]").onclick = () => void start("analysis");
   $("[data-ai-cancel]").onclick = () => cancel();
-  $(".ai-chat-form").onsubmit = (event) => {
+  $(".ai-chat-form").onsubmit = async (event) => {
     event.preventDefault();
     const question = $("textarea").value.trim();
-    if (!question || active) return;
-    void start("chat", question);
-    if (active) $("textarea").value = "";
+    if (!question || active || preparing) return;
+    if (await start("chat", question)) {
+      if (!disposed && $("textarea").value.trim() === question)
+        $("textarea").value = "";
+    }
   };
   $("textarea").onkeydown = (event) => {
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
@@ -461,7 +516,7 @@ export function createAIAssistant({
     setOpen,
     updateContext,
     configure,
-    getState: () => ({ open, height, busy: Boolean(active) }),
+    getState: () => ({ open, height, busy: Boolean(active || preparing) }),
     destroy() {
       cancel();
       disposed = true;

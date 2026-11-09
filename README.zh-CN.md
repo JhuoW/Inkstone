@@ -9,7 +9,7 @@
 <p align="center"><a href="README.md">English</a> · 简体中文</p>
 <p align="center"><a href="https://wei2hu0.github.io/inkstone-website/zh.html">访问墨石官网 ↗</a></p>
 
-墨石是一款专注写作的本地 Markdown 编辑器。你的笔记始终以普通文件保存在自己的电脑上。
+墨石是一款 **AI 大模型驱动的本地 Markdown 编辑器**，支持专注写作、智能文档分析、评分与修改建议。你的笔记始终以普通文件保存在自己的电脑上。
 
 ![墨石 — 中文界面](docs/images/main-zh-CN.png)
 
@@ -21,12 +21,18 @@
 
 ## 功能
 
-- 可选的 [AI 写作助手](docs/AI_ASSISTANT.md)：连接本地模型、OpenAI 或 Claude，在可调整高度的底部面板中分析评分、对话，并确认应用修改建议。
+- [AI写作助手](docs/AI_ASSISTANT.md)：支持本地模型、OpenAI、Claude、Gemini、DeepSeek 等 11 种接入，自动发现模型，在底部面板中分析评分、对话，并确认应用修改建议。
 - Markdown 即时编辑与源码模式，保留选区和撤销记录。
 - 行内公式、LaTeX 公式块、Mermaid 图表与可直接编辑的表格。
 - 持续显示的代码块，支持语法高亮与语言下拉选择。
 - 本地文件夹、搜索、自动保存、恢复及 HTML/PDF 导出。
 - 简体中文和英文界面，浅色与深色主题。
+
+### AI写作助手
+
+分析文档，查看评分与修改建议，确认后再应用修改。
+
+![AI写作助手的文档分析、评分与修改建议](docs/images/AI-demo-cn.png)
 
 ### 让公式融入文字
 

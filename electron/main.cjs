@@ -1981,10 +1981,10 @@ const ai = () =>
     safeStorage,
   }));
 const handlers = {
-  aiGetSettings: () => ai().getSettings(),
+  aiGetSettings: (payload) => ai().getSettings(payload),
   aiSaveSettings: (payload) => ai().saveSettings(payload),
-  aiListModels: (_payload, win) => ai().models(win.id),
-  aiTestConnection: (_payload, win) => ai().test(win.id),
+  aiListModels: (payload, win) => ai().models(win.id, payload),
+  aiTestConnection: (payload, win) => ai().test(win.id, payload),
   aiStart: (payload, win) =>
     ai().start(win.id, payload, (event) => send(win, "ai-response", event)),
   aiCancel: (payload, win) => ai().cancel(win.id, payload.id),

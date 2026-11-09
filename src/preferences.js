@@ -99,11 +99,11 @@ export function showPreferences(
   ];
   const panes = {
     ai: group(
-      t("AI 写作助手", "AI Writing Assistant"),
+      t("AI写作助手", "AI Writing Assistant"),
       hint(
         t(
-          "使用本地模型，或配置自己的 OpenAI / Anthropic 密钥。仅在主动分析或对话时发送当前文档。",
-          "Use a local model or your own OpenAI / Anthropic key. Document content is sent only when you analyze or chat.",
+          "连接本地模型，或使用自己的 OpenAI、Claude、Gemini、DeepSeek 等服务商密钥。仅在主动分析或对话时发送当前文档。",
+          "Connect a local model or use your own key for OpenAI, Claude, Gemini, DeepSeek and other providers. Document content is sent only when you analyze or chat.",
         ),
       ) +
         `<button type="button" id="configure-ai-models">${t("配置模型", "Configure models")}</button>`,

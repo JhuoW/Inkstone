@@ -533,7 +533,8 @@ kbd {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
+  flex: 0 1 auto;
+  max-width: 42%;
   min-width: 0;
   font-size: 12px;
   white-space: nowrap;
@@ -561,6 +562,49 @@ kbd {
   font-size: 12px;
   color: var(--muted);
   flex-shrink: 0;
+}
+.titlebar-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 8px;
+}
+.ai-entry-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 0 auto;
+}
+.ai-launcher {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 7px;
+  padding: 5px 10px;
+  min-height: 30px;
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+.ai-launcher > svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.ai-launcher:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 12%, var(--accent-soft));
+  border-color: var(--accent);
+}
+.ai-launcher[aria-expanded="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--panel);
+}
+.ai-launcher[aria-expanded="true"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 88%, var(--text));
 }
 .command-launcher {
   display: inline-flex;
@@ -1468,12 +1512,51 @@ kbd {
   #dirty-dot {
     color: Highlight;
   }
+  .ai-launcher[aria-expanded="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
   .modal::backdrop {
     background: transparent;
   }
 }
 
 /* A wide user-sized sidebar can constrain the editor even on a large display. */
+@container editor-pane (max-width: 600px) {
+  .command-launcher span {
+    display: none;
+  }
+}
+@container editor-pane (max-width: 500px) {
+  .titlebar {
+    height: auto;
+    min-height: 44px;
+    flex-wrap: wrap;
+    padding: 6px 8px;
+    gap: 4px 8px;
+  }
+  .breadcrumb {
+    flex: 1;
+    max-width: none;
+  }
+  .ai-entry-slot {
+    order: 1;
+    flex-basis: calc(100% - 36px);
+  }
+  .titlebar-actions {
+    order: 1;
+    justify-content: flex-end;
+  }
+  .breadcrumb > span:first-child,
+  .breadcrumb > span:nth-child(2) {
+    display: none;
+  }
+  #save-state {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 @container editor-pane (max-width: 360px) {
   .toolbar {
     height: auto;

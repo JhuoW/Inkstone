@@ -15,11 +15,11 @@ The isolated, sandboxed renderer gets only `window.inkstone.invoke(method, paylo
 
 AI runs in the main process and never receives filesystem editing capabilities. The renderer must request explicit user confirmation and apply revisions through the editor's normal transaction API.
 
-- `aiGetSettings({})` returns provider, endpoint, model, temperature, maxTokens, timeoutMs, hasKey and secureStorageAvailable; never a saved key.
+- `aiGetSettings({provider?,endpoint?})` returns the active or requested safe configuration, readiness, `hasKey`, `secureStorageAvailable`, provider catalogue and per-provider profiles; never a saved key. Options include provider, endpoint, model, temperature, maxTokens, timeoutMs and an optional Anthropic workspace ID (`workspace`).
 - `aiSaveSettings({...settings,apiKey?,clearKey?})` validates configuration and stores credentials using OS encryption in the user-data directory, separate from ordinary preferences. An empty key preserves an existing credential; clearKey removes it. Linux basic_text fallback is refused.
-- `aiListModels({})` returns `[{id}]`; `aiTestConnection({})` makes a small streaming request to the selected model and returns `{ok,message}`.
+- `aiListModels({...draft})` returns `[{id,label?}]`; `aiTestConnection({...draft})` makes a small synthetic streaming request and returns `{ok,message}`. Both accept optional draft settings and `apiKey`/`clearKey` without saving them. Omit the draft to use the active saved profile. Model discovery handles Gemini/Anthropic pagination and provider-specific response formats.
 - `aiStart({id,task,text,documentType,locale,question?,history?})` starts one request for the calling window and returns `{id}`. Tasks are analysis/chat; document types are general/academic/technical. Text is limited to 200,000 characters. `ai-response` events contain `{id,type,text?,message?}`; delta.text is incremental and done.text is complete. Analysis completion is validated JSON with summary, overallScore, dimensions and exact-source suggestions.
-- `aiCancel({id?})` aborts only the caller's current operation. Windows closing or renderer crashes also abort requests. Local endpoints are loopback-only; online endpoints are fixed HTTPS URLs. Redirects are refused, streamed output is bounded and incomplete streams fail visibly.
+- `aiCancel({id?})` aborts only the caller's current operation. Windows closing or renderer crashes also abort requests. Endpoints are editable HTTP/HTTPS URLs with no embedded credentials, query or fragment. Credentials are scoped to provider and normalized endpoint, with safe migration from older profiles. Redirects are refused, streamed output is bounded and incomplete streams fail visibly.
 
 `aiPanelOpen` and `aiPanelHeight` are ordinary validated editor preferences. AI conversation and document text are not written to model configuration files.
 
