@@ -23,7 +23,14 @@ jobs:
           $version = node -p "require('./package.json').version"
           if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'Release tag does not match package.json' }
       - run: npm ci
-      - run: node node_modules/electron/install.js
+      - name: Download Electron with bounded retries
+        run: |
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            node node_modules/electron/install.js
+            if ($LASTEXITCODE -eq 0) { exit 0 }
+            if ($attempt -lt 3) { Start-Sleep -Seconds (10 * $attempt) }
+          }
+          exit 1
       - run: npm test
       - run: npm ci --prefix integrations/vscode
       - run: npm test --prefix integrations/vscode
@@ -96,7 +103,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node node_modules/electron/install.js
+      - name: Download Electron with bounded retries
+        run: |
+          for attempt in 1 2 3; do
+            if node node_modules/electron/install.js; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep "$((10 * attempt))"; fi
+          done
+          exit 1
       - run: npm test
       - run: npm run licenses
       - name: Build Linux packages with bounded download retries
