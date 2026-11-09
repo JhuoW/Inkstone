@@ -17,10 +17,7 @@
 
 截图直接使用 `webContents.capturePage()` 保存完整物理像素，避免 CDP 在缩放状态裁切窗口。150% 测试同时记录实际 CSS viewport：1280px 窗口对应约 853 CSS px、800px 窗口对应约 533 CSS px；亲看图片中 256 CSS px 侧栏变为 384 物理 px。
 
-- [150% / 1280×900 设置](../artifacts/ui-redesign/desktop-interactions/preferences-1280x900-zoom150-sidebar256.png)
-- [150% / 800×800 设置](../artifacts/ui-redesign/desktop-interactions/preferences-800x800-zoom150-sidebar256.png)
-- [720×500 / 侧栏 500 设置](../artifacts/ui-redesign/desktop-interactions/preferences-720x500-zoom100-sidebar500.png)
-- [明亮主题](../artifacts/ui-redesign/desktop-interactions/contrast-light.png)、[深色主题](../artifacts/ui-redesign/desktop-interactions/contrast-dark.png)
+当时的截图（150% / 1280×900 与 800×800 设置、720×500 / 侧栏 500 设置、明亮与深色主题对比）已在 0.9.0 清理历史截图时移出仓库，需要时可从 Git 历史中取回；结构化几何与对比度数据仍保留在上面的 results.json 中。
 
 ## 运行与验证边界
 

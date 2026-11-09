@@ -10,6 +10,10 @@ playwright-report/
 # Validation logs referenced by the delivery documentation
 !artifacts/**/*.log
 
+# Screenshots written by local test runs are not kept. The images referenced by
+# current documentation, promotional renders and website sources stay tracked.
+artifacts/**/*.png
+
 # Generated Python caches
 __pycache__/
 *.pyc

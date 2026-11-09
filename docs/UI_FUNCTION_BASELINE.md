@@ -64,15 +64,17 @@ spellcheck, strictMarkdown, tabSize, theme, typewriterMode, wheelZoom
 
 ## 截图检查表
 
-| 场景 | 改版前实物 | 改版后检查重点 |
-| --- | --- | --- |
-| 英语明亮写作与文件树 | [1280](../artifacts/ui-redesign/before/writing-light-1280.png) / [800](../artifacts/ui-redesign/before/writing-light-800.png) | 标题/导航/正文层次；无需大面积空白或卡片；全部控件可访问 |
-| 深色写作 | [1280](../artifacts/ui-redesign/before/writing-dark-1280.png) / [800](../artifacts/ui-redesign/before/writing-dark-800.png) | 文本对比、选区、文件树当前项、公式与代码一致 |
-| 中文与缩放 | [中文](../artifacts/ui-redesign/before/writing-zh-1280.png) / [150%](../artifacts/ui-redesign/before/writing-light-zoom150.png) | 标签换行、控件溢出、中文回退；不当作Windows原生DPI证据 |
-| 设置 | [明亮](../artifacts/ui-redesign/before/preferences-light-1280.png) / [深色](../artifacts/ui-redesign/before/preferences-dark-1280.png) / [800](../artifacts/ui-redesign/before/preferences-light-800.png) | 分类、字段密度、滚动区域、固定动作区与完整字段 |
-| 导出与命令面板 | [导出](../artifacts/ui-redesign/before/export-light-1280.png) / [命令](../artifacts/ui-redesign/before/commands-light-1280.png) | 格式/参数层级、键盘操作、busy及反馈、所有命令保持可发现 |
-| 大纲与正文源码 | [大纲](../artifacts/ui-redesign/before/outline-light-1280.png) / [源码](../artifacts/ui-redesign/before/source-light-1280.png) | 结构树当前项、光标、选区、源码排版和模式稳定 |
-| 公式及结构内容 | [公式编辑](../artifacts/ui-redesign/before/math-edit-light-1280.png) / [数学、图表、图片](../artifacts/ui-redesign/before/structures-light-1280.png) | 数学命中范围、同区编辑、错误、图表与资源排版不退化 |
+改版前（0.3）的实物截图已在 0.9.0 清理历史截图时移出仓库，需要时可从 Git 历史中取回。检查重点保留如下：
+
+| 场景 | 改版后检查重点 |
+| --- | --- |
+| 英语明亮写作与文件树（1280 / 800） | 标题/导航/正文层次；无需大面积空白或卡片；全部控件可访问 |
+| 深色写作（1280 / 800） | 文本对比、选区、文件树当前项、公式与代码一致 |
+| 中文与缩放（中文 / 150%） | 标签换行、控件溢出、中文回退；不当作Windows原生DPI证据 |
+| 设置（明亮 / 深色 / 800） | 分类、字段密度、滚动区域、固定动作区与完整字段 |
+| 导出与命令面板 | 格式/参数层级、键盘操作、busy及反馈、所有命令保持可发现 |
+| 大纲与正文源码 | 结构树当前项、光标、选区、源码排版和模式稳定 |
+| 公式及结构内容（公式编辑 / 数学、图表、图片） | 数学命中范围、同区编辑、错误、图表与资源排版不退化 |
 
 实看基线发现：正文块间距较松、同一视图出现外层和编辑区滚动条、设置背板使用模糊效果、工具栏字形符号不统一。这些是可调整的视觉/布局问题，不构成删除命令或改变源文模型的理由。
 

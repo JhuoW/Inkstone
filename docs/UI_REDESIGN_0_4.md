@@ -23,17 +23,7 @@
 
 截图由真实Electron应用生成。before来自修改前0.3应用；after来自0.4当前构建，同一文稿、同一尺寸和设置。不是概念稿。
 
-| 场景 | 改版前 | 改版后 |
-| --- | --- | --- |
-| 明亮写作与文件树 | [before](../artifacts/ui-redesign/before/writing-light-1280.png) | [after](../artifacts/ui-redesign/after/writing-light-1280.png) |
-| 深色800px窗口 | [before](../artifacts/ui-redesign/before/writing-dark-800.png) | [after](../artifacts/ui-redesign/after/writing-dark-800.png) |
-| 偏好设置 | [before](../artifacts/ui-redesign/before/preferences-light-1280.png) | [after](../artifacts/ui-redesign/after/preferences-light-1280.png) |
-| 导出 | [before](../artifacts/ui-redesign/before/export-light-1280.png) | [after](../artifacts/ui-redesign/after/export-light-1280.png) |
-| 命令面板 | [before](../artifacts/ui-redesign/before/commands-light-1280.png) | [after](../artifacts/ui-redesign/after/commands-light-1280.png) |
-| 公式原位编辑 | [before](../artifacts/ui-redesign/before/math-edit-light-1280.png) | [after](../artifacts/ui-redesign/after/math-edit-light-1280.png) |
-| 150%界面缩放 | [before](../artifacts/ui-redesign/before/writing-light-zoom150.png) | [after](../artifacts/ui-redesign/after/writing-light-zoom150.png) |
-
-完整截图目录还包含中文、源码、大纲及结构内容。`capturePage`等待缩放布局和绘制后取得完整窗口像素，并记录CSS视口、DPR与实际zoomFactor；不再使用会裁截Electron缩放截图的CDP默认截图范围。150%是Electron界面缩放，不冒充Windows原生DPI测试。
+0.4 版本的 before/after 截图（明亮写作与文件树、深色800px窗口、偏好设置、导出、命令面板、公式原位编辑、150%界面缩放，以及中文、源码、大纲及结构内容）已在 0.9.0 清理历史截图时移出仓库，需要时可从 Git 历史中取回；当前界面以 [README](../README.md) 截图为准。`capturePage`等待缩放布局和绘制后取得完整窗口像素，并记录CSS视口、DPR与实际zoomFactor；不再使用会裁截Electron缩放截图的CDP默认截图范围。150%是Electron界面缩放，不冒充Windows原生DPI测试。
 
 ## 功能保留与回归
 
