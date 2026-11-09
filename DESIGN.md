@@ -61,7 +61,7 @@ Baseline snapshots precede code changes. The command, preference, export and nat
 
 ## Sources and application
 
-- [Impeccable](https://github.com/pbakaus/impeccable), installed `/home/zhuowei/.codex/skills/impeccable`: Operate/Read guidance and craft floor. Its context engine download failed; repository context was inspected directly. No design hook or live overlay was installed.
+- [Impeccable](https://github.com/pbakaus/impeccable): Operate/Read guidance and craft floor. Its context engine download failed; repository context was inspected directly. No design hook or live overlay was installed.
 - [Anthropic Frontend Design](https://github.com/anthropics/skills/tree/main/skills/frontend-design): explicit subject, deliberate hierarchy and self-critique. Marketing-page guidance does not override desktop functionality.
 - [Desktop UI Design](https://github.com/dasien/ClaudeMultiAgentTemplate/tree/main/templates/.claude/skills/desktop-ui-design): conventional menus, controls, shortcuts and feedback.
 - [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines/blob/main/command.md): accessibility, focus, forms, overflow and theme review for the Electron renderer. Web URL state, CDN preload and mobile landing-page requirements are not added to this local desktop application.

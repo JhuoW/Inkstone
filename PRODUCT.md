@@ -10,11 +10,11 @@ The renderer uses web technologies inside Electron. The shipped product is a Win
 
 ## Users and purpose
 
-The explicit brief is daily Markdown writing, including Chinese and English, with a quiet editor comparable in interaction quality to established desktop tools. Further demographic or commercial positioning is unspecified.
+The explicit brief is daily Markdown writing, including Chinese and English, with a quiet editor comparable in interaction quality to established desktop tools. Inkstone 0.8.0 adds an optional AI Writing Assistant for document review, scoring, chat and reviewed revisions. Further demographic or commercial positioning is unspecified.
 
 ## Operating context
 
-People open local files and folders, write in Live Preview or source mode, navigate a tree/outline/search, edit formulas and tables, and export locally. Core writing works offline. No account, cloud sync, image upload, or service integration is part of the product. Images use local references or explicit URLs.
+People open local files and folders, write in Live Preview or source mode, navigate a tree/outline/search, edit formulas and tables, and export locally. Core writing works offline and needs no account. Documents stay ordinary local files; there is no cloud sync or image uploader. Images use local references or explicit URLs. The AI Writing Assistant connects directly to a model service the user configures (cloud providers or local servers such as Ollama and LM Studio) and sends content only when the user starts an analysis or chat.
 
 ## Capabilities and constraints
 
@@ -26,7 +26,7 @@ Inkstone / 墨石, original supplied artwork in `inkstone-brand`, and the docume
 
 ## Evidence
 
-Version 0.3 baseline: 90 unit tests, 21 editor browser groups, 10 formula groups, 9 UI groups and 67 Electron cases. Windows packages have been cross-built and statically checked; Linux and Wine evidence does not constitute native Windows acceptance. Current detailed functionality and limitations remain in `FEATURE_PARITY.md`.
+Current version: 0.9.0. Its release record lists 207 unit tests, 145 Electron end-to-end cases (21 for the AI assistant) and live Gemini checks passing on Windows; see `docs/releases/v0.9.0.md`. Earlier baselines (for example 0.3: 90 unit tests, 21 editor browser groups, 10 formula groups, 9 UI groups and 67 Electron cases) remain historical records. Linux and Wine evidence does not constitute native Windows acceptance. Detailed functionality and limitations remain in `FEATURE_PARITY.md`.
 
 ## Product principles
 

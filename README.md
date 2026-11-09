@@ -61,7 +61,7 @@ npm ci
 npm start
 ```
 
-Use `npm test` for unit tests and `npm run dist:win` to build the Windows installer. See [validation notes](docs/RELEASE_0_6_4.md) and the [Electron API](electron/API.md) for details.
+Use `npm test` for unit tests and `npm run dist:win` to build the Windows installer. See the [0.9.0 release notes](docs/releases/v0.9.0.md), [architecture](docs/ARCHITECTURE.md) and the [Electron API](electron/API.md) for details.
 
 ## License & contributor
 

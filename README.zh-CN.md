@@ -61,7 +61,7 @@ npm ci
 npm start
 ```
 
-使用 `npm test` 运行单元测试，`npm run dist:win` 构建 Windows 安装程序。详细信息见[验证记录](docs/RELEASE_0_6_4.md)和 [Electron API](electron/API.md)。
+使用 `npm test` 运行单元测试，`npm run dist:win` 构建 Windows 安装程序。详细信息见 [0.9.0 发布记录](docs/releases/v0.9.0.md)、[架构说明](docs/ARCHITECTURE.md)和 [Electron API](electron/API.md)。
 
 ## 许可证与贡献者
 

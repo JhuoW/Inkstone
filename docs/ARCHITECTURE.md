@@ -1,8 +1,8 @@
-# Inkstone 0.3 架构与可靠性边界
+# Inkstone 0.9.0 架构与可靠性边界
 
 本文描述当前代码路径与设计取舍，不代替运行验收。实现状态见 [功能矩阵](../FEATURE_PARITY.md)，跨平台实际结果见 [验收记录](ACCEPTANCE.md)。
 
-本版只面向Windows与Linux，Windows为主平台。账户、云同步、图片上传与上传器协议均不在产品中；相关菜单、设置、桥接和检测已删除。文稿引用的远程资源读取及用户明确下载图片仍可访问相应地址。
+本版只面向Windows与Linux，Windows为主平台。Inkstone 不需要账户，也不提供云同步或图片上传器。文稿引用的远程资源读取、用户明确下载图片，以及用户主动发起的 [AI 写作助手](AI_ASSISTANT.md) 请求会访问相应地址；AI 请求由主进程直接发往用户选择的模型服务（云端或本地），不经过 Inkstone 服务器。
 
 ## 数据流
 
@@ -80,6 +80,10 @@ BOM和编码由文件层保留。默认严格UTF-8；用户可明确指定UTF-16
 
 英语拼写词典随程序本地分发：Chromium固定版本的en-US Hunspell词典、SHA及来源保存在 `electron/dictionaries/provenance.json`。窗口创建前预装本地缓存，词典请求仅使用 `inkstone-dictionary://local/`；不存在的语言返回缺失，不回退CDN下载。真实新用户会话的原生拼写建议与外部HTTP请求为0已验。词库完整SCOWL/Ispell/WordNet许可保存在同目录并收入第三方通知。
 
+## AI 写作助手
+
+`electron/ai-service.cjs` 与 `electron/ai-provider.cjs` 在主进程中发起模型请求；渲染进程只通过白名单 IPC 提交文本并接收流式结果，拿不到 API Key。Key 经操作系统凭据保护（Electron `safeStorage`）加密后按“提供商 + 端点”分别保存。分析请求优先使用各服务的结构化输出（OpenAI 兼容服务的 `response_format`、Anthropic 的强制工具调用、Gemini 的 `responseSchema`）；服务拒绝该参数时自动退回纯提示词 JSON，主进程随后按同一 schema 校验结果。修改建议在渲染端以 CodeMirror 变更集映射到当前文档位置，应用时再次核对原文，详见 [AI 写作助手](AI_ASSISTANT.md)。
+
 ## 外部工具与导出
 
 本地Pandoc通过 `execFile` 及参数数组调用，不把用户文件路径拼接到 shell 命令。工具检测独立于执行，缺失、版本错误、超时和输出不合法均须明确报错。Pandoc 支持的输入和输出集合不同，不能仅根据扩展名显示双向支持。
@@ -102,7 +106,7 @@ PNG 高度有限；超长文档需要清晰失败信息或分段方案。音视�
 
 ## 许可证与供应链策略
 
-应用源码使用 MIT。直接依赖选择成熟开放源码组件；典型许可证包括 CodeMirror/Lezer、markdown-it 及多数插件、KaTeX、Mermaid、Vite、electron-builder 的 MIT，highlight.js 的 BSD-3-Clause，以及 DOMPurify 的 Apache-2.0/MPL-2.0 双许可。传统图表的 flowchart.js/Raphael/Underscore 为 MIT，vendored js-sequence-diagrams 为 BSD-2-Clause，固定revision、原文件SHA-256和改动说明在 `src/vendor/sequence-diagrams/README.md`，原许可一并保留。MathJax3为Apache-2.0许可，随输出打包保留许可。ZenUML插件1.0.1与锁定core3.50.1均MIT，以本地包加载。最终以锁文件对应版本的许可证及 `THIRD_PARTY_NOTICES.md` 为准，不能只依靠包名推断所有传递依赖许可。
+Inkstone 自身源码（包括 `integrations/vscode` 扩展）统一使用 AGPL-3.0-only，完整条款见仓库根目录 `LICENSE`。第三方依赖保留各自许可证。直接依赖选择成熟开放源码组件；典型许可证包括 CodeMirror/Lezer、markdown-it 及多数插件、KaTeX、Mermaid、Vite、electron-builder 的 MIT，highlight.js 的 BSD-3-Clause，以及 DOMPurify 的 Apache-2.0/MPL-2.0 双许可。传统图表的 flowchart.js/Raphael/Underscore 为 MIT，vendored js-sequence-diagrams 为 BSD-2-Clause，固定revision、原文件SHA-256和改动说明在 `src/vendor/sequence-diagrams/README.md`，原许可一并保留。MathJax3为Apache-2.0许可，随输出打包保留许可。ZenUML插件1.0.1与锁定core3.50.1均MIT，以本地包加载。最终以锁文件对应版本的许可证及 `THIRD_PARTY_NOTICES.md` 为准，不能只依靠包名推断所有传递依赖许可。
 
 Electron 发行件还包含 Chromium、Node 等组件及各自 notices，应随发行包保留。Pandoc为可选外部程序，不把其代码并入应用；用户安装这些程序时遵守其许可证。系统字体不随本项目复制；KaTeX 等随包字体必须保留对应许可。锁文件用于复现，后续版本升级应重新审核许可证和运行回归测试。
 
