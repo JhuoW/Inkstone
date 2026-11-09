@@ -26,7 +26,7 @@ Inkstone / 墨石, original supplied artwork in `inkstone-brand`, and the docume
 
 ## Evidence
 
-Current version: 0.9.1. Its release record lists 210 unit tests and 156 Electron end-to-end cases passing on Windows; see `docs/releases/v0.9.1.md`. Earlier baselines (for example 0.3: 90 unit tests, 21 editor browser groups, 10 formula groups, 9 UI groups and 67 Electron cases) remain historical records. Linux and Wine evidence does not constitute native Windows acceptance. Detailed functionality and limitations remain in `FEATURE_PARITY.md`.
+Current version: 0.9.2. Its release record lists 210 unit tests and 158 Electron end-to-end cases passing on Windows; see `docs/releases/v0.9.2.md`. Earlier baselines (for example 0.3: 90 unit tests, 21 editor browser groups, 10 formula groups, 9 UI groups and 67 Electron cases) remain historical records. Linux and Wine evidence does not constitute native Windows acceptance. Detailed functionality and limitations remain in `FEATURE_PARITY.md`.
 
 ## Product principles
 

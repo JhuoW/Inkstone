@@ -6,7 +6,8 @@ import http from "node:http";
 
 // 0.9.1 usability changes: front matter, find bar, shortcut recorder,
 // snippet list, typography, export layout, slash menu, narrow windows,
-// immersive mode, AI first-run setup and the status bar.
+// immersive mode, AI first-run setup and the status bar; 0.9.2 adds the
+// title bar folder name and the welcome cursor.
 let application, page, directory, profile, file, errors;
 const original =
   "---\r\ntitle: Notes\r\ntags: [a, b]\r\n---\r\n\r\n# Heading\r\n\r\nAlpha beta alpha.\r\n\r\n中文段落。\r\n";
@@ -292,6 +293,65 @@ test("AI setup does not probe a local server before anything is configured", asy
   } finally {
     server.close();
   }
+});
+
+test("the title bar shows a short folder name in full", async () => {
+  const folder = page.locator("#breadcrumb-folder");
+  await expect(folder).toHaveText(path.basename(directory));
+  const size = await folder.evaluate((node) => ({
+    shown: node.clientWidth,
+    needed: node.scrollWidth,
+  }));
+  expect(size.shown).toBeGreaterThanOrEqual(size.needed);
+});
+
+test("the Chinese welcome starts on its first paragraph, not on the quote", async () => {
+  await application.evaluate(({ app }) => app.exit(0)).catch(() => {});
+  await application.close().catch(() => {});
+  // A fresh profile: the first one would reopen the file from its session.
+  const welcomeProfile = path.join(directory, "welcome-profile");
+  await fs.mkdir(welcomeProfile);
+  await fs.writeFile(
+    path.join(welcomeProfile, "settings.json"),
+    JSON.stringify({
+      locale: "zh-CN",
+      firstRunComplete: true,
+      defaultAppPrompted: true,
+      autoSave: false,
+      spellcheck: false,
+    }),
+  );
+  const env = { ...process.env, INKSTONE_USER_DATA: welcomeProfile };
+  delete env.ELECTRON_RUN_AS_NODE;
+  const executablePath = process.env.INKSTONE_EXECUTABLE
+    ? path.resolve(process.env.INKSTONE_EXECUTABLE)
+    : undefined;
+  application = await electron.launch({
+    executablePath,
+    args: executablePath ? [] : [process.cwd()],
+    env,
+    chromiumSandbox: true,
+  });
+  page = await application.firstWindow();
+  page.on("pageerror", (error) => errors.push(error.stack || error.message));
+  await page.waitForFunction(
+    () =>
+      window.__inkstone?.editor.getText().startsWith("# 写下值得留下的想法") &&
+      !__inkstone.editor.view.state.readOnly,
+  );
+  const welcome = await doc();
+  await expect
+    .poll(() =>
+      page.evaluate(() => __inkstone.editor.view.state.selection.main.head),
+    )
+    .toBe(welcome.indexOf("从一个念头开始"));
+  // The quote renders instead of showing its ">" marker as a source line.
+  await expect(
+    page.locator("#editor-host blockquote", { hasText: "墨石 Inkstone" }),
+  ).toBeVisible();
+  await expect(
+    page.locator(".cm-line", { hasText: "墨石 Inkstone" }),
+  ).toHaveCount(0);
 });
 
 test("status bar names the count clearly and explains it on hover", async () => {

@@ -281,6 +281,9 @@ test("analysis previews and locates revisions; explicit acceptance preserves sou
   await configure();
   await showPanel();
   await analyze();
+  await expect(page.locator(".ai-suggestions-count")).toHaveText(
+    "1 suggestion",
+  );
   await page.screenshot({ path: test.info().outputPath("ai-en-light.png") });
   await panel().screenshot({
     path: test.info().outputPath("ai-en-light-panel.png"),
