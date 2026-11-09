@@ -4,7 +4,10 @@ import path from "node:path";
 import os from "node:os";
 import assert from "node:assert/strict";
 
-const output = path.resolve("docs/images");
+// INKSTONE_README_IMAGES writes to another folder, e.g. to review before replacing.
+const output = path.resolve(
+  process.env.INKSTONE_README_IMAGES || "docs/images",
+);
 await fs.mkdir(output, { recursive: true });
 
 for (const locale of ["en", "zh-CN"]) {

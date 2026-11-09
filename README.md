@@ -22,15 +22,15 @@ Run the installer to install or upgrade Inkstone. Choose it from **Open with** f
 ## Features
 
 - [AI Writing Assistant](docs/AI_ASSISTANT.md): 11 provider choices including local models, OpenAI, Claude, Gemini and DeepSeek; model discovery, document scoring, chat and reviewed revisions in a resizable bottom panel.
-- Live Markdown editing with a source mode that preserves selection and undo history.
+- Live Markdown editing, a `/` menu for inserting blocks, and a source mode that preserves selection and undo history.
 - Inline formulas, LaTeX math blocks, Mermaid diagrams, and editable tables.
 - Persistent code blocks with syntax highlighting and a language picker.
-- Local folders, search, autosave, recovery, and HTML/PDF export.
-- English and Simplified Chinese interfaces, light and dark themes.
+- Local folders, search, autosave and recovery; export to PDF, HTML and images, or to Word and more with Pandoc.
+- English and Simplified Chinese interfaces, light and dark themes, and an immersive writing mode.
 
 ### AI Writing Assistant
 
-Analyze your document, view scores and suggestions, and review revisions before applying them.
+Analyze your document for an overall score, feedback on each dimension and suggested revisions. Review every change before you accept it.
 
 ![AI Writing Assistant with document analysis, scoring and revision suggestions](docs/images/AI-demo-en.png)
 
