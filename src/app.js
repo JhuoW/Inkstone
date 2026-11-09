@@ -50,10 +50,13 @@ import { installFileTreeKeyboard } from "./file-tree-keyboard.js";
 import { shortcutMatches } from "./shortcuts.js";
 import { createAIAssistant } from "./ai-assistant.js";
 import { showAIModelSettings } from "./ai-model-settings.js";
-import { validateAIRevision } from "./ai-revisions.js";
+import { combineAIRevisions } from "./ai-revisions.js";
+import { localizedError, rawErrorMessage } from "./errors.js";
 import "./ai-assistant.css";
 
 const native = window.inkstone;
+// Desktop errors arrive in English with an IPC wrapper. Show them in the UI
+// language; `error.raw` and `error.code` keep the original for branching.
 const invoke = async (method, payload = {}) => {
   if (!native)
     throw new Error(
@@ -62,8 +65,14 @@ const invoke = async (method, payload = {}) => {
         "Open Inkstone as a desktop application.",
       ),
     );
-  return native.invoke(method, payload);
+  try {
+    return await native.invoke(method, payload);
+  } catch (error) {
+    throw localizedError(error, settings.locale === "zh-CN" ? "zh-CN" : "en");
+  }
 };
+const failedWith = (error, code) =>
+  rawErrorMessage(error).includes(code + ":") || error?.code === code;
 let settings = { ...defaults },
   current = { path: null, text: welcome, revision: null },
   savedText = welcome;
@@ -186,6 +195,7 @@ const defaultShortcuts = {
   typewriter: "F9",
   fullscreen: "F11",
   export: "Mod-Shift-e",
+  aiAssistant: "Mod-Shift-a",
 };
 function commandShortcut(id) {
   const key = { ...defaultShortcuts, ...settings.shortcuts }[id];
@@ -266,7 +276,12 @@ function shell() {
     '</span><span>/</span><strong id="document-title">' +
     t("欢迎使用墨石", "Welcome to Inkstone") +
     '</strong><span id="dirty-dot"></span></div><div class="ai-entry-slot"><button class="ai-launcher" data-command="aiAssistant" aria-controls="ai-assistant-host" aria-expanded="false" title="' +
-    t("AI写作助手", "AI Writing Assistant") +
+    esc(
+      t("AI写作助手", "AI Writing Assistant") +
+        (commandShortcut("aiAssistant")
+          ? ` (${commandShortcut("aiAssistant")})`
+          : ""),
+    ) +
     '">' +
     icon.writingAssistant +
     "<span>" +
@@ -725,9 +740,16 @@ function makeEditor(text) {
 }
 function getAIContext() {
   const selection = editor.view.state.selection.main;
+  const doc = editor.view.state.doc;
+  let text;
   return {
-    identity: `${generation}:${current.path || ""}`,
-    text: editor.view.state.doc.toString(),
+    // Changes when another document loads or the text is replaced wholesale.
+    // Saving under a new path (Save As, first save) keeps the same document.
+    identity: `${generation}:${editor.getDocumentEpoch?.() ?? 0}`,
+    // Built on demand: most callers only need the identity or lock state.
+    get text() {
+      return (text ??= doc.toString());
+    },
     selection: { from: selection.from, to: selection.to },
     readOnly: !!(
       mutationBlocked() ||
@@ -760,11 +782,33 @@ function makeAIAssistant() {
       editor.setSelection({ anchor: from, head: to });
       editor.focus();
     },
-    applyRevision: (revision) => {
-      const changes = validateAIRevision(getAIContext(), revision);
+    copyText: (text) => invoke("writeClipboard", { text }),
+    // Inserts an AI reply at the cursor as its own undo step.
+    insertText: (text) => {
+      if (getAIContext().readOnly)
+        throw Error(t("文档为只读", "Document is read-only"));
+      const { from, to } = editor.view.state.selection.main;
+      const insert = String(text).replace(/\r\n|\r/g, "\n");
+      editor.view.dispatch({
+        changes: { from, to, insert },
+        selection: { anchor: from + insert.length },
+        annotations: isolateHistory.of("full"),
+        userEvent: "input.ai",
+        scrollIntoView: true,
+      });
+      editor.focus();
+    },
+    // Accepts one revision or several; several become one undo step.
+    applyRevision: (input) => {
+      const revisions = Array.isArray(input) ? input : [input];
+      const changes = combineAIRevisions(getAIContext(), revisions);
+      if (!changes.length) return;
+      const last = changes.at(-1);
       editor.view.dispatch({
         changes,
-        selection: { anchor: changes.from + changes.insert.length },
+        selection: {
+          anchor: editor.view.state.changes(changes).mapPos(last.to, 1),
+        },
         annotations: isolateHistory.of("full"),
         userEvent: "input.ai",
         scrollIntoView: true,
@@ -778,6 +822,7 @@ function makeAIAssistant() {
   );
 }
 function changed(_text, metadata = {}) {
+  if (metadata.changes) aiAssistant?.trackChanges(metadata.changes);
   updateStatus();
   syncNativeDirty();
   clearTimeout(recoveryTimer);
@@ -1272,7 +1317,7 @@ async function openDocument(path) {
     try {
       doc = await invoke("openFile", { path });
     } catch (error) {
-      if (!error.message.includes("ENCODING")) throw error;
+      if (!failedWith(error, "ENCODING")) throw error;
       const encoding = await chooseEncoding();
       if (!encoding) return;
       doc = await invoke("openFile", { path, encoding });
@@ -1398,7 +1443,7 @@ async function saveDocument(saveAs = false, encoding = current.encoding) {
       if (dirty()) changed();
       return true;
     } catch (e) {
-      if (e.message.includes("CONFLICT")) showConflict();
+      if (failedWith(e, "CONFLICT")) showConflict();
       else toast(e.message, true);
       return false;
     } finally {

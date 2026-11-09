@@ -2,7 +2,7 @@
 
 Supported platforms are Windows (primary) and Linux. The main process rejects other platforms, uses Ctrl shortcuts and closes the application when its last window closes. The Windows window icon uses `build/icon.ico`; Linux uses `build/icon.png`.
 
-The isolated, sandboxed renderer gets only `window.inkstone.invoke(method, payload)`, `on(event, callback)` (returns unsubscribe), and `filePath(File)` for an actual dropped OS file. No general filesystem, shell, or IPC access is exposed. Calls throw human-readable errors; `CONFLICT:` means keep the editor buffer and offer disk reload or Save As. Cancellation returns `null` (image picker returns `[]`).
+The isolated, sandboxed renderer gets only `window.inkstone.invoke(method, payload)`, `on(event, callback)` (returns unsubscribe), and `filePath(File)` for an actual dropped OS file. No general filesystem, shell, or IPC access is exposed. Calls throw human-readable English errors with a code prefix; `CONFLICT:` means keep the editor buffer and offer disk reload or Save As. The renderer's `invoke` wrapper (`src/errors.js`) removes Electron's IPC prefix, translates known messages when the interface is Chinese and keeps the original text and code on `error.raw` / `error.code` for branching. Cancellation returns `null` (image picker returns `[]`).
 
 ## Application and Windows integration
 

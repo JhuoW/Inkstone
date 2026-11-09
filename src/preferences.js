@@ -382,7 +382,7 @@ export function showPreferences(
               "Mod 表示 Ctrl。可组合 Shift 和 Alt。",
               "Mod means Ctrl. Combine with Shift and Alt.",
             ) +
-              "<br>bold, italic, save, open, quickOpen, source, focus, typewriter, settings, export, find",
+              "<br>bold, italic, save, open, quickOpen, source, focus, typewriter, settings, export, find, aiAssistant",
           ),
       ),
   };

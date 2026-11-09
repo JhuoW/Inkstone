@@ -175,6 +175,63 @@
   color: var(--muted);
   margin-right: auto;
 }
+/* Suggestions stay listed while the document is edited; their state shows
+   whether each can still be applied. */
+.ai-suggestions-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 16px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.ai-suggestions-count {
+  font-weight: 600;
+  margin-right: auto;
+}
+.ai-suggestions-omitted {
+  flex-basis: 100%;
+  color: var(--muted);
+}
+.ai-suggestion[data-state="applied"] {
+  border-color: var(--accent);
+}
+.ai-suggestion[data-state="applied"] .ai-diff-original pre {
+  text-decoration: line-through;
+  text-decoration-color: var(--muted);
+}
+.ai-suggestion[data-state="stale"],
+.ai-suggestion[data-state="unlocatable"] {
+  border-style: dashed;
+}
+.ai-suggestion[data-state="stale"] .ai-diff,
+.ai-suggestion[data-state="stale"] > p {
+  opacity: 0.65;
+}
+.ai-suggestion[data-state="applied"] .ai-suggestion-note {
+  color: var(--text);
+}
+.ai-meter {
+  display: block;
+  height: 3px;
+  margin: 6px 0 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ai-meter::before {
+  content: "";
+  display: block;
+  height: 100%;
+  width: calc(var(--value, 0) * 1%);
+  background: var(--accent);
+}
+@media (forced-colors: active) {
+  .ai-meter::before {
+    background: CanvasText;
+  }
+}
 .ai-chat-form {
   display: flex;
   gap: 8px;
@@ -200,6 +257,15 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   margin: 4px 0;
+}
+.ai-chat-message[data-role="user"] > strong {
+  color: var(--muted);
+}
+.ai-chat-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
 }
 .ai-settings-dialog {
   max-width: min(720px, calc(100vw - 36px));

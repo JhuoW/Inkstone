@@ -312,6 +312,7 @@ class AIService {
           item.controller.signal,
           (delta) => emit({ type: "delta", text: delta }),
           this.fetch,
+          (attempt, of) => emit({ type: "retry", attempt, of }),
         );
         item.controller.signal.throwIfAborted();
         emit({ type: "done", text });

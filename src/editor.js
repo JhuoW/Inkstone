@@ -666,6 +666,7 @@ export function createEditor(
   let view;
   let dispatching = false;
   let renderRevision = 0;
+  let documentEpoch = 0;
   let sourceHistory;
   const composingInputs = new Set();
   const behavior = new Compartment();
@@ -1442,6 +1443,8 @@ export function createEditor(
             onChange(source.raw, {
               selection: api?.getSelection(),
               composing: update.view.composing,
+              // Lets consumers map recorded positions through this edit.
+              changes: update.changes,
             });
           }
           if (update.selectionSet || update.docChanged) {
@@ -1748,7 +1751,10 @@ export function createEditor(
         scrollIntoView,
       });
     },
+    // Increments whenever the whole document is replaced without edit history.
+    getDocumentEpoch: () => documentEpoch,
     setDocument(nextText, selection) {
+      documentEpoch++;
       source = new SourceDocument(nextText);
       const safe = selection
         ? {

@@ -1775,6 +1775,11 @@ function menu() {
         ),
         action(label("专注模式", "Focus mode"), "focus"),
         action(label("打字机模式", "Typewriter mode"), "typewriter"),
+        action(
+          label("AI写作助手", "AI Writing Assistant"),
+          "aiAssistant",
+          "Ctrl+Shift+A",
+        ),
         { type: "separator" },
         action(label("重置缩放", "Reset zoom"), "zoomReset", "Ctrl+0"),
         action(label("放大", "Zoom in"), "zoomIn", "Ctrl+Plus"),

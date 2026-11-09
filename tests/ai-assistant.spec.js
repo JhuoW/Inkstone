@@ -163,7 +163,8 @@ test.beforeEach(async () => {
     chromiumSandbox: true,
   });
   page = await application.firstWindow();
-  page.on("pageerror", (error) => errors.push(error.message));
+  // Keep the stack so an intermittent renderer error can be located.
+  page.on("pageerror", (error) => errors.push(error.stack || error.message));
   await page.waitForFunction(
     () =>
       window.__inkstone?.getDocument().path?.endsWith("AI 文稿.md") &&
@@ -336,9 +337,111 @@ test("selection scope excludes unrelated content, prevents stale edits and respe
   await page.evaluate(() => __inkstone.execute("readOnly"));
   await expect(page.locator("[data-ai-accept]")).toBeDisabled();
   await page.evaluate(() => __inkstone.execute("readOnly"));
-  await page.evaluate(() => __inkstone.editor.insert("Changed"));
+  // Editing elsewhere keeps the suggestion applicable.
+  await page.evaluate(() => {
+    const e = __inkstone.editor;
+    e.setSelection({ anchor: e.view.state.doc.length });
+    e.insert("\n\nA new closing line.");
+  });
+  await expect(page.locator("[data-ai-accept]")).toBeEnabled();
+  // Editing the quoted passage itself makes the suggestion outdated.
+  await page.evaluate(() => {
+    const e = __inkstone.editor;
+    const from = e.view.state.doc.toString().indexOf("Alpha");
+    e.setSelection({ anchor: from, head: from + "Alpha paragraph.".length });
+    e.insert("Changed");
+  });
   await expect(page.locator("[data-ai-accept]")).toHaveCount(0);
+  await expect(page.locator(".ai-suggestion")).toHaveAttribute(
+    "data-state",
+    "stale",
+  );
   expect(await text()).not.toContain("A clearer paragraph.");
+});
+
+test("accepting one suggestion keeps the others; accept all and revert work with undo", async () => {
+  await configure();
+  await showPanel();
+  reply = JSON.stringify({
+    summary: "Two sentences can be clearer.",
+    overallScore: 76,
+    dimensions: [{ name: "Clarity", score: 76, reason: "Two vague phrases." }],
+    suggestions: [
+      {
+        original: "# Review",
+        replacement: "# Review notes",
+        reason: "A more specific heading.",
+      },
+      {
+        original: "Alpha paragraph.",
+        replacement: "A clearer paragraph.",
+        reason: "Use a more specific description.",
+      },
+      {
+        original: "unchanged.",
+        replacement: "unchanged throughout.",
+        reason: "State the scope.",
+      },
+    ],
+  });
+  await page.locator("[data-ai-analyze]").click();
+  await expect(page.locator(".ai-overall-score")).toHaveText("76 / 100");
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(3);
+  await expect(page.locator("[data-ai-accept-all]")).toHaveText(
+    "Accept all (3)",
+  );
+  // Accept the middle suggestion; the other two remain applicable.
+  await page
+    .locator(".ai-suggestion")
+    .nth(1)
+    .locator("[data-ai-accept]")
+    .click();
+  await expect
+    .poll(text)
+    .toBe(editorOriginal.replace("Alpha paragraph.", "A clearer paragraph."));
+  await expect(page.locator(".ai-suggestion").nth(1)).toHaveAttribute(
+    "data-state",
+    "applied",
+  );
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(2);
+  await page
+    .locator('.ai-suggestion[data-state="applied"] .ai-suggestion-actions')
+    .scrollIntoViewIfNeeded();
+  await panel().screenshot({
+    path: test.info().outputPath("ai-suggestion-states.png"),
+  });
+  // Manual typing elsewhere does not invalidate them either.
+  await page.evaluate(() => {
+    const e = __inkstone.editor;
+    e.setSelection({ anchor: e.view.state.doc.length });
+    e.insert("Closing.");
+  });
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(2);
+  await page.locator("[data-ai-accept-all]").click();
+  const accepted = editorOriginal
+    .replace("# Review", "# Review notes")
+    .replace("Alpha paragraph.", "A clearer paragraph.")
+    .replace("unchanged.", "unchanged throughout.");
+  await expect.poll(text).toBe(accepted + "Closing.");
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(0);
+  // One undo step removes the whole batch; the batch cards become pending again.
+  await page.keyboard.press("Control+z");
+  await expect
+    .poll(text)
+    .toBe(
+      editorOriginal.replace("Alpha paragraph.", "A clearer paragraph.") +
+        "Closing.",
+    );
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(2);
+  // Revert restores the original passage of a single applied suggestion.
+  await expect(page.locator("[data-ai-revert]")).toHaveCount(1);
+  await page.locator("[data-ai-revert]").click();
+  await expect.poll(text).toBe(editorOriginal + "Closing.");
+  await expect(page.locator("[data-ai-accept]")).toHaveCount(3);
+  await page.evaluate(() => __inkstone.execute("save"));
+  expect(await fs.readFile(file, "utf8")).toBe(
+    original.replace(/\r\n$/, "\r\nClosing."),
+  );
 });
 
 test("streaming can be cancelled and document switches discard delayed results", async () => {
@@ -383,11 +486,55 @@ test("chat keeps document context and reports server errors without editing", as
   ).toContain("Alpha paragraph.");
   fail = true;
   await page.locator("[data-ai-analyze]").click();
+  // Server errors are retried twice (about 5.5 s) and the wait is visible.
+  await expect(page.locator(".ai-status")).toContainText(
+    "Provider busy; retrying (1/2)",
+  );
   await expect(page.locator(".ai-status")).toContainText(
     /503|unavailable|failed/i,
+    { timeout: 15000 },
   );
   await expect(panel()).toHaveAttribute("aria-busy", "false");
   expect(await text()).toBe(editorOriginal);
+});
+
+test("Chinese UI translates provider errors and chat replies insert at the cursor as one undo step", async () => {
+  await configure();
+  await page.evaluate(() =>
+    __inkstone.invoke("updateSettings", { locale: "zh-CN" }),
+  );
+  await expect(page.locator("[data-ai-analyze]")).toHaveText("分析与评分");
+  await showPanel();
+  fail = true;
+  await page.locator("[data-ai-analyze]").click();
+  await expect(page.locator(".ai-status")).toContainText("服务繁忙，正在重试");
+  await expect(page.locator(".ai-status")).toContainText(
+    "模型服务返回 HTTP 503",
+    { timeout: 15000 },
+  );
+  await expect(page.locator(".ai-status")).not.toContainText("Provider");
+  // Desktop errors outside the AI panel are translated as well.
+  const message = await page.evaluate(() =>
+    __inkstone.invoke("fileOperation", { action: "unsupported" }).then(
+      () => "",
+      (error) => error.message,
+    ),
+  );
+  expect(message).not.toContain("Error invoking remote method");
+  expect(message).toMatch(/[一-鿿]/);
+  fail = false;
+  reply = "建议在开头说明研究目的。";
+  await page.locator("#ai-chat-question").fill("开头如何改进？");
+  await page.locator(".ai-chat-form button[type=submit]").click();
+  await expect(page.locator(".ai-chat-log")).toContainText(reply);
+  await page.evaluate(() => {
+    const e = __inkstone.editor;
+    e.setSelection({ anchor: e.view.state.doc.length });
+  });
+  await page.locator("[data-ai-insert]").click();
+  await expect.poll(text).toBe(editorOriginal + reply);
+  await page.keyboard.press("Control+z");
+  await expect.poll(text).toBe(editorOriginal);
 });
 
 test("AI panel rebuilds in Chinese dark mode and remains usable in a short narrow window", async () => {
@@ -582,7 +729,9 @@ test("failed and cancelled setup tests leave saved configuration and document un
   const before = await page.evaluate(() => __inkstone.invoke("aiGetSettings"));
   fail = true;
   await dialog.locator('button[type="submit"]').click();
-  await expect(dialog.locator(".ai-settings-status")).toContainText("503");
+  await expect(dialog.locator(".ai-settings-status")).toContainText("503", {
+    timeout: 15000,
+  });
   await expect(dialog).toBeVisible();
   fail = false;
   hold = true;

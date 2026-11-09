@@ -1,7 +1,16 @@
 import { showAIModelSettings } from "./ai-model-settings.js";
 import { icon } from "./ui.js";
+import { localizeError } from "./errors.js";
 import "./ai-assistant.css";
-import { resolveAIRevision, boundAIHistory } from "./ai-revisions.js";
+import {
+  resolveAIRevision,
+  boundAIHistory,
+  createChangeTracker,
+  locateAnchor,
+  uniqueOccurrence,
+} from "./ai-revisions.js";
+
+const normalizeEOL = (value) => String(value).replace(/\r\n|\r/g, "\n");
 
 export function createAIAssistant({
   host,
@@ -10,6 +19,8 @@ export function createAIAssistant({
   getContext,
   applyRevision,
   locate,
+  copyText,
+  insertText,
   saveLayout,
   t,
   onConfigure,
@@ -20,37 +31,36 @@ export function createAIAssistant({
     Number(initialLayout.height ?? initialLayout.aiPanelHeight) || 260;
   let active = null,
     preparing = null,
-    snapshot = null,
+    report = null,
     history = [],
     disposed = false,
     applying = false;
   let contextIdentity,
-    contextText,
-    frame = 0;
+    frame = 0,
+    refreshTimer = 0;
+  // Every tracker receives each editor change until results are cleared.
+  const trackers = new Set();
   host.className = "ai-assistant";
   host.setAttribute("aria-label", t("AI写作助手", "AI Writing Assistant"));
   host.innerHTML = `<div class="ai-resizer" role="separator" tabindex="0" aria-orientation="horizontal" aria-label="${t("AI 面板高度", "AI panel height")}"></div>
-    <header class="ai-header"><strong>${t("AI写作助手", "AI Writing Assistant")}</strong><span class="ai-model-label">${t("按需分析当前文档", "Review the current document on demand")}</span><button type="button" data-ai-clear-chat>${t("清空对话", "Clear chat")}</button><button type="button" data-ai-configure>${t("模型", "Models")}</button><button type="button" data-ai-close class="icon-button" aria-label="${t("收起 AI 面板", "Hide AI panel")}">${icon.close}</button></header>
-    <div class="ai-controls"><label><span class="sr-only">${t("分析范围", "Analysis scope")}</span><select data-ai-scope><option value="document">${t("整篇文档", "Whole document")}</option><option value="selection">${t("选中段落", "Selection")}</option></select></label><label><span class="sr-only">${t("文档类型", "Document type")}</span><select data-ai-type><option value="general">${t("一般写作", "General writing")}</option><option value="academic">${t("学术论文", "Academic paper")}</option><option value="technical">${t("技术文档", "Technical document")}</option></select></label><button type="button" data-ai-analyze class="primary">${t("分析与评分", "Analyze & score")}</button><button type="button" data-ai-cancel hidden>${t("取消", "Cancel")}</button><span class="ai-status" role="status" aria-live="polite"></span></div>
-    <div class="ai-content" tabindex="0"><p class="ai-empty">${t("分析结构、逻辑与表达，或就当前文档提问。建议需由你确认后应用；AI 可能出错，请核实事实与引用。", "Review structure, reasoning and clarity, or ask about your document. You decide which revisions to apply. AI can make mistakes; verify facts and references.")}</p><div class="ai-results"></div><div class="ai-chat-log"></div><pre class="ai-stream" hidden></pre></div>
-    <form class="ai-chat-form"><label class="sr-only" for="ai-chat-question">${t("询问当前文档", "Ask about this document")}</label><textarea id="ai-chat-question" rows="1" maxlength="8000" placeholder="${t("询问当前文档…", "Ask about this document…")}"></textarea><button type="submit">${t("发送", "Send")}</button></form>`;
+    <header class="ai-header"><strong>${t("AI写作助手", "AI Writing Assistant")}</strong><span class="ai-model-label">${t("按需分析当前文档", "Review the current document on demand")}</span><button type="button" data-ai-clear-chat>${t("清空对话", "Clear chat")}</button><button type="button" data-ai-configure>${t("模型", "Models")}</button><button type="button" data-ai-close class="icon-button" aria-label="${t("收起 AI 面板", "Hide AI panel")}" title="${t("收起 AI 面板", "Hide AI panel")}">${icon.close}</button></header>
+    <div class="ai-controls"><label><span class="sr-only">${t("分析范围", "Analysis scope")}</span><select data-ai-scope title="${t("分析范围", "Analysis scope")}"><option value="document">${t("整篇文档", "Whole document")}</option><option value="selection">${t("选中段落", "Selection")}</option></select></label><label><span class="sr-only">${t("文档类型", "Document type")}</span><select data-ai-type title="${t("文档类型", "Document type")}"><option value="general">${t("一般写作", "General writing")}</option><option value="academic">${t("学术论文", "Academic paper")}</option><option value="technical">${t("技术文档", "Technical document")}</option></select></label><button type="button" data-ai-analyze class="primary">${t("分析与评分", "Analyze & score")}</button><button type="button" data-ai-cancel hidden>${t("取消", "Cancel")}</button><span class="ai-status" role="status" aria-live="polite"></span></div>
+    <div class="ai-content" tabindex="0"><p class="ai-empty">${t("分析结构、逻辑与表达，或就当前文档提问。建议需由你确认后应用；继续编辑不会使其余建议失效。AI 可能出错，请核实事实与引用。", "Review structure, reasoning and clarity, or ask about your document. You decide which revisions to apply, and editing keeps the remaining suggestions usable. AI can make mistakes; verify facts and references.")}</p><div class="ai-results"></div><div class="ai-chat-log"></div><pre class="ai-stream" hidden></pre></div>
+    <form class="ai-chat-form"><label class="sr-only" for="ai-chat-question">${t("询问当前文档", "Ask about this document")}</label><textarea id="ai-chat-question" rows="1" maxlength="8000" placeholder="${t("询问当前文档…（Enter 发送，Shift+Enter 换行）", "Ask about this document… (Enter to send, Shift+Enter for a new line)")}"></textarea><button type="submit">${t("发送", "Send")}</button></form>`;
   const $ = (selector) => host.querySelector(selector);
   const status = (value) => {
     $(".ai-status").textContent = value;
   };
   const current = () => getContext();
-  const fresh = (candidate = snapshot) => {
-    const context = current();
-    return (
-      !!candidate &&
-      context.identity === candidate.identity &&
-      context.text === candidate.text
-    );
-  };
   const persist = () =>
     Promise.resolve(
       saveLayout?.({ aiPanelOpen: open, aiPanelHeight: Math.round(height) }),
-    ).catch((error) => status(error.message));
+    ).catch((error) => showError(error));
+  function track(length) {
+    const tracker = createChangeTracker(length);
+    trackers.add(tracker);
+    return tracker;
+  }
   function size() {
     if (disposed) return;
     const available = host.parentElement?.clientHeight || 600;
@@ -71,33 +81,60 @@ export function createAIAssistant({
     preparing = null;
     const request = active;
     active = null;
-    if (request) void invoke("aiCancel", { id: request.id }).catch(() => {});
+    if (request) {
+      trackers.delete(request.tracker);
+      void invoke("aiCancel", { id: request.id }).catch(() => {});
+    }
     busy(false);
     $(".ai-stream").hidden = true;
     if (request) status(note);
   }
-  function clearResults() {
+  function clearReport() {
+    report = null;
+    trackers.clear();
+    if (active?.tracker) trackers.add(active.tracker);
     $(".ai-results").replaceChildren();
+  }
+  function clearResults() {
+    clearReport();
     $(".ai-chat-log").replaceChildren();
     $(".ai-stream").textContent = "";
     $(".ai-stream").hidden = true;
-    snapshot = null;
     history = [];
     $(".ai-empty").hidden = false;
   }
+  // Only switching or reloading the document discards results. Ordinary edits
+  // keep them; each suggestion follows its passage through the edits.
   function updateContext() {
-    if (disposed || (!active && !snapshot && !history.length)) return;
+    if (disposed) return;
     const context = current();
-    if (context.identity !== contextIdentity || context.text !== contextText) {
-      cancel(t("文档已变化，分析已停止", "Document changed; analysis stopped"));
-      clearResults();
-      status(t("文档已变化，请重新分析", "Document changed. Analyze again."));
+    if (context.identity !== contextIdentity) {
+      const hadResults = Boolean(active || report || history.length);
+      if (hadResults) {
+        cancel(
+          t("文档已切换，分析已停止", "Document switched; analysis stopped"),
+        );
+        clearResults();
+        status(
+          t(
+            "文档已切换，之前的 AI 结果已清除",
+            "Document switched. Previous AI results were cleared.",
+          ),
+        );
+      }
       contextIdentity = context.identity;
-      contextText = context.text;
     }
-    host.querySelectorAll("[data-ai-accept]").forEach((button) => {
-      button.disabled = Boolean(context.readOnly) || applying;
-    });
+    scheduleRefresh();
+  }
+  function trackChanges(changes) {
+    if (disposed || !changes) return;
+    for (const tracker of trackers) tracker.add(changes);
+    scheduleRefresh();
+  }
+  function scheduleRefresh(delay = 120) {
+    if (disposed || !report) return;
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(refreshCards, delay);
   }
   function updateModelLabel() {
     void invoke("aiGetSettings")
@@ -123,24 +160,364 @@ export function createAIAssistant({
     return open;
   }
   function showError(error) {
-    status(error?.message || String(error));
+    status(localizeError(error));
   }
   function appendChat(role, text) {
     const article = document.createElement("article");
     article.className = "ai-chat-message";
+    article.dataset.role = role;
     const label = document.createElement("strong");
     label.textContent = role === "user" ? t("你", "You") : "AI";
     const content = document.createElement("p");
     content.textContent = text;
     article.append(label, content);
+    if (role === "assistant" && (copyText || insertText)) {
+      const actions = document.createElement("div");
+      actions.className = "ai-chat-actions";
+      if (copyText)
+        actions.append(
+          cardButton(t("复制", "Copy"), () =>
+            Promise.resolve()
+              .then(() => copyText(text))
+              .then(() => status(t("已复制回复", "Reply copied")))
+              .catch(showError),
+          ),
+        );
+      if (insertText) {
+        const insert = cardButton(
+          t("插入到光标处", "Insert at cursor"),
+          () => {
+            if (current().readOnly) {
+              status(t("文档为只读", "Document is read-only"));
+              return;
+            }
+            Promise.resolve()
+              .then(() => insertText(text))
+              .then(() =>
+                status(
+                  t(
+                    "已插入到光标处，可按 Ctrl+Z 撤销",
+                    "Inserted at the cursor; press Ctrl+Z to undo",
+                  ),
+                ),
+              )
+              .catch(showError);
+          },
+          "data-ai-insert",
+        );
+        actions.append(insert);
+      }
+      article.append(actions);
+    }
+    const follow = nearBottom();
     $(".ai-chat-log").append(article);
     while ($(".ai-chat-log").children.length > 20)
       $(".ai-chat-log").firstChild.remove();
+    if (follow) scrollToBottom();
+  }
+  // Keep new output visible unless the reader scrolled up to earlier content.
+  function nearBottom() {
+    const content = $(".ai-content");
+    return content.scrollHeight - content.scrollTop - content.clientHeight < 48;
+  }
+  function scrollToBottom() {
+    const content = $(".ai-content");
+    content.scrollTop = content.scrollHeight;
+  }
+
+  // ----- Suggestions -----------------------------------------------------
+  // A card resolves to the passage it currently refers to: the original text
+  // ("pending"), the applied replacement ("applied"), or nothing ("stale").
+  function resolveCard(card, text) {
+    if (!report || card.unlocatable) return null;
+    const located = locateAnchor(card.anchor, text);
+    if (located) return { ...located, kind: card.anchor.kind };
+    // Fall back to a unique match inside the analyzed region, for example
+    // after Undo restored a passage the anchor no longer follows.
+    const scope = report.scope.tracker.mapRegion(
+      report.scope.from,
+      report.scope.to,
+    );
+    if (!scope || report.scope.tracker.length !== text.length) return null;
+    for (const [kind, needle] of [
+      ["original", card.original],
+      ["applied", card.replacement],
+    ]) {
+      const found = uniqueOccurrence(text, needle, scope.from, scope.to);
+      if (found) {
+        card.anchor = {
+          tracker: track(text.length),
+          from: found.from,
+          to: found.to,
+          expected: needle,
+          kind,
+        };
+        return { ...found, kind };
+      }
+    }
+    return null;
+  }
+  function lineAt(text, position) {
+    let line = 1;
+    for (
+      let index = text.indexOf("\n");
+      index >= 0 && index < position;
+      index = text.indexOf("\n", index + 1)
+    )
+      line++;
+    return line;
+  }
+  function cardButton(label, onClick, attribute) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    if (attribute) button.setAttribute(attribute, "");
+    button.onclick = onClick;
+    return button;
+  }
+  function renderCardActions(card, resolved, text, readOnly) {
+    const actions = card.actions;
+    // Rebuild buttons only when something visible changed, so keyboard focus
+    // on a card survives refreshes caused by typing elsewhere.
+    const line = resolved ? lineAt(text, resolved.from) : 0;
+    const signature = [
+      card.unlocatable,
+      resolved?.kind || "stale",
+      line,
+      readOnly,
+      applying,
+    ].join("|");
+    if (card.signature === signature) return;
+    card.signature = signature;
+    actions.replaceChildren();
+    const note = document.createElement("span");
+    note.className = "ai-suggestion-note";
+    actions.append(note);
+    card.element.dataset.state = card.unlocatable
+      ? "unlocatable"
+      : resolved?.kind === "applied"
+        ? "applied"
+        : resolved
+          ? "pending"
+          : "stale";
+    if (card.unlocatable) {
+      note.textContent = t(
+        "原文无法唯一定位，仅供参考",
+        "Passage cannot be uniquely located; review manually",
+      );
+    } else if (!resolved) {
+      note.textContent = t(
+        "原文已在编辑器中修改，此建议不再自动应用",
+        "The passage was edited in the document; this suggestion can no longer be applied automatically",
+      );
+    } else {
+      if (resolved.kind === "applied") {
+        note.textContent = t(
+          `已应用 · 第 ${line} 行`,
+          `Applied · Line ${line}`,
+        );
+        const revert = cardButton(
+          t("撤销此修改", "Revert"),
+          () => void revertCard(card),
+          "data-ai-revert",
+        );
+        revert.disabled = readOnly || applying;
+        actions.append(
+          cardButton(t("定位", "Locate"), () => locateCard(card)),
+          revert,
+        );
+      } else {
+        note.textContent = t(`第 ${line} 行`, `Line ${line}`);
+        const accept = cardButton(
+          t("接受修改", "Accept revision"),
+          () => void acceptCards([card]),
+          "data-ai-accept",
+        );
+        accept.classList.add("primary");
+        accept.disabled = readOnly || applying;
+        actions.append(
+          cardButton(t("定位", "Locate"), () => locateCard(card)),
+          accept,
+        );
+      }
+    }
+    actions.append(
+      cardButton(t("忽略", "Dismiss"), () => {
+        card.element.remove();
+        report.cards = report.cards.filter((item) => item !== card);
+        refreshCards();
+      }),
+    );
+  }
+  function refreshCards() {
+    clearTimeout(refreshTimer);
+    if (disposed || !report) return;
+    const context = current();
+    if (context.identity !== report.identity) return;
+    const text = context.text,
+      readOnly = Boolean(context.readOnly);
+    let pending = 0,
+      applied = 0,
+      stale = 0;
+    for (const card of report.cards) {
+      const resolved = resolveCard(card, text);
+      if (resolved?.kind === "applied") applied++;
+      else if (resolved) pending++;
+      else if (!card.unlocatable) stale++;
+      renderCardActions(card, resolved, text, readOnly);
+    }
+    // Drop trackers that no card, scope or request still uses.
+    const used = new Set([report.scope.tracker, active?.tracker]);
+    for (const card of report.cards)
+      if (card.anchor) used.add(card.anchor.tracker);
+    for (const tracker of trackers)
+      if (!used.has(tracker)) trackers.delete(tracker);
+    const toolbar = report.toolbar;
+    if (!toolbar) return;
+    const parts = [
+      report.cards.length
+        ? t(
+            `修改建议 ${report.cards.length} 条`,
+            `${report.cards.length} suggestions`,
+          )
+        : t("已处理全部建议", "All suggestions handled"),
+    ];
+    if (applied) parts.push(t(`已应用 ${applied}`, `${applied} applied`));
+    if (stale) parts.push(t(`${stale} 条已失效`, `${stale} outdated`));
+    toolbar.querySelector(".ai-suggestions-count").textContent =
+      parts.join(" · ");
+    const all = toolbar.querySelector("[data-ai-accept-all]");
+    all.hidden = pending < 2;
+    all.disabled = readOnly || applying;
+    all.textContent = t(`全部接受（${pending}）`, `Accept all (${pending})`);
+  }
+  function locateCard(card) {
+    const context = current();
+    const resolved = resolveCard(card, context.text);
+    if (!resolved) {
+      refreshCards();
+      return;
+    }
+    Promise.resolve(locate({ from: resolved.from, to: resolved.to })).catch(
+      showError,
+    );
+  }
+  // Apply revisions as one transaction and re-anchor each card at its new text.
+  async function applyResolved(entries, toKind) {
+    const context = current();
+    const revisions = entries.map(({ card, range }) => ({
+      identity: context.identity,
+      text: context.text,
+      from: range.from,
+      to: range.to,
+      original: toKind === "applied" ? card.original : card.replacement,
+      replacement: toKind === "applied" ? card.replacement : card.original,
+    }));
+    await applyRevision(revisions.length === 1 ? revisions[0] : revisions);
+    const after = current().text;
+    const tracker = track(after.length);
+    let delta = 0;
+    for (const [index, entry] of [...entries.entries()].sort(
+      (a, b) => a[1].range.from - b[1].range.from,
+    )) {
+      const inserted = normalizeEOL(revisions[index].replacement);
+      const from = entry.range.from + delta;
+      entry.card.anchor = {
+        tracker,
+        from,
+        to: from + inserted.length,
+        expected: inserted,
+        kind: toKind,
+      };
+      delta += inserted.length - (entry.range.to - entry.range.from);
+    }
+  }
+  async function acceptCards(cards) {
+    if (applying || !report) return;
+    const context = current();
+    if (context.readOnly) {
+      status(t("文档为只读", "Document is read-only"));
+      return;
+    }
+    const entries = [];
+    let skipped = 0;
+    for (const card of cards) {
+      const range = resolveCard(card, context.text);
+      if (!range || range.kind !== "original") {
+        skipped++;
+        continue;
+      }
+      // Overlapping suggestions cannot be applied in the same step.
+      if (
+        entries.some(
+          (entry) => range.from < entry.range.to && entry.range.from < range.to,
+        )
+      ) {
+        skipped++;
+        continue;
+      }
+      entries.push({ card, range });
+    }
+    if (!entries.length) {
+      refreshCards();
+      status(
+        t(
+          "没有可应用的建议，原文可能已被修改",
+          "No suggestion can be applied; the passages may have been edited",
+        ),
+      );
+      return;
+    }
+    applying = true;
+    refreshCards();
+    try {
+      await applyResolved(entries, "applied");
+      status(
+        entries.length > 1
+          ? t(
+              `已应用 ${entries.length} 条修改${skipped ? `，${skipped} 条因重叠或已修改而跳过` : ""}。可按 Ctrl+Z 一次撤销。`,
+              `Applied ${entries.length} revisions${skipped ? `; skipped ${skipped} that overlap or were edited` : ""}. Press Ctrl+Z to undo them together.`,
+            )
+          : t(
+              "修改已应用，可撤销。其余建议仍可继续应用。",
+              "Revision applied; undo is available. The other suggestions remain available.",
+            ),
+      );
+    } catch (error) {
+      showError(error);
+    } finally {
+      applying = false;
+      refreshCards();
+    }
+  }
+  async function revertCard(card) {
+    if (applying || !report) return;
+    const context = current();
+    if (context.readOnly) {
+      status(t("文档为只读", "Document is read-only"));
+      return;
+    }
+    const range = resolveCard(card, context.text);
+    if (!range || range.kind !== "applied") {
+      refreshCards();
+      return;
+    }
+    applying = true;
+    refreshCards();
+    try {
+      await applyResolved([{ card, range }], "original");
+      status(t("已恢复原文", "Original passage restored"));
+    } catch (error) {
+      showError(error);
+    } finally {
+      applying = false;
+      refreshCards();
+    }
   }
   function renderAnalysis(text, request) {
-    let report;
+    let analysis;
     try {
-      report = JSON.parse(
+      analysis = JSON.parse(
         text.replace(/^\s*```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, ""),
       );
     } catch {
@@ -151,11 +528,22 @@ export function createAIAssistant({
         ),
       );
     }
+    clearReport();
+    report = {
+      identity: request.snapshot.identity,
+      scope: {
+        tracker: request.tracker,
+        from: request.snapshot.offset,
+        to: request.snapshot.offset + request.snapshot.source.length,
+      },
+      cards: [],
+      toolbar: null,
+    };
+    trackers.add(request.tracker);
     const results = $(".ai-results");
-    results.replaceChildren();
     const intro = document.createElement("div");
     intro.className = "ai-summary";
-    const overall = Number(report.overallScore);
+    const overall = Number(analysis.overallScore);
     const score = document.createElement("strong");
     score.className = "ai-overall-score";
     score.textContent =
@@ -163,32 +551,71 @@ export function createAIAssistant({
         ? `${overall} / 100`
         : t("未评分", "Not scored");
     const summary = document.createElement("p");
-    summary.textContent = String(report.summary || "");
+    summary.textContent = String(analysis.summary || "");
     intro.append(score, summary);
     results.append(intro);
     const dimensions = document.createElement("div");
     dimensions.className = "ai-dimensions";
-    for (const dimension of (Array.isArray(report.dimensions)
-      ? report.dimensions
+    for (const dimension of (Array.isArray(analysis.dimensions)
+      ? analysis.dimensions
       : []
     ).slice(0, 12)) {
       const item = document.createElement("div");
       const name = document.createElement("strong");
-      const score = Number(dimension.score);
-      name.textContent = `${String(dimension.name || "")} · ${Number.isFinite(score) && score >= 0 && score <= 100 ? score : "—"}/100`;
+      const value = Number(dimension.score);
+      name.textContent = `${String(dimension.name || "")} · ${Number.isFinite(value) && value >= 0 && value <= 100 ? value : "—"}/100`;
+      const meter = document.createElement("span");
+      meter.className = "ai-meter";
+      meter.setAttribute("aria-hidden", "true");
+      meter.style.setProperty(
+        "--value",
+        String(Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0),
+      );
       const reason = document.createElement("p");
       reason.textContent = String(dimension.reason || "");
-      item.append(name, reason);
+      item.append(name, meter, reason);
       dimensions.append(item);
     }
     results.append(dimensions);
-    for (const suggestion of (Array.isArray(report.suggestions)
-      ? report.suggestions
-      : []
-    ).slice(0, 30)) {
-      const revision = resolveAIRevision(request.snapshot, suggestion);
-      const card = document.createElement("article");
-      card.className = "ai-suggestion";
+    const suggestions = (
+      Array.isArray(analysis.suggestions) ? analysis.suggestions : []
+    ).slice(0, 30);
+    const omitted = Number(analysis.omittedSuggestions) || 0;
+    if (suggestions.length || omitted) {
+      const toolbar = document.createElement("div");
+      toolbar.className = "ai-suggestions-toolbar";
+      const count = document.createElement("span");
+      count.className = "ai-suggestions-count";
+      const all = cardButton(
+        "",
+        () => {
+          const text = current().text;
+          void acceptCards(
+            report.cards.filter(
+              (card) => resolveCard(card, text)?.kind === "original",
+            ),
+          );
+        },
+        "data-ai-accept-all",
+      );
+      all.hidden = true;
+      toolbar.append(count, all);
+      if (omitted) {
+        const note = document.createElement("span");
+        note.className = "ai-suggestions-omitted";
+        note.textContent = t(
+          `另有 ${omitted} 条建议引用的原文不存在或不唯一，已省略`,
+          `${omitted} more suggestions quoted text that is missing or not unique and were omitted`,
+        );
+        toolbar.append(note);
+      }
+      results.append(toolbar);
+      report.toolbar = toolbar;
+    }
+    for (const suggestion of suggestions) {
+      const base = resolveAIRevision(request.snapshot, suggestion);
+      const element = document.createElement("article");
+      element.className = "ai-suggestion";
       const reason = document.createElement("p");
       reason.textContent = String(suggestion.reason || "");
       const diff = document.createElement("div");
@@ -206,77 +633,31 @@ export function createAIAssistant({
         block.append(heading, source);
         diff.append(block);
       }
-      card.append(reason, diff);
       const actions = document.createElement("div");
       actions.className = "ai-suggestion-actions";
-      if (revision) {
-        const line = document.createElement("span");
-        line.textContent =
-          t("第 ", "Line ") +
-          request.snapshot.text.slice(0, revision.from).split("\n").length;
-        actions.append(line);
-        const jump = document.createElement("button");
-        jump.type = "button";
-        jump.textContent = t("定位", "Locate");
-        jump.onclick = () => {
-          if (!fresh(request.snapshot)) {
-            updateContext();
-            return;
-          }
-          Promise.resolve(locate(revision)).catch(showError);
-        };
-        const accept = document.createElement("button");
-        accept.type = "button";
-        accept.dataset.aiAccept = "";
-        accept.textContent = t("接受修改", "Accept revision");
-        accept.disabled = Boolean(current().readOnly);
-        accept.onclick = async () => {
-          if (applying) return;
-          if (!fresh(request.snapshot)) {
-            updateContext();
-            return;
-          }
-          if (current().readOnly) {
-            status(t("文档为只读", "Document is read-only"));
-            return;
-          }
-          applying = true;
-          accept.disabled = true;
-          try {
-            await applyRevision(revision);
-            updateContext();
-            status(
-              t(
-                "修改已应用，可撤销。请重新分析更新后的文档。",
-                "Revision applied; undo is available. Analyze the updated document again.",
-              ),
-            );
-          } catch (error) {
-            showError(error);
-          } finally {
-            applying = false;
-            if (accept.isConnected)
-              accept.disabled = Boolean(current().readOnly);
-          }
-        };
-        actions.append(jump, accept);
-      } else {
-        const note = document.createElement("span");
-        note.textContent = t(
-          "原文无法唯一定位，仅供参考",
-          "Passage cannot be uniquely located; review manually",
-        );
-        actions.append(note);
-      }
-      const reject = document.createElement("button");
-      reject.type = "button";
-      reject.textContent = t("忽略", "Dismiss");
-      reject.onclick = () => card.remove();
-      actions.append(reject);
-      card.append(actions);
-      results.append(card);
+      element.append(reason, diff, actions);
+      results.append(element);
+      report.cards.push({
+        element,
+        actions,
+        original: normalizeEOL(suggestion.original ?? ""),
+        replacement: normalizeEOL(suggestion.replacement ?? ""),
+        unlocatable: !base,
+        anchor: base
+          ? {
+              tracker: request.tracker,
+              from: base.from,
+              to: base.to,
+              expected: base.original,
+              kind: "original",
+            }
+          : null,
+      });
     }
+    refreshCards();
   }
+
+  // ----- Requests --------------------------------------------------------
   async function start(task, question = "") {
     if (active || preparing || disposed) return false;
     updateContext();
@@ -291,10 +672,15 @@ export function createAIAssistant({
       : context.text.length;
     if (from === to) {
       status(
-        t(
-          "请先选择文字或打开有内容的文档",
-          "Select text or open a nonempty document first",
-        ),
+        selection
+          ? t(
+              "请先在文档中选择要分析的文字",
+              "Select the text to analyze in the document first",
+            )
+          : t(
+              "请先选择文字或打开有内容的文档",
+              "Select text or open a nonempty document first",
+            ),
       );
       return;
     }
@@ -352,22 +738,30 @@ export function createAIAssistant({
     if (disposed || !open) return false;
     updateModelLabel();
     contextIdentity = context.identity;
-    contextText = context.text;
-    snapshot = {
+    const snapshot = {
       identity: context.identity,
       text: context.text,
       source: context.text.slice(from, to),
       offset: from,
     };
     const id = crypto.randomUUID();
-    active = { id, task, snapshot, text: "", question };
+    // Edits made while the model works are recorded so results still apply.
+    const tracker = track(snapshot.text.length);
+    active = { id, task, snapshot, tracker, text: "", question };
     const request = active;
     busy(true);
     $(".ai-empty").hidden = true;
     $(".ai-stream").textContent = "";
     $(".ai-stream").hidden = false;
-    status(t("正在分析…", "Working…"));
-    if (task === "analysis") $(".ai-results").replaceChildren();
+    status(
+      task === "analysis"
+        ? t("正在分析…", "Analyzing…")
+        : t("正在回复…", "Replying…"),
+    );
+    if (task === "analysis") {
+      clearReport();
+      $(".ai-results").replaceChildren();
+    }
     if (task === "chat") appendChat("user", question);
     try {
       await invoke("aiStart", {
@@ -382,6 +776,7 @@ export function createAIAssistant({
     } catch (error) {
       if (active === request) {
         active = null;
+        trackers.delete(tracker);
         busy(false);
         $(".ai-stream").hidden = true;
         showError(error);
@@ -393,8 +788,19 @@ export function createAIAssistant({
   const unsubscribe = on("ai-response", (event) => {
     const request = active;
     if (!request || event.id !== request.id || disposed) return;
-    if (!fresh(request.snapshot)) {
+    if (current().identity !== request.snapshot.identity) {
       updateContext();
+      return;
+    }
+    if (event.type === "retry") {
+      const attempt = Number(event.attempt) || 1,
+        of = Number(event.of) || attempt;
+      status(
+        t(
+          `服务繁忙，正在重试（${attempt}/${of}）…`,
+          `Provider busy; retrying (${attempt}/${of})…`,
+        ),
+      );
       return;
     }
     if (event.type === "delta") {
@@ -402,15 +808,24 @@ export function createAIAssistant({
       if (!frame)
         frame = requestAnimationFrame(() => {
           frame = 0;
-          if (active === request) $(".ai-stream").textContent = request.text;
+          if (active === request) {
+            const follow = nearBottom();
+            $(".ai-stream").textContent = request.text;
+            if (follow) scrollToBottom();
+          }
         });
       return;
     }
     active = null;
     busy(false);
     $(".ai-stream").hidden = true;
+    if (request.task !== "analysis") trackers.delete(request.tracker);
     if (event.type === "error") {
-      status(event.message || t("模型请求失败", "Model request failed"));
+      status(
+        event.message
+          ? localizeError(event.message)
+          : t("模型请求失败", "Model request failed"),
+      );
       return;
     }
     if (event.type !== "done") return;
@@ -450,6 +865,17 @@ export function createAIAssistant({
   $("[data-ai-close]").onclick = () => setOpen(false);
   $("[data-ai-analyze]").onclick = () => void start("analysis");
   $("[data-ai-cancel]").onclick = () => cancel();
+  $("[data-ai-scope]").onchange = () => {
+    if ($("[data-ai-scope]").value !== "selection") return;
+    const { selection } = current();
+    if (selection.from === selection.to)
+      status(
+        t(
+          "请在文档中选择要分析的文字",
+          "Select the text to analyze in the document",
+        ),
+      );
+  };
   $(".ai-chat-form").onsubmit = async (event) => {
     event.preventDefault();
     const question = $("textarea").value.trim();
@@ -465,6 +891,12 @@ export function createAIAssistant({
       $(".ai-chat-form").requestSubmit();
     }
   };
+  host.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && (active || preparing)) {
+      event.preventDefault();
+      cancel();
+    }
+  });
   const resizer = $(".ai-resizer");
   let drag = null;
   resizer.onpointerdown = (event) => {
@@ -515,11 +947,14 @@ export function createAIAssistant({
     toggle: () => setOpen(!open),
     setOpen,
     updateContext,
+    trackChanges,
     configure,
     getState: () => ({ open, height, busy: Boolean(active || preparing) }),
     destroy() {
       cancel();
       disposed = true;
+      clearTimeout(refreshTimer);
+      trackers.clear();
       unsubscribe?.();
       observer.disconnect();
       if (frame) cancelAnimationFrame(frame);
