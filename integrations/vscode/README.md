@@ -2,16 +2,16 @@
 
 独立的 VS Code / Cursor 扩展，提供命令面板、Markdown 编辑区及文件列表右键的“在墨石中打开”。它只调用本机墨石程序，只处理本地路径、不自动下载应用、不包含 Typora 的素材或代码。
 
-当前版本 0.9.0（与 Inkstone 桌面应用版本一致），仅支持Windows和Linux。Linux 上13项Node行为测试及真实子进程参数测试已通过；尚未在 VS Code / Cursor 扩展宿主中人工验收，也未验证 Windows 实际启动。安装包生成不能替代这些验收。
+当前版本 0.9.1（与 Inkstone 桌面应用版本一致），仅支持Windows和Linux。Linux 上13项Node行为测试及真实子进程参数测试已通过；尚未在 VS Code / Cursor 扩展宿主中人工验收，也未验证 Windows 实际启动。安装包生成不能替代这些验收。
 
 ## 安装
 
-先安装 Inkstone 桌面应用。在 VS Code 的扩展菜单选择 **Install from VSIX… / 从 VSIX 安装…**，选择 `release/extensions/inkstone-open-0.9.0.vsix`。使用兼容 VSIX 的 Cursor 安装入口也可安装，但需单独验证。
+先安装 Inkstone 桌面应用。在 VS Code 的扩展菜单选择 **Install from VSIX… / 从 VSIX 安装…**，选择 `release/extensions/inkstone-open-0.9.1.vsix`。使用兼容 VSIX 的 Cursor 安装入口也可安装，但需单独验证。
 
 也可在本机 VS Code 命令行执行：
 
 ```bash
-code --install-extension release/extensions/inkstone-open-0.9.0.vsix
+code --install-extension release/extensions/inkstone-open-0.9.1.vsix
 ```
 
 本包未发布到 Marketplace。`inkstone-local` 是本地打包使用的标识，不宣称已注册发布者或平台认证。
@@ -47,7 +47,7 @@ npm test
 npm run package
 ```
 
-输出为根仓库 `release/extensions/inkstone-open-0.9.0.vsix`，没有运行时 npm 依赖。`@vscode/vsce` 只用于开发打包，不随扩展分发；没有执行 Marketplace 发布。
+输出为根仓库 `release/extensions/inkstone-open-0.9.1.vsix`，没有运行时 npm 依赖。`@vscode/vsce` 只用于开发打包，不随扩展分发；没有执行 Marketplace 发布。
 
 人工验收步骤：在目标宿主安装 VSIX，分别用命令面板、编辑区右键和文件树右键打开中文/空格/特殊字符文件；确认未命名 Save As 的保存与取消；确认保存失败不启动；确认另一个编辑器已激活时文件树命令仍打开选中文件；验证缺应用错误与路径设置。Windows/Linux、VS Code/Cursor 分别记录结果。其他操作系统会在保存文档或启动进程之前明确拒绝。
 
