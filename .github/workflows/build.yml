@@ -2,6 +2,7 @@ name: Windows and Linux local editor
 on:
   push:
     branches: [master]
+    tags: ["v*"]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -16,13 +17,25 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Verify release tag matches the application version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          $version = node -p "require('./package.json').version"
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'Release tag does not match package.json' }
       - run: npm ci
       - run: node node_modules/electron/install.js
       - run: npm test
       - run: npm ci --prefix integrations/vscode
       - run: npm test --prefix integrations/vscode
       - run: npm run licenses
-      - run: npm run dist:win
+      - name: Build Windows installer with bounded download retries
+        run: |
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            npm run dist:win
+            if ($LASTEXITCODE -eq 0) { exit 0 }
+            if ($attempt -lt 3) { Start-Sleep -Seconds (10 * $attempt) }
+          }
+          exit 1
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - name: Run Windows editing and context menu regressions
@@ -41,6 +54,7 @@ jobs:
       - name: Verify native installer language and file associations
         run: |
           node scripts/verify-installer-language.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node scripts/verify-installer-associations.mjs
       - name: Run the actual packaged Windows application
         run: npm run test:native
@@ -51,6 +65,27 @@ jobs:
         env:
           INKSTONE_EXECUTABLE: release/win-unpacked/Inkstone.exe
           INKSTONE_NATIVE_VARIANT: packaged
+      - name: Verify and prepare the release installer
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          node scripts/verify-windows-package.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verify-release-source.mjs release/win-unpacked/resources/app.asar
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $version = node -p "require('./package.json').version"
+          $installer = "Inkstone-$version-windows-x64.exe"
+          $digest = (Get-FileHash -Algorithm SHA256 -LiteralPath "release/$installer").Hash.ToLowerInvariant()
+          Set-Content -LiteralPath release/SHA256SUMS.txt -Encoding ascii -Value "$digest  $installer"
+      - name: Upload the verified Windows installer
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            release/Inkstone-*-windows-x64.exe
+            release/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 7
   linux:
     name: Linux x64
     runs-on: ubuntu-22.04
@@ -64,10 +99,46 @@ jobs:
       - run: node node_modules/electron/install.js
       - run: npm test
       - run: npm run licenses
-      - run: npm run dist:linux
+      - name: Build Linux packages with bounded download retries
+        run: |
+          for attempt in 1 2 3; do
+            if npm run dist:linux; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep "$((10 * attempt))"; fi
+          done
+          exit 1
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - name: Run the actual Linux application
         run: xvfb-run -a npm run test:native
       - name: Extract and validate each Linux package
         run: xvfb-run -a npm run verify:packages
+  release:
+    name: Publish verified Windows installer
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release-assets
+      - name: Publish the latest release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          version="${tag#v}"
+          export RELEASE_DOCS="https://github.com/$GITHUB_REPOSITORY/blob/$tag/docs/"
+          node -e 'const fs=require("node:fs"); const text=fs.readFileSync(process.argv[1],"utf8"); fs.writeFileSync("release-notes.md", text.replaceAll("](../", "]("+process.env.RELEASE_DOCS));' "docs/releases/$tag.md"
+          (cd release-assets && sha256sum --check SHA256SUMS.txt)
+          gh release create "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag --latest \
+            --title "Inkstone $version" \
+            --notes-file release-notes.md \
+            "release-assets/Inkstone-$version-windows-x64.exe" \
+            release-assets/SHA256SUMS.txt
