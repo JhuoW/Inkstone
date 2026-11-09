@@ -6,7 +6,7 @@
     <title>Inkstone — A place for your thoughts</title>
     <meta
       name="description"
-      content="An open-source, local Markdown editor with in-place math, editable tables, syntax-highlighted code and diagrams. A place for your thoughts."
+      content="Inkstone is an AI-powered, open-source Markdown editor that scores your writing and suggests revisions, with math, tables, highlighted code and diagrams."
     />
     <meta name="theme-color" content="#F4F0E6" />
     <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
@@ -35,7 +35,17 @@
               <li><a href="#download">Download</a></li>
               <li>
                 <a class="src" href="https://github.com/JhuoW/Inkstone"
-                  >View source <span class="arrow">↗</span></a
+                  ><svg
+                    class="gh"
+                    viewBox="0 0 16 16"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    /></svg
+                  >View source</a
                 >
               </li>
             </ul>
@@ -73,10 +83,6 @@
       <!-- Hero -->
       <section class="hero">
         <div class="wrap">
-          <div class="eyebrow">
-            <i class="dot"></i><span>Open source</span><i class="sep"></i
-            ><span>A local-first writing tool</span>
-          </div>
           <h1>
             <span class="name"
               ><img
@@ -91,7 +97,7 @@
           <div class="hero-grid">
             <div>
               <p class="lede">
-                A quiet, local Markdown editor.<br />
+                An AI-powered, open-source Markdown editor.<br />
                 From a one-line note to equations, diagrams and the finished
                 piece.
               </p>
@@ -104,7 +110,17 @@
                 <a
                   class="btn btn-secondary"
                   href="https://github.com/JhuoW/Inkstone"
-                  >View source <span class="arrow">↗</span></a
+                  ><svg
+                    class="gh"
+                    viewBox="0 0 16 16"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    /></svg
+                  >View source</a
                 >
               </div>
               <div class="alt">
@@ -133,8 +149,12 @@
                 </dd>
               </div>
               <div>
+                <dt>AI</dt>
+                <dd>Optional · local models or your own API key</dd>
+              </div>
+              <div>
                 <dt>Account</dt>
-                <dd>No sign-up, no cloud</dd>
+                <dd>No sign-up, no cloud required</dd>
               </div>
               <div>
                 <dt>Interface</dt>
@@ -153,7 +173,6 @@
       <section class="showcase">
         <div class="caption-row">
           <span>Actual interface · English · Light theme</span>
-          <span class="mono">1280 × 900</span>
         </div>
         <div class="window">
           <div class="titlebar">
@@ -195,21 +214,19 @@
               src="assets/screenshots/app-writing-en-1280.png"
               width="1280"
               height="900"
-              alt="Inkstone writing view: file sidebar on the left, a document with an equation and a table on the right"
+              alt="Inkstone writing view: file sidebar on the left, a document with an equation and a table on the right, and the AI Writing Assistant button in the title bar"
             />
-            <span class="pin" style="left: 17.34375%; top: 31.22222%">1</span>
-            <span class="pin" style="left: 28.90625%; top: 10.66667%">2</span>
-            <span class="pin" style="left: 28.90625%; top: 38%">3</span>
-            <span class="pin" style="left: 28.90625%; top: 80.33333%">4</span>
+            <span class="pin" style="left: 17.26563%; top: 32.0434%">1</span>
+            <span class="pin" style="left: 28.86719%; top: 15.8342%">2</span>
+            <span class="pin" style="left: 28.86719%; top: 43.0434%">3</span>
+            <span class="pin" style="left: 28.86719%; top: 82.23177%">4</span>
+            <span class="pin" style="left: 55.20752%; top: 1.05556%">5</span>
           </div>
         </div>
         <div class="wrap legend">
           <div>
             <h4><i>1</i>File sidebar</h4>
-            <p>
-              Files, outline and search, working directly on the folders on your
-              computer.
-            </p>
+            <p>Files, outline and search, right on your local folders.</p>
           </div>
           <div>
             <h4><i>2</i>Typography</h4>
@@ -220,13 +237,15 @@
           </div>
           <div>
             <h4><i>3</i>Inline math</h4>
-            <p>
-              Equations sit inside the sentence. Click one to edit it in place.
-            </p>
+            <p>Equations sit in the sentence. Click one to edit it.</p>
           </div>
           <div>
             <h4><i>4</i>Tables</h4>
-            <p>Edit tables right on the page, without a trip back to source.</p>
+            <p>Edit right on the page, no switch to source needed.</p>
+          </div>
+          <div>
+            <h4><i>5</i>AI Writing Assistant</h4>
+            <p>Scores your draft and suggests revisions in one click.</p>
           </div>
         </div>
       </section>
@@ -236,37 +255,83 @@
         <div class="wrap">
           <div class="section-head">
             <h3>Features</h3>
-            <span>01 — 03</span>
+            <span>01 — 04</span>
           </div>
 
           <!-- 01 -->
           <div class="row text-left">
             <div class="copy">
               <div class="idx">
-                <b>01</b><i class="sep"></i
-                ><span>Live preview · Source mode</span>
+                <b>01</b><i class="sep"></i><span>AI Writing Assistant</span>
               </div>
-              <h2>Writing,<br />naturally.</h2>
+              <h2>Feedback,<br />when you ask.</h2>
               <p>
-                Write Markdown directly on the page and watch headings, lists
-                and equations take shape as you type. Click a rendered equation
-                to edit its source in place. When you want every character in
-                view, switch to source mode; your selection and undo history
-                come with you.
+                Review the whole document or a selection for an overall score,
+                notes on each dimension and concrete revisions. Every change
+                needs your approval, and any change can be undone.
               </p>
               <dl class="kv">
                 <div>
-                  <dt>Shortcut</dt>
+                  <dt>Models</dt>
                   <dd>
-                    <kbd>Ctrl</kbd> + <kbd>/</kbd>&nbsp; Live preview ⇄ Source
+                    OpenAI, Claude, Gemini, DeepSeek, local models and more (11
+                    in all)
                   </dd>
                 </div>
                 <div>
-                  <dt>Original</dt>
-                  <dd>Kept as written, no silent reformatting</dd>
+                  <dt>Review</dt>
+                  <dd>Overall score · notes by dimension · revisions</dd>
+                </div>
+                <div>
+                  <dt>Your call</dt>
+                  <dd>Locate, accept, dismiss or undo, one by one</dd>
+                </div>
+                <div>
+                  <dt>Privacy</dt>
+                  <dd>
+                    Runs only when asked; with a local model, nothing leaves
+                    your computer
+                  </dd>
                 </div>
               </dl>
             </div>
+            <div class="f-ai">
+              <div class="plabel">
+                <b>Analyze &amp; score</b
+                ><span>Overall score and notes by dimension</span>
+              </div>
+              <div class="panel">
+                <img
+                  src="assets/screenshots/ai-review-en@2x.png"
+                  width="1640"
+                  height="634"
+                  alt="AI Writing Assistant analysis: 93 out of 100, with scores and comments for purpose, clarity, organization and tone"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="switch">
+                <i class="line"></i><span>You decide what changes</span
+                ><i class="line"></i>
+              </div>
+              <div class="plabel">
+                <b>Suggested revision</b><span>Locate, accept or dismiss</span>
+              </div>
+              <div class="panel">
+                <img
+                  src="assets/screenshots/ai-revision-en@2x.png"
+                  width="1640"
+                  height="466"
+                  alt="A suggested revision showing the original and suggested sentence, with Locate, Accept revision and Dismiss buttons"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 -->
+          <div class="row text-right">
             <div class="f1">
               <div class="plabel">
                 <b>Live preview</b
@@ -286,7 +351,7 @@
               </div>
               <div class="plabel">
                 <b>Source mode</b
-                ><span>The same passage, as plain Markdown</span>
+                ><span>The same paragraph in plain Markdown</span>
               </div>
               <div class="panel">
                 <img
@@ -304,10 +369,74 @@
                 />
               </div>
             </div>
+            <div class="copy">
+              <div class="idx">
+                <b>02</b><i class="sep"></i
+                ><span>Live preview · Source mode</span>
+              </div>
+              <h2>Writing,<br />naturally.</h2>
+              <p>
+                Write Markdown directly on the page and watch headings, lists
+                and equations take shape as you type. Click an equation to edit
+                its source. When every character matters, switch to source mode
+                in one step; your selection and undo history stay intact.
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>Shortcut</dt>
+                  <dd>
+                    <kbd>Ctrl</kbd> + <kbd>/</kbd>&nbsp; Live preview ⇄ Source
+                  </dd>
+                </div>
+                <div>
+                  <dt>Insert</dt>
+                  <dd>
+                    Type <kbd>/</kbd> at the start of a line for headings,
+                    tables, math and more
+                  </dd>
+                </div>
+                <div>
+                  <dt>Original</dt>
+                  <dd>No silent reformatting or rewriting</dd>
+                </div>
+              </dl>
+            </div>
           </div>
 
-          <!-- 02 -->
-          <div class="row text-right">
+          <!-- 03 -->
+          <div class="row text-left">
+            <div class="copy">
+              <div class="idx">
+                <b>03</b><i class="sep"></i
+                ><span>Math · Tables · Code · Diagrams</span>
+              </div>
+              <h2>Thinking,<br />with structure.</h2>
+              <p>
+                Inline math, LaTeX blocks, editable tables, syntax-highlighted
+                code and Mermaid diagrams all live in one Markdown file and
+                render clearly on the page.
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>Math</dt>
+                  <dd>
+                    Inline <span class="mono">$…$</span> and display
+                    <span class="mono">$$…$$</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Code</dt>
+                  <dd>Syntax highlighting for the language you pick</dd>
+                </div>
+                <div>
+                  <dt>Diagrams</dt>
+                  <dd>
+                    <span class="mono">Mermaid</span> flowcharts, sequence
+                    diagrams and more
+                  </dd>
+                </div>
+              </dl>
+            </div>
             <div class="f2">
               <div class="main">
                 <div class="plabel">
@@ -337,70 +466,10 @@
                 </div>
               </div>
             </div>
-            <div class="copy">
-              <div class="idx">
-                <b>02</b><i class="sep"></i
-                ><span>Math · Tables · Code · Diagrams</span>
-              </div>
-              <h2>Thinking,<br />with structure.</h2>
-              <p>
-                Inline math and LaTeX blocks, tables you edit in place,
-                syntax-highlighted code and Mermaid diagrams all live in the
-                same Markdown file, and all render clearly on the page.
-              </p>
-              <dl class="kv">
-                <div>
-                  <dt>Math</dt>
-                  <dd>
-                    Inline <span class="mono">$…$</span> and display
-                    <span class="mono">$$…$$</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Code</dt>
-                  <dd>Syntax highlighting, language picker</dd>
-                </div>
-                <div>
-                  <dt>Diagrams</dt>
-                  <dd>
-                    <span class="mono">Mermaid</span> flowcharts, sequences and
-                    more
-                  </dd>
-                </div>
-              </dl>
-            </div>
           </div>
 
-          <!-- 03 -->
-          <div class="row text-left">
-            <div class="copy">
-              <div class="idx">
-                <b>03</b><i class="sep"></i
-                ><span>Local files · Offline · Export</span>
-              </div>
-              <h2>Your files,<br />close at hand.</h2>
-              <p>
-                Open any folder on your computer; your documents are ordinary
-                .md files. No account, nothing uploaded, and writing keeps
-                working offline. When you are done, export to HTML, PDF or PNG.
-              </p>
-              <dl class="kv">
-                <div>
-                  <dt>Files</dt>
-                  <dd>Folders · search · autosave · recovery</dd>
-                </div>
-                <div>
-                  <dt>Offline</dt>
-                  <dd>Core writing needs no connection</dd>
-                </div>
-                <div>
-                  <dt>More formats</dt>
-                  <dd>
-                    Optional <span class="mono">Pandoc</span> for Word and more
-                  </dd>
-                </div>
-              </dl>
-            </div>
+          <!-- 04 -->
+          <div class="row text-right">
             <div class="f3">
               <div>
                 <div class="plabel"><b>The folder in Inkstone</b></div>
@@ -418,14 +487,13 @@
                 <div class="plabel" style="padding-left: 21px">
                   <b>The same folder on disk</b>
                 </div>
-                <div class="tree">
-                  Field notes/ <span class="dim">├──</span> assets/
-                  <span class="dim">├──</span> Research/
-                  <span class="dim">│ └──</span> Writing rituals.md
-                  <span class="dim">├──</span>
-                  <span class="hl">A quieter place.md</span>
-                  <span class="dim">└──</span> Reading list.md
-                </div>
+                <pre class="tree">
+Field notes/
+<span class="dim">├──</span> assets/
+<span class="dim">├──</span> Research/
+<span class="dim">│   └──</span> Writing rituals.md
+<span class="dim">├──</span> <span class="hl">A quieter place.md</span>
+<span class="dim">└──</span> Reading list.md</pre>
                 <div class="note">Plain .md files that open in any editor.</div>
               </div>
               <div class="exports">
@@ -434,6 +502,32 @@
                 <div><b>PNG</b><span>Offline export</span></div>
                 <div><b>DOCX …</b><span>Via Pandoc</span></div>
               </div>
+            </div>
+            <div class="copy">
+              <div class="idx">
+                <b>04</b><i class="sep"></i
+                ><span>Local files · Offline · Export</span>
+              </div>
+              <h2>Your files,<br />close at hand.</h2>
+              <p>
+                Open any folder on your computer and start writing; every
+                document is a plain .md file. No account, no cloud, and writing
+                works offline. When you are done, export to HTML, PDF or PNG.
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>Files</dt>
+                  <dd>Folders · search · autosave · recovery</dd>
+                </div>
+                <div>
+                  <dt>Offline</dt>
+                  <dd>Core writing needs no connection</dd>
+                </div>
+                <div>
+                  <dt>More formats</dt>
+                  <dd>Word and more with <span class="mono">Pandoc</span></dd>
+                </div>
+              </dl>
             </div>
           </div>
         </div>
@@ -444,8 +538,8 @@
         <img class="icon" src="assets/brand/inkstone-icon-512.png" alt="" />
         <h2>Your next piece starts here.</h2>
         <p>
-          Open source, local and quiet. Get the Windows installer, or build for
-          Linux from source.
+          You hold the pen; AI helps you polish. Get the Windows installer, or
+          build for Linux from source.
         </p>
         <div class="cta">
           <a
@@ -458,7 +552,17 @@
             class="btn btn-secondary"
             style="width: 290px"
             href="https://github.com/JhuoW/Inkstone"
-            >View source <span class="arrow">↗</span></a
+            ><svg
+              class="gh"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                fill="currentColor"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+              /></svg
+            >View source</a
           >
         </div>
         <div class="meta">
@@ -481,7 +585,19 @@
             <a href="#features">Features</a><a href="#download">Download</a
             ><a href="https://github.com/JhuoW/Inkstone/releases/latest"
               >Release notes</a
-            ><a href="https://github.com/JhuoW/Inkstone">View source ↗</a>
+            ><a href="https://github.com/JhuoW/Inkstone"
+              ><svg
+                class="gh"
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                /></svg
+              >View source</a
+            >
           </nav>
           <div class="sign">
             <span>A place for your thoughts</span

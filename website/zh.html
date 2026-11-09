@@ -6,7 +6,7 @@
     <title>Inkstone 墨石 — 让想法落在纸上</title>
     <meta
       name="description"
-      content="墨石是一款开源的本地 Markdown 编辑器，支持原位公式编辑、表格、代码高亮与图表。让想法落在纸上。"
+      content="墨石是 AI 大模型驱动的开源 Markdown 编辑器，可为文稿评分并提出修改建议，支持公式、表格、代码高亮与图表。"
     />
     <meta name="theme-color" content="#F4F0E6" />
     <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
@@ -35,7 +35,17 @@
               <li><a href="#download">下载</a></li>
               <li>
                 <a class="src" href="https://github.com/JhuoW/Inkstone"
-                  >查看源码 <span class="arrow">↗</span></a
+                  ><svg
+                    class="gh"
+                    viewBox="0 0 16 16"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    /></svg
+                  >查看源码</a
                 >
               </li>
             </ul>
@@ -73,10 +83,6 @@
       <!-- Hero -->
       <section class="hero">
         <div class="wrap">
-          <div class="eyebrow">
-            <i class="dot"></i><span>开源</span><i class="sep"></i
-            ><span>本地优先的写作工具</span>
-          </div>
           <h1>
             <span class="name">墨石：</span
             ><span class="tag">让想法落在纸上</span>
@@ -84,7 +90,7 @@
           <div class="hero-grid">
             <div>
               <p class="lede">
-                一个安静的本地 Markdown 编辑器。<br />从一行随笔，到公式、图表与完整文章。
+                AI 大模型驱动的开源 Markdown 编辑器。<br />从一行随笔，到公式、图表与完整文章。
               </p>
               <div class="cta">
                 <a
@@ -95,7 +101,17 @@
                 <a
                   class="btn btn-secondary"
                   href="https://github.com/JhuoW/Inkstone"
-                  >查看源码 <span class="arrow">↗</span></a
+                  ><svg
+                    class="gh"
+                    viewBox="0 0 16 16"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    /></svg
+                  >查看源码</a
                 >
               </div>
               <div class="alt">
@@ -120,8 +136,12 @@
                 <dd>本地 <span class="mono">.md</span> 文件，原文保留</dd>
               </div>
               <div>
+                <dt>AI</dt>
+                <dd>可选 · 本地模型或自备 API Key</dd>
+              </div>
+              <div>
                 <dt>账号</dt>
-                <dd>无需注册，不经云端</dd>
+                <dd>无需注册，不依赖云端</dd>
               </div>
               <div>
                 <dt>界面</dt>
@@ -142,7 +162,6 @@
       <section class="showcase">
         <div class="caption-row">
           <span>真实界面 · 简体中文 · 浅色主题</span>
-          <span class="mono">1280 × 900</span>
         </div>
         <div class="window">
           <div class="titlebar">
@@ -183,19 +202,20 @@
             <img
               src="assets/screenshots/app-writing-zh-1280.png"
               width="1280"
-              height="899"
-              alt="墨石写作界面：左侧文件侧栏，右侧为包含公式与表格的文档"
+              height="900"
+              alt="墨石写作界面：左侧是文件侧栏，右侧是含公式和表格的文档，标题栏中间是 AI写作助手入口"
             />
-            <span class="pin" style="left: 17.34375%; top: 31.22222%">1</span>
-            <span class="pin" style="left: 28.90625%; top: 15.77778%">2</span>
-            <span class="pin" style="left: 28.90625%; top: 43.11111%">3</span>
-            <span class="pin" style="left: 28.90625%; top: 85.44444%">4</span>
+            <span class="pin" style="left: 17.26563%; top: 32.0434%">1</span>
+            <span class="pin" style="left: 28.86719%; top: 15.8342%">2</span>
+            <span class="pin" style="left: 28.86719%; top: 43.0434%">3</span>
+            <span class="pin" style="left: 28.86719%; top: 82.23177%">4</span>
+            <span class="pin" style="left: 58.32886%; top: 1.05556%">5</span>
           </div>
         </div>
         <div class="wrap legend">
           <div>
             <h4><i>1</i>文件侧栏</h4>
-            <p>文件、大纲与搜索三个入口，直接浏览电脑上的文件夹。</p>
+            <p>文件、大纲与搜索，直接打开本机文件夹。</p>
           </div>
           <div>
             <h4><i>2</i>正文排版</h4>
@@ -203,11 +223,15 @@
           </div>
           <div>
             <h4><i>3</i>行内公式</h4>
-            <p>公式就写在句子里，点击即可就地修改。</p>
+            <p>公式嵌在句中，点击即可修改。</p>
           </div>
           <div>
             <h4><i>4</i>表格</h4>
-            <p>表格在页面中直接编辑，不必回到源码。</p>
+            <p>在页面上直接编辑，无需切回源码。</p>
+          </div>
+          <div>
+            <h4><i>5</i>AI写作助手</h4>
+            <p>一键为文稿评分，并给出修改建议。</p>
           </div>
         </div>
       </section>
@@ -217,31 +241,74 @@
         <div class="wrap">
           <div class="section-head">
             <h3>功能</h3>
-            <span>01 — 03</span>
+            <span>01 — 04</span>
           </div>
 
           <!-- 01 -->
           <div class="row text-left">
             <div class="copy">
               <div class="idx">
-                <b>01</b><i class="sep"></i><span>即时预览 · 源码模式</span>
+                <b>01</b><i class="sep"></i><span>AI写作助手</span>
               </div>
-              <h2>写作，<br />自然发生。</h2>
+              <h2>评阅，<br />随叫随到。</h2>
               <p>
-                直接在页面里写
-                Markdown，标题、列表与公式随写随现。点开渲染后的公式，就地修改它的源码；需要逐字掌控时，一键切到源码模式，选区与撤销记录都还在。
+                评阅全文或选中的段落，给出总分、分项点评与具体修改建议。每处修改都须经你确认，也随时可以撤销。
               </p>
               <dl class="kv">
                 <div>
-                  <dt>快捷键</dt>
-                  <dd><kbd>Ctrl</kbd> + <kbd>/</kbd>　即时预览 ⇄ 源码模式</dd>
+                  <dt>模型</dt>
+                  <dd>OpenAI、Claude、Gemini、DeepSeek、本地模型等 11 种</dd>
                 </div>
                 <div>
-                  <dt>原文</dt>
-                  <dd>不重排、不改写你的 Markdown</dd>
+                  <dt>评阅</dt>
+                  <dd>总分 · 分项点评 · 修改建议</dd>
+                </div>
+                <div>
+                  <dt>由你决定</dt>
+                  <dd>逐条定位、接受、忽略或撤销</dd>
+                </div>
+                <div>
+                  <dt>隐私</dt>
+                  <dd>仅在你请求时运行；用本地模型，文稿不出本机</dd>
                 </div>
               </dl>
             </div>
+            <div class="f-ai">
+              <div class="plabel">
+                <b>分析与评分</b><span>总分与分项点评</span>
+              </div>
+              <div class="panel">
+                <img
+                  src="assets/screenshots/ai-review-zh@2x.png"
+                  width="1640"
+                  height="598"
+                  alt="AI写作助手的分析结果：总分 92，另有写作目的、清晰度、结构、排版四项评分与点评"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="switch">
+                <i class="line"></i><span>改与不改，由你决定</span
+                ><i class="line"></i>
+              </div>
+              <div class="plabel">
+                <b>修改建议</b><span>定位、接受或忽略</span>
+              </div>
+              <div class="panel">
+                <img
+                  src="assets/screenshots/ai-revision-zh@2x.png"
+                  width="1640"
+                  height="427"
+                  alt="一条修改建议：左为原文，右为建议，下方有定位、接受修改、忽略三个按钮"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 -->
+          <div class="row text-right">
             <div class="f1">
               <div class="plabel">
                 <b>即时预览</b><span>点击公式，源码就地展开</span>
@@ -259,7 +326,7 @@
                 ><span>整篇切换</span><i class="line"></i>
               </div>
               <div class="plabel">
-                <b>源码模式</b><span>同一段文字，原样的 Markdown</span>
+                <b>源码模式</b><span>同一段落的 Markdown 原文</span>
               </div>
               <div class="panel">
                 <img
@@ -277,10 +344,62 @@
                 />
               </div>
             </div>
+            <div class="copy">
+              <div class="idx">
+                <b>02</b><i class="sep"></i><span>即时预览 · 源码模式</span>
+              </div>
+              <h2>写作，<br />自然发生。</h2>
+              <p>
+                直接在页面上写
+                Markdown，标题、列表与公式随写随现。点击公式即可修改源码；需要逐字推敲时，一键切换到源码模式，选区和撤销记录都会保留。
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>快捷键</dt>
+                  <dd><kbd>Ctrl</kbd> + <kbd>/</kbd>　即时预览 ⇄ 源码模式</dd>
+                </div>
+                <div>
+                  <dt>插入</dt>
+                  <dd>行首输入 <kbd>/</kbd>，插入标题、表格、公式等</dd>
+                </div>
+                <div>
+                  <dt>原文</dt>
+                  <dd>不擅自重排或改写</dd>
+                </div>
+              </dl>
+            </div>
           </div>
 
-          <!-- 02 -->
-          <div class="row text-right">
+          <!-- 03 -->
+          <div class="row text-left">
+            <div class="copy">
+              <div class="idx">
+                <b>03</b><i class="sep"></i
+                ><span>公式 · 表格 · 代码 · 图表</span>
+              </div>
+              <h2>思考，<br />也有结构。</h2>
+              <p>
+                行内公式、LaTeX 公式块、可直接编辑的表格、语法高亮的代码块和
+                Mermaid 图表，都写在同一份 Markdown 中，并在页面上清晰呈现。
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>公式</dt>
+                  <dd>
+                    行内 <span class="mono">$…$</span> 与公式块
+                    <span class="mono">$$…$$</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>代码</dt>
+                  <dd>语法高亮，可切换语言</dd>
+                </div>
+                <div>
+                  <dt>图表</dt>
+                  <dd><span class="mono">Mermaid</span> 流程图、时序图等</dd>
+                </div>
+              </dl>
+            </div>
             <div class="f2">
               <div class="main">
                 <div class="plabel">
@@ -309,65 +428,10 @@
                 </div>
               </div>
             </div>
-            <div class="copy">
-              <div class="idx">
-                <b>02</b><i class="sep"></i
-                ><span>公式 · 表格 · 代码 · 图表</span>
-              </div>
-              <h2>思考，<br />也有结构。</h2>
-              <p>
-                行内公式与 LaTeX
-                公式块、可直接编辑的表格、带语法高亮的代码块，以及 Mermaid
-                图表，都写在同一份 Markdown 里，也都在页面上清楚呈现。
-              </p>
-              <dl class="kv">
-                <div>
-                  <dt>公式</dt>
-                  <dd>
-                    行内 <span class="mono">$…$</span> 与公式块
-                    <span class="mono">$$…$$</span>
-                  </dd>
-                </div>
-                <div>
-                  <dt>代码</dt>
-                  <dd>语法高亮，下拉选择语言</dd>
-                </div>
-                <div>
-                  <dt>图表</dt>
-                  <dd><span class="mono">Mermaid</span> 流程图、时序图等</dd>
-                </div>
-              </dl>
-            </div>
           </div>
 
-          <!-- 03 -->
-          <div class="row text-left">
-            <div class="copy">
-              <div class="idx">
-                <b>03</b><i class="sep"></i
-                ><span>本地文件 · 离线编辑 · 导出</span>
-              </div>
-              <h2>文稿，<br />留在手边。</h2>
-              <p>
-                打开电脑上的任意文件夹，文稿就是普通的 .md
-                文件。无需账号，不上传云端，断网也能照常写作。写完之后，导出为
-                HTML、PDF 或 PNG。
-              </p>
-              <dl class="kv">
-                <div>
-                  <dt>文件</dt>
-                  <dd>本地文件夹 · 搜索 · 自动保存与恢复</dd>
-                </div>
-                <div>
-                  <dt>离线</dt>
-                  <dd>核心写作无需联网</dd>
-                </div>
-                <div>
-                  <dt>更多格式</dt>
-                  <dd>可选 <span class="mono">Pandoc</span>，导出 Word 等</dd>
-                </div>
-              </dl>
-            </div>
+          <!-- 04 -->
+          <div class="row text-right">
             <div class="f3">
               <div>
                 <div class="plabel"><b>墨石中的文件夹</b></div>
@@ -385,14 +449,13 @@
                 <div class="plabel" style="padding-left: 21px">
                   <b>硬盘上的同一个文件夹</b>
                 </div>
-                <div class="tree">
-                  Field notes/ <span class="dim">├──</span> assets/
-                  <span class="dim">├──</span> Research/
-                  <span class="dim">│ └──</span> Writing rituals.md
-                  <span class="dim">├──</span>
-                  <span class="hl">A quieter place.md</span>
-                  <span class="dim">└──</span> Reading list.md
-                </div>
+                <pre class="tree">
+Field notes/
+<span class="dim">├──</span> assets/
+<span class="dim">├──</span> Research/
+<span class="dim">│   └──</span> Writing rituals.md
+<span class="dim">├──</span> <span class="hl">A quieter place.md</span>
+<span class="dim">└──</span> Reading list.md</pre>
                 <div class="note">普通 .md 文件，任何编辑器都能打开。</div>
               </div>
               <div class="exports">
@@ -402,6 +465,34 @@
                 <div><b>DOCX …</b><span>经 Pandoc 转换</span></div>
               </div>
             </div>
+            <div class="copy">
+              <div class="idx">
+                <b>04</b><i class="sep"></i
+                ><span>本地文件 · 离线编辑 · 导出</span>
+              </div>
+              <h2>文稿，<br />留在手边。</h2>
+              <p>
+                打开电脑上的任意文件夹即可写作，文稿都是普通的 .md
+                文件。无需账号，不依赖云端，断网也能照常写。写完可导出为
+                HTML、PDF 或 PNG。
+              </p>
+              <dl class="kv">
+                <div>
+                  <dt>文件</dt>
+                  <dd>本地文件夹 · 搜索 · 自动保存与恢复</dd>
+                </div>
+                <div>
+                  <dt>离线</dt>
+                  <dd>核心写作无需联网</dd>
+                </div>
+                <div>
+                  <dt>更多格式</dt>
+                  <dd>
+                    配合 <span class="mono">Pandoc</span>，可导出 Word 等格式
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       </section>
@@ -410,7 +501,9 @@
       <section class="wrap closing" id="download">
         <img class="icon" src="assets/brand/inkstone-icon-512.png" alt="" />
         <h2>你的下一篇文章，从这里开始。</h2>
-        <p>开源，本地，安静。下载 Windows 安装版，或从源码构建 Linux 版本。</p>
+        <p>
+          落笔由你，润色有 AI。下载 Windows 安装版，或从源码构建 Linux 版本。
+        </p>
         <div class="cta">
           <a
             class="btn btn-primary"
@@ -422,7 +515,17 @@
             class="btn btn-secondary"
             style="width: 270px"
             href="https://github.com/JhuoW/Inkstone"
-            >查看源码 <span class="arrow">↗</span></a
+            ><svg
+              class="gh"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                fill="currentColor"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+              /></svg
+            >查看源码</a
           >
         </div>
         <div class="meta">
@@ -445,7 +548,19 @@
             <a href="#features">功能</a><a href="#download">下载</a
             ><a href="https://github.com/JhuoW/Inkstone/releases/latest"
               >更新说明</a
-            ><a href="https://github.com/JhuoW/Inkstone">查看源码 ↗</a>
+            ><a href="https://github.com/JhuoW/Inkstone"
+              ><svg
+                class="gh"
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                /></svg
+              >查看源码</a
+            >
           </nav>
           <div class="sign">
             <span>让想法落在纸上</span

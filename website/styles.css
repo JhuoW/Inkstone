@@ -121,6 +121,16 @@ a:focus-visible {
   font-family: var(--sans);
   font-weight: 400;
 }
+/* GitHub mark beside "View source" links; inherits the link colour. */
+.gh {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  vertical-align: -0.16em;
+}
+footer nav .gh {
+  margin-right: 6px;
+}
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -155,24 +165,6 @@ a:focus-visible {
 /* ---------- Hero ---------- */
 .hero {
   padding-top: 104px;
-}
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--stone);
-}
-.eyebrow .dot {
-  width: 7px;
-  height: 7px;
-  background: var(--vermilion);
-  border-radius: 1px;
-}
-.eyebrow .sep {
-  width: 24px;
-  height: 1px;
-  background: var(--rule-strong);
 }
 h1 {
   margin-top: 30px;
@@ -348,8 +340,9 @@ h1 .tag {
 .legend {
   margin-top: 44px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 32px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 28px;
+  row-gap: 28px;
 }
 .legend > div {
   border-top: 1px solid var(--ink);
@@ -390,9 +383,6 @@ h1 .tag {
   margin: 0 auto 22px;
   font-size: 13px;
   color: var(--stone);
-}
-.caption-row .mono {
-  font-size: 12.5px;
 }
 
 /* ---------- Features ---------- */
@@ -537,7 +527,8 @@ kbd {
   font-size: 12.5px;
 }
 
-/* feature 1 */
+/* AI Writing Assistant and live preview: two stacked panels */
+.f-ai .panel img,
 .f1 .panel img {
   width: 100%;
 }
@@ -713,6 +704,10 @@ kbd {
   justify-content: center;
   margin-top: 48px;
   gap: 20px;
+}
+.closing .btn {
+  padding-inline: 24px;
+  white-space: nowrap;
 }
 .closing .meta {
   display: flex;
@@ -959,6 +954,9 @@ footer a:hover {
   .alt .bar {
     display: none;
   }
+  .legend {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .row {
     column-gap: 48px;
     padding-block: 88px;
@@ -1055,6 +1053,7 @@ footer a:hover {
     margin-top: 20px;
     font-size: 48px;
   }
+  .f-ai,
   .f1,
   .f2,
   .f3 {
@@ -1161,14 +1160,6 @@ footer a:hover {
   .hero-wordmark {
     width: 290px;
   }
-  .eyebrow {
-    font-size: 11px;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .eyebrow .sep {
-    width: 18px;
-  }
   .hero-grid {
     margin-top: 30px;
     gap: 32px;
@@ -1208,9 +1199,6 @@ footer a:hover {
     flex-wrap: wrap;
     margin-bottom: 14px;
     font-size: 12px;
-  }
-  .caption-row .mono {
-    font-size: 11px;
   }
   .titlebar {
     height: 28px;
