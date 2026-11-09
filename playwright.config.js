@@ -13,6 +13,7 @@ export default defineConfig({
     "native-context.spec.js",
     "system-integration.spec.js",
     "code-fences.spec.js",
+    "ai-assistant.spec.js",
   ],
   timeout: 90000,
   workers: 1,

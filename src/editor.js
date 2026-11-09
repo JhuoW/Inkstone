@@ -60,6 +60,7 @@ import {
   reparseParagraph,
   hydrateDiagrams,
   parseBlocks,
+  formatMarkdownSource,
   getOutline,
   inlineMathRanges,
   renderInlineMath,
@@ -1915,14 +1916,10 @@ export function createEditor(
             : wrap("`");
         case "codeBlock": {
           const selected = view.state.sliceDoc(selection.from, selection.to);
-          const delimiter = "`".repeat(
-            Math.max(
-              3,
-              ...[...selected.matchAll(/`+/g)].map(
-                (match) => match[0].length + 1,
-              ),
-            ),
-          );
+          let fenceLength = 3;
+          for (const match of selected.matchAll(/`+/g))
+            fenceLength = Math.max(fenceLength, match[0].length + 1);
+          const delimiter = "`".repeat(fenceLength);
           return wrap(
             `\n\n${delimiter}${argument ?? settings.defaultCodeLanguage ?? ""}\n`,
             `\n${delimiter}\n`,
@@ -2092,10 +2089,7 @@ export function createEditor(
           return deleteLine(view);
         case "format": {
           const text = view.state.doc.toString();
-          const formatted = text
-            .replace(/^[ \t]+$/gm, "")
-            .replace(/\n{4,}/g, "\n\n\n")
-            .replace(/\s*$/, "\n");
+          const formatted = formatMarkdownSource(text, settings);
           if (text !== formatted)
             view.dispatch({
               changes: {

@@ -1,6 +1,12 @@
 "use strict";
 const { contextBridge, ipcRenderer, webUtils } = require("electron");
 const methods = new Set([
+  "aiGetSettings",
+  "aiSaveSettings",
+  "aiListModels",
+  "aiTestConnection",
+  "aiStart",
+  "aiCancel",
   "bootstrap",
   "getAboutInfo",
   "getDefaultAppInfo",
@@ -46,6 +52,7 @@ const methods = new Set([
   "contextMenu",
 ]);
 const events = new Set([
+  "ai-response",
   "command",
   "external-change",
   "before-close",

@@ -40,7 +40,9 @@ test.describe("desktop persistence, resource and export integration", () => {
       env: environment,
     });
     page = await application.firstWindow();
-    await page.waitForFunction(() => !!window.inkstone);
+    await page.waitForFunction(
+      () => window.__inkstone?.editor && !__inkstone.editor.view.state.readOnly,
+    );
     await invoke("updateSettings", { autoSave: false });
   });
   test.afterAll(async () => {
@@ -669,6 +671,13 @@ require(${JSON.stringify(path.resolve("electron/main.cjs"))});
       exportOptions: { pageSize: "Letter" },
     };
     await invoke("updateSettings", patch);
+    // This suite shares a live renderer and an externally watched file. Keep
+    // its session mode consistent with the direct IPC roundtrip so a pending
+    // external reload cannot overwrite the test's source mode with live mode.
+    await page.evaluate(async () => {
+      if (__inkstone.editor.getMode() !== "source")
+        await __inkstone.execute("source");
+    });
     await invoke("saveSession", {
       path: note,
       folder: directory,

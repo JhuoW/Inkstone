@@ -30,6 +30,12 @@ function roundtrip(html) {
 const cellText = (table) =>
   [...table.rows].map((row) => [...row.cells].map((cell) => cell.textContent));
 
+test("large copied code with many backtick runs does not overflow the call stack", () => {
+  const code = "x`".repeat(150000) + "\n`````\nend";
+  const markdown = htmlToMarkdown(`<pre><code>${escape(code)}</code></pre>`);
+  assert.equal(markdown, "``````\n" + code + "\n``````");
+});
+
 test("external HTML table preserves literal heading and cell pipes without inventing columns", () => {
   const { table } = roundtrip(
     tableHTML(

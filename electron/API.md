@@ -11,6 +11,18 @@ The isolated, sandboxed renderer gets only `window.inkstone.invoke(method, paylo
 - `openDefaultApps({})` opens a fixed Windows Default apps URI, using the matching user/machine registration on supported Windows 11 versions. Windows requires the user to confirm the default there; this operation never writes UserChoice or changes an extension default. Portable/unregistered copies use the generic Windows page and explain installation. Other platforms are unsupported for this action.
 - `claimDefaultAppPrompt({})` offers the installed Windows app’s setup choice once per profile, persisting `defaultAppPrompted:true` before showing it. Competing windows cannot claim the same prompt twice.
 
+## AI providers
+
+AI runs in the main process and never receives filesystem editing capabilities. The renderer must request explicit user confirmation and apply revisions through the editor's normal transaction API.
+
+- `aiGetSettings({})` returns provider, endpoint, model, temperature, maxTokens, timeoutMs, hasKey and secureStorageAvailable; never a saved key.
+- `aiSaveSettings({...settings,apiKey?,clearKey?})` validates configuration and stores credentials using OS encryption in the user-data directory, separate from ordinary preferences. An empty key preserves an existing credential; clearKey removes it. Linux basic_text fallback is refused.
+- `aiListModels({})` returns `[{id}]`; `aiTestConnection({})` makes a small streaming request to the selected model and returns `{ok,message}`.
+- `aiStart({id,task,text,documentType,locale,question?,history?})` starts one request for the calling window and returns `{id}`. Tasks are analysis/chat; document types are general/academic/technical. Text is limited to 200,000 characters. `ai-response` events contain `{id,type,text?,message?}`; delta.text is incremental and done.text is complete. Analysis completion is validated JSON with summary, overallScore, dimensions and exact-source suggestions.
+- `aiCancel({id?})` aborts only the caller's current operation. Windows closing or renderer crashes also abort requests. Local endpoints are loopback-only; online endpoints are fixed HTTPS URLs. Redirects are refused, streamed output is bounded and incomplete streams fail visibly.
+
+`aiPanelOpen` and `aiPanelHeight` are ordinary validated editor preferences. AI conversation and document text are not written to model configuration files.
+
 ## Documents and state
 
 - `bootstrap({})` → `{settings,session,recovery,recoverableAtStartup,version,platform,diagnostics,spellcheck,warnings,languageConfigured}`. `recovery` contains all stored drafts for the explicit recovery manager. `recoverableAtStartup` excludes draft IDs owned by any live window, preventing a new window from treating ongoing work as crashed work. A retained draft becomes eligible after its owner window closes. diagnostics contains current activeFileWatchers/activeDirectoryWatchers counts for verification. Session is the renderer's last `saveSession` object, optionally with a CLI path. Fresh profiles use the first preferred system UI language (Chinese maps to Simplified Chinese; other languages map to English). A valid saved locale takes precedence over `process.resourcesPath/installer-locale.json` (`{"locale":"en"}` or `{"locale":"zh-CN"}`). A valid saved locale, a valid installer language seed, or `firstRunComplete:true` suppresses the first-run language prompt. Installation therefore does not ask for the same language again in the app. `updateSettings({locale,firstRunComplete:true})` persists an explicit first-run choice.

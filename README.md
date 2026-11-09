@@ -21,6 +21,7 @@ Run the installer to install or upgrade Inkstone. Choose it from **Open with** f
 
 ## Features
 
+- Optional [AI Writing Assistant](docs/AI_ASSISTANT.md): local models, OpenAI or Claude, document scoring, chat and reviewed revisions in a resizable bottom panel.
 - Live Markdown editing with a source mode that preserves selection and undo history.
 - Inline formulas, LaTeX math blocks, Mermaid diagrams, and editable tables.
 - Persistent code blocks with syntax highlighting and a language picker.

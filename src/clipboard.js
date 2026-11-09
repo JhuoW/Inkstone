@@ -52,12 +52,10 @@ converter.addRule("codeLanguages", {
       language =
         [...code.classList].find((c) => c.startsWith("language-"))?.slice(9) ||
         "";
-    const fence = "\x60".repeat(
-      Math.max(
-        3,
-        ...[...code.textContent.matchAll(/\x60+/g)].map((m) => m[0].length + 1),
-      ),
-    );
+    let fenceLength = 3;
+    for (const match of code.textContent.matchAll(/\x60+/g))
+      fenceLength = Math.max(fenceLength, match[0].length + 1);
+    const fence = "\x60".repeat(fenceLength);
     return (
       "\n\n" +
       fence +

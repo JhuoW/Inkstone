@@ -626,6 +626,29 @@ export function renderInlineMath(token, block, options = {}) {
   );
 }
 
+/** Tidy only inter-block whitespace; literal content and nested structures stay intact. */
+export function formatMarkdownSource(text, options = {}) {
+  const clean = (value) =>
+    value.replace(/^[ \t]+$/gm, "").replace(/\n{4,}/g, "\n\n\n");
+  let result = "",
+    offset = 0;
+  const blocks = parseBlocks(text, options);
+  for (const block of blocks) {
+    result +=
+      clean(text.slice(offset, block.from)) + text.slice(block.from, block.to);
+    offset = block.to;
+  }
+  // Parsers can exclude trailing blank lines of an unfinished literal block.
+  // Keep that tail verbatim rather than treating code/data whitespace as prose.
+  const last = blocks.at(-1);
+  const literalTail =
+    last &&
+    !["paragraph_open", "heading_open", "hr", "table_open"].includes(last.type);
+  return (
+    result + (literalTail ? text.slice(offset) : clean(text.slice(offset)))
+  );
+}
+
 /** Source ranges and shared parse context for top-level, selection-safe editing blocks. */
 export function parseBlocks(text, options = {}) {
   configureMarkdownParser(md, options, {

@@ -4,9 +4,33 @@ import { JSDOM } from "jsdom";
 const dom = new JSDOM("<!doctype html><body></body>");
 globalThis.window = dom.window;
 globalThis.document = dom.window.document;
-const { renderMarkdown, getOutline, parseBlocks, resolveAsset } =
-  await import("../src/markdown.js");
+const {
+  renderMarkdown,
+  getOutline,
+  parseBlocks,
+  resolveAsset,
+  formatMarkdownSource,
+} = await import("../src/markdown.js");
 const { inlineMathRanges } = await import("../src/markdown.js");
+
+test("source formatting preserves literal block contents while tidying blank separators", () => {
+  const blocks = [
+    '```python\nvalue = """\n   \n\n\n\nend\n"""\n```',
+    "$$\nx = y\n  \n\n\n\n+ z\n$$",
+    "<pre>\n  \n\n\n\ntext\n</pre>",
+    "- nested code:\n\n  ```text\n    \n\n\n\n  end\n  ```",
+    "```text\nunfinished\n    ",
+  ];
+  for (const block of blocks) {
+    const source = "Before\n\n  \n\n\n" + block;
+    assert.equal(formatMarkdownSource(source), "Before\n\n\n" + block);
+  }
+  const frontmatter = "---\ntext: |\n  keep\n  \n\n\n\n  spacing\n---";
+  assert.equal(
+    formatMarkdownSource(frontmatter + "\n\n\n\nAfter"),
+    frontmatter + "\n\n\nAfter",
+  );
+});
 
 test("formula source spans identify repeated formulas, headings and nested prose without matching code examples", () => {
   const source =

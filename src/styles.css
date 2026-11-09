@@ -647,6 +647,14 @@ kbd {
 #insert-menu-button svg {
   width: 12px;
 }
+#editor-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
 #editor-host {
   flex: 1;
   min-height: 0;

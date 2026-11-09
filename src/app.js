@@ -48,6 +48,10 @@ import { normalizeSource } from "./source.js";
 import { manageResources } from "./resource-manager.js";
 import { installFileTreeKeyboard } from "./file-tree-keyboard.js";
 import { shortcutMatches } from "./shortcuts.js";
+import { createAIAssistant } from "./ai-assistant.js";
+import { showAIModelSettings } from "./ai-model-settings.js";
+import { validateAIRevision } from "./ai-revisions.js";
+import "./ai-assistant.css";
 
 const native = window.inkstone;
 const invoke = async (method, payload = {}) => {
@@ -74,6 +78,7 @@ const collapsedFolders = new Set(),
   fileUndoStack = [],
   closedDocuments = [];
 let editor,
+  aiAssistant,
   saveTimer,
   recoveryTimer,
   outlineTimer,
@@ -200,6 +205,8 @@ function commandShortcut(id) {
 const run = (name, arg) => guarded(execute)(name, arg);
 
 function shell() {
+  aiAssistant?.destroy();
+  aiAssistant = null;
   $("#app").innerHTML =
     '<aside id="sidebar"><div id="sidebar-resize" role="separator" aria-orientation="vertical" aria-label="Sidebar width" tabindex="0"></div><div class="brand">' +
     brandIdentity(
@@ -301,12 +308,12 @@ function shell() {
     icon.code +
     "<span>" +
     t("源码", "Source") +
-    '</span></button><button data-command="export">' +
+    '</span></button><button data-command="aiAssistant" aria-controls="ai-assistant-host" aria-expanded="false">AI</button><button data-command="export">' +
     icon.export +
     "<span>" +
     t("导出", "Export") +
     "</span></button></div></div>" +
-    '<div id="language-onboarding" hidden></div><div id="recovery-notice" class="recovery-notice" hidden></div><div id="conflict-banner" hidden role="alert"></div><div id="editor-host"></div><div id="floating-toolbar" hidden>' +
+    '<div id="language-onboarding" hidden></div><div id="recovery-notice" class="recovery-notice" hidden></div><div id="conflict-banner" hidden role="alert"></div><div id="editor-area"><div id="editor-host"></div><div id="ai-assistant-host" hidden></div></div><div id="floating-toolbar" hidden>' +
     [
       ["bold", "bold"],
       ["italic", "italic"],
@@ -612,6 +619,7 @@ function acceptSettings(patch) {
     const mount = host;
     shell();
     $("#editor-host").replaceWith(mount);
+    makeAIAssistant();
     applyAppearance();
     updateStatus();
     renderSidebar();
@@ -707,6 +715,60 @@ function makeEditor(text) {
       }
     },
     true,
+  );
+}
+function getAIContext() {
+  const selection = editor.view.state.selection.main;
+  return {
+    identity: `${generation}:${current.path || ""}`,
+    text: editor.view.state.doc.toString(),
+    selection: { from: selection.from, to: selection.to },
+    readOnly: !!(
+      mutationBlocked() ||
+      compositionActive ||
+      editor.view.composing
+    ),
+  };
+}
+function makeAIAssistant() {
+  aiAssistant?.destroy();
+  aiAssistant = createAIAssistant({
+    host: $("#ai-assistant-host"),
+    invoke,
+    on: (event, callback) => native?.on(event, callback) || (() => {}),
+    getContext: getAIContext,
+    t,
+    initialLayout: {
+      open: !!settings.aiPanelOpen,
+      height: settings.aiPanelHeight || 260,
+    },
+    saveLayout: async (patch) => {
+      $("[data-command=aiAssistant]")?.setAttribute(
+        "aria-expanded",
+        String(patch.aiPanelOpen ?? settings.aiPanelOpen),
+      );
+      await updateSettings(patch);
+    },
+    onConfigure: () => showAIModelSettings({ invoke, t }),
+    locate: ({ from, to }) => {
+      editor.setSelection({ anchor: from, head: to });
+      editor.focus();
+    },
+    applyRevision: (revision) => {
+      const changes = validateAIRevision(getAIContext(), revision);
+      editor.view.dispatch({
+        changes,
+        selection: { anchor: changes.from + changes.insert.length },
+        annotations: isolateHistory.of("full"),
+        userEvent: "input.ai",
+        scrollIntoView: true,
+      });
+      editor.focus();
+    },
+  });
+  $("[data-command=aiAssistant]")?.setAttribute(
+    "aria-expanded",
+    String(!!settings.aiPanelOpen),
   );
 }
 function changed(_text, metadata = {}) {
@@ -821,6 +883,7 @@ function flushExternalChange() {
 }
 function updateStatus() {
   if (!editor) return;
+  aiAssistant?.updateContext();
   const text = editor.getText(),
     sel = editor.view.state.selection.main;
   if (text !== statisticsText) {
@@ -2125,6 +2188,8 @@ function commandList() {
     ["typewriter", "切换打字机模式", "Toggle typewriter"],
     ["fullscreen", "全屏", "Full screen"],
     ["sidebar", "切换侧边栏", "Toggle sidebar"],
+    ["aiAssistant", "切换 AI 助手", "Toggle AI Assistant"],
+    ["aiModels", "AI / 模型设置", "AI / Models"],
     ["zoomIn", "放大", "Zoom in"],
     ["zoomOut", "缩小", "Zoom out"],
     ["zoomReset", "重置缩放", "Reset zoom"],
@@ -2857,6 +2922,10 @@ async function execute(name, arg) {
       return;
     case "settings":
       return showPreferences(settings, updateSettings, invoke);
+    case "aiAssistant":
+      return aiAssistant?.toggle();
+    case "aiModels":
+      return showAIModelSettings({ invoke, t });
     case "defaultApps":
       return showPreferences(settings, updateSettings, invoke, {
         section: "files",
@@ -3556,6 +3625,7 @@ async function init() {
   current = { ...current, text: initialWelcome };
   savedText = initialWelcome;
   makeEditor(initialWelcome);
+  makeAIAssistant();
   applyAppearance();
   updateStatus();
   renderSidebar();

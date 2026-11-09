@@ -12,7 +12,9 @@ const {
   protocol,
   net,
   session,
+  safeStorage,
 } = require("electron");
+const { AIService } = require("./ai-service.cjs");
 const fs = require("node:fs/promises");
 const fsSync = require("node:fs");
 const path = require("node:path");
@@ -75,6 +77,8 @@ const defaults = {
   lineHeight: 1.75,
   contentWidth: 780,
   sidebarWidth: 256,
+  aiPanelOpen: false,
+  aiPanelHeight: 260,
   lineNumbers: false,
   strictMarkdown: true,
   cjkEmphasis: false,
@@ -335,6 +339,7 @@ function validateSettings(patch) {
   patch = removeRetiredSettings(patch).settings;
   const value = { ...removeRetiredSettings(settings).settings };
   const booleans = [
+    "aiPanelOpen",
     "lineNumbers",
     "strictMarkdown",
     "cjkEmphasis",
@@ -381,6 +386,7 @@ function validateSettings(patch) {
     }
   for (const [key, min, max] of [
     ["sidebarWidth", 180, 500],
+    ["aiPanelHeight", 100, 1200],
     ["fontSize", 10, 64],
     ["lineHeight", 1, 3],
     ["contentWidth", 360, 1800],
@@ -1892,6 +1898,7 @@ function createWindow(file) {
     }
   });
   win.on("closed", () => {
+    aiService?.close(win.id);
     closeCoordinator.removed(win.id);
     states.delete(win.id);
     pruneWatchers();
@@ -1940,6 +1947,7 @@ function createWindow(file) {
     if (states.has(win.id)) states.get(win.id).unresponsive = false;
   });
   win.webContents.on("render-process-gone", () => {
+    aiService?.cancel(win.id);
     closeCoordinator.removed(win.id);
     dialog
       .showMessageBox({
@@ -1966,7 +1974,20 @@ function createWindow(file) {
   return win;
 }
 let pendingClipboardWrite = Promise.resolve();
+let aiService;
+const ai = () =>
+  (aiService ||= new AIService({
+    directory: app.getPath("userData"),
+    safeStorage,
+  }));
 const handlers = {
+  aiGetSettings: () => ai().getSettings(),
+  aiSaveSettings: (payload) => ai().saveSettings(payload),
+  aiListModels: (_payload, win) => ai().models(win.id),
+  aiTestConnection: (_payload, win) => ai().test(win.id),
+  aiStart: (payload, win) =>
+    ai().start(win.id, payload, (event) => send(win, "ai-response", event)),
+  aiCancel: (payload, win) => ai().cancel(win.id, payload.id),
   async getAboutInfo() {
     return {
       name: "Inkstone",
@@ -2726,6 +2747,7 @@ app.on("before-quit", (event) => {
   void closeCoordinator.request([...states.keys()], "quit");
 });
 app.on("will-quit", () => {
+  aiService?.dispose();
   for (const watcher of watchers.values()) watcher.close();
   for (const group of folderWatchers.values()) {
     clearTimeout(group.timer);

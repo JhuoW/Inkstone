@@ -1,7 +1,7 @@
 {
   "name": "inkstone-editor",
   "productName": "Inkstone",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Inkstone 墨石 — a local-first, source-preserving Markdown editor for Windows and Linux",
   "author": {
     "name": "Wei Zhuo",
@@ -21,7 +21,8 @@
     "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
     "test:editor": "node tests/editor-browser.mjs",
     "licenses": "node scripts/licenses.mjs",
-    "test:all": "npm test && npm run test:editor && npm run test:math && npm run test:ui && npm run test:editor-design && npm run test:e2e",
+    "test:all": "npm test && npm run test:editor && npm run test:stability && npm run test:math && npm run test:ui && npm run test:editor-design && npm run test:e2e",
+    "test:stability": "node tests/editor-stability-browser.mjs",
     "verify:packages": "node scripts/verify-packages.mjs",
     "format": "prettier --write src electron tests scripts/*.mjs *.js index.html package.json",
     "test:native": "node scripts/verify-native.mjs",

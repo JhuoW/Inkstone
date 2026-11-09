@@ -27,7 +27,7 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - name: Run Windows editing and context menu regressions
         id: windows_regressions
-        run: node node_modules/playwright/cli.js test tests/windows-regressions.spec.js tests/context-menu.spec.js tests/native-context.spec.js
+        run: node node_modules/playwright/cli.js test tests/windows-regressions.spec.js tests/context-menu.spec.js tests/native-context.spec.js tests/code-fences.spec.js tests/ai-assistant.spec.js
       - name: Upload failed Windows regression diagnostics
         if: ${{ failure() && steps.windows_regressions.outcome == 'failure' }}
         uses: actions/upload-artifact@v4

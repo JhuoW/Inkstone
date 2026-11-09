@@ -678,6 +678,7 @@ try {
         "appearance",
         "files",
         "tools",
+        "ai",
         "advanced",
       ]) {
         if (section !== "writing") await page.keyboard.press("ArrowDown");

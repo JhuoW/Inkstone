@@ -1,7 +1,10 @@
 import { $, $$, esc, modal, toast, promptText, ask } from "./ui.js";
 import { resolveAsset } from "./markdown.js";
+import { showAIModelSettings } from "./ai-model-settings.js";
 
 export const defaults = {
+  aiPanelOpen: false,
+  aiPanelHeight: 260,
   locale: "en",
   firstRunComplete: false,
   defaultAppPrompted: false,
@@ -91,9 +94,20 @@ export function showPreferences(
     ["appearance", t("外观", "Appearance")],
     ["files", t("文件", "Files")],
     ["tools", t("外部工具", "External tools")],
+    ["ai", t("AI / 模型", "AI / Models")],
     ["advanced", t("自定义", "Customize")],
   ];
   const panes = {
+    ai: group(
+      t("AI 写作助手", "AI Writing Assistant"),
+      hint(
+        t(
+          "使用本地模型，或配置自己的 OpenAI / Anthropic 密钥。仅在主动分析或对话时发送当前文档。",
+          "Use a local model or your own OpenAI / Anthropic key. Document content is sent only when you analyze or chat.",
+        ),
+      ) +
+        `<button type="button" id="configure-ai-models">${t("配置模型", "Configure models")}</button>`,
+    ),
     writing:
       group(
         t("界面语言", "Language"),
@@ -390,6 +404,9 @@ export function showPreferences(
     { wide: true },
   );
   d.el.classList.add("preferences-dialog");
+  $("#configure-ai-models", d.el).onclick = () => {
+    void showAIModelSettings({ invoke, t });
+  };
   const tabs = $$("[data-section]", d.el);
   const activateTab = (button) => {
     tabs.forEach((tab) => {
