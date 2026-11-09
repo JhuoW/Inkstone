@@ -1596,3 +1596,61 @@ kbd {
 .default-app-welcome > p {
   line-height: 1.65;
 }
+
+/* Narrow windows: formatting buttons that do not fit move into "⋯". */
+.format-tools {
+  scrollbar-width: none;
+}
+.format-tools::-webkit-scrollbar {
+  display: none;
+}
+#toolbar-more {
+  flex-shrink: 0;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+/* Narrow windows: the sidebar opens over the document instead of beside it. */
+body.sidebar-overlay #sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 60;
+  width: min(var(--sidebar-width, 256px), 86vw);
+  margin-left: 0;
+  visibility: visible;
+  box-shadow: 0 10px 32px rgb(0 0 0 / 0.24);
+}
+/* Immersive mode: only the document (and the AI panel if open). */
+body.zen-mode #sidebar,
+body.zen-mode .titlebar,
+body.zen-mode .toolbar,
+body.zen-mode .statusbar,
+body.zen-mode #language-onboarding,
+body.zen-mode #recovery-notice {
+  display: none !important;
+}
+#zen-exit {
+  position: fixed;
+  top: 10px;
+  right: 18px;
+  z-index: 50;
+  font-size: 12px;
+  opacity: 0.4;
+}
+#zen-exit:hover,
+#zen-exit:focus-visible {
+  opacity: 1;
+}
+#zen-exit[hidden] {
+  display: none;
+}
+/* Status bar toggles show clearly when they are on. */
+.statusbar button.active {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-radius: 3px;
+}
+.statusbar #statistics:hover {
+  color: var(--text);
+}

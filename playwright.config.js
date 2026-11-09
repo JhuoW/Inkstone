@@ -14,6 +14,7 @@ export default defineConfig({
     "system-integration.spec.js",
     "code-fences.spec.js",
     "ai-assistant.spec.js",
+    "ux-improvements.spec.js",
   ],
   timeout: 90000,
   workers: 1,

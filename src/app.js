@@ -196,7 +196,43 @@ const defaultShortcuts = {
   fullscreen: "F11",
   export: "Mod-Shift-e",
   aiAssistant: "Mod-Shift-a",
+  zen: "Mod-Shift-Enter",
 };
+// Bindings provided by the native menu and editor keymap. Preferences shows
+// them as defaults and refuses a new shortcut that would collide with one.
+const builtInShortcuts = {
+  new: "Mod-n",
+  newWindow: "Mod-Shift-n",
+  open: "Mod-o",
+  openFolder: "Mod-Shift-o",
+  save: "Mod-s",
+  saveAs: "Mod-Shift-s",
+  export: "Mod-Shift-e",
+  undo: "Mod-z",
+  redo: "Mod-Shift-z",
+  find: "Mod-f",
+  globalSearch: "Mod-Shift-f",
+  bold: "Mod-b",
+  italic: "Mod-i",
+  strike: "Mod-Shift-x",
+  link: "Mod-k",
+  table: "Mod-Alt-t",
+  source: "Mod-/",
+  sidebar: "Mod-Shift-l",
+  quickOpen: "Mod-p",
+  commands: "Mod-Shift-p",
+  zoomReset: "Mod-0",
+  zoomIn: "Mod-+",
+  zoomOut: "Mod--",
+  settings: "Mod-,",
+  ...Object.fromEntries(
+    [1, 2, 3, 4, 5, 6].map((level) => [`heading${level}`, `Mod-${level}`]),
+  ),
+};
+const preferenceOptions = () => ({
+  commands: () => commandList(),
+  shortcutDefaults: { ...builtInShortcuts, ...defaultShortcuts },
+});
 function commandShortcut(id) {
   const key = { ...defaultShortcuts, ...settings.shortcuts }[id];
   return key
@@ -213,6 +249,121 @@ function commandShortcut(id) {
     : "";
 }
 const run = (name, arg) => guarded(execute)(name, arg);
+
+let toolbarObserver = null,
+  toolbarFrame = 0;
+// Hide trailing formatting buttons until the toolbar fits; show "⋯" for them.
+function fitToolbar() {
+  const tools = $(".format-tools"),
+    more = $("#toolbar-more");
+  if (!tools || !more) return;
+  const items = [...tools.children];
+  items.forEach((item) => (item.hidden = false));
+  more.hidden = true;
+  if (tools.scrollWidth <= tools.clientWidth + 1) return;
+  more.hidden = false;
+  for (
+    let index = items.length - 1;
+    index >= 0 && tools.scrollWidth > tools.clientWidth + 1;
+    index--
+  )
+    items[index].hidden = true;
+  // Do not leave a separator at the visible end.
+  const visible = items.filter((item) => !item.hidden);
+  if (visible.at(-1)?.classList.contains("separator"))
+    visible.at(-1).hidden = true;
+}
+
+// Below this width the sidebar starts hidden; the sidebar button then shows
+// it over the editor instead of squeezing the document.
+const NARROW_WINDOW = 960;
+let sidebarAutoHidden = false;
+const narrowWindow = () => window.innerWidth < NARROW_WINDOW;
+function fitSidebarToWindow() {
+  const body = document.body;
+  if (narrowWindow()) {
+    if (
+      !body.classList.contains("sidebar-hidden") &&
+      !body.classList.contains("sidebar-overlay")
+    ) {
+      body.classList.add("sidebar-hidden");
+      sidebarAutoHidden = true;
+    }
+  } else {
+    body.classList.remove("sidebar-overlay");
+    if (sidebarAutoHidden) body.classList.remove("sidebar-hidden");
+    sidebarAutoHidden = false;
+  }
+}
+function closeSidebarOverlay() {
+  if (!document.body.classList.contains("sidebar-overlay")) return;
+  document.body.classList.remove("sidebar-overlay");
+  document.body.classList.add("sidebar-hidden");
+}
+function toggleSidebar() {
+  const body = document.body;
+  if (narrowWindow()) {
+    if (body.classList.contains("sidebar-overlay")) closeSidebarOverlay();
+    else {
+      body.classList.remove("sidebar-hidden");
+      body.classList.add("sidebar-overlay");
+      sidebarAutoHidden = true;
+    }
+    return;
+  }
+  sidebarAutoHidden = false;
+  body.classList.toggle("sidebar-hidden");
+}
+window.addEventListener("resize", fitSidebarToWindow);
+// Choosing something outside the overlay, or Esc, closes it.
+document.addEventListener(
+  "pointerdown",
+  (event) => {
+    if (
+      document.body.classList.contains("sidebar-overlay") &&
+      !event.target.closest?.("#sidebar, [data-command=sidebar]")
+    )
+      closeSidebarOverlay();
+  },
+  true,
+);
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    document.body.classList.contains("sidebar-overlay") &&
+    !document.querySelector("dialog[open]")
+  )
+    closeSidebarOverlay();
+});
+
+// Immersive mode hides every surface except the document and AI panel. It is
+// not saved: each window starts with the full interface.
+function toggleZen(force) {
+  const on = force ?? !document.body.classList.contains("zen-mode");
+  document.body.classList.toggle("zen-mode", on);
+  if (on) closeSidebarOverlay();
+  const exit = $("#zen-exit");
+  if (exit) exit.hidden = !on;
+  if (on)
+    toast(
+      t(
+        `已进入沉浸模式，按 Esc 或 ${commandShortcut("zen") || "Ctrl+Shift+Enter"} 退出`,
+        `Immersive mode. Press Esc or ${commandShortcut("zen") || "Ctrl+Shift+Enter"} to exit`,
+      ),
+    );
+  editor?.focus();
+}
+// Esc leaves immersive mode only when nothing else (search, completion, a
+// menu or dialog) used the key first.
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    !event.defaultPrevented &&
+    document.body.classList.contains("zen-mode") &&
+    !document.querySelector("dialog[open], .command-menu:popover-open")
+  )
+    toggleZen(false);
+});
 
 function shell() {
   aiAssistant?.destroy();
@@ -321,7 +472,11 @@ function shell() {
           "</button>",
       )
       .join("") +
-    '</div><button id="insert-menu-button" aria-haspopup="menu" aria-expanded="false"><span>' +
+    '</div><button id="toolbar-more" class="icon-button" aria-haspopup="menu" hidden title="' +
+    t("更多格式", "More formatting") +
+    '" aria-label="' +
+    t("更多格式", "More formatting") +
+    '">⋯</button><button id="insert-menu-button" aria-haspopup="menu" aria-expanded="false"><span>' +
     t("插入", "Insert") +
     "</span>" +
     icon.chevronDown +
@@ -334,6 +489,9 @@ function shell() {
     "<span>" +
     t("导出", "Export") +
     "</span></button></div></div>" +
+    '<button id="zen-exit" data-command="zen" hidden>' +
+    t("退出沉浸模式", "Exit immersive mode") +
+    "</button>" +
     '<div id="language-onboarding" hidden></div><div id="recovery-notice" class="recovery-notice" hidden></div><div id="conflict-banner" hidden role="alert"></div><div id="editor-area"><div id="editor-host"></div><div id="ai-assistant-host" hidden></div></div><div id="floating-toolbar" hidden>' +
     [
       ["bold", "bold"],
@@ -411,6 +569,46 @@ function shell() {
       .filter(Boolean);
     commandMenu(event.currentTarget, items, (id) => run(id));
   };
+  // Formatting buttons that do not fit move into the "⋯" menu instead of
+  // making the toolbar scroll.
+  const toolbarLabels = {
+    heading: [t("标题 1", "Heading 1"), "heading1"],
+    bold: [t("加粗", "Bold")],
+    italic: [t("斜体", "Italic")],
+    strike: [t("删除线", "Strikethrough")],
+    quote: [t("引用", "Quote")],
+    bullet: [t("无序列表", "Bullet list")],
+    task: [t("任务列表", "Task list")],
+    link: [t("插入链接", "Insert link")],
+    insertImage: [t("插入本地图片", "Insert local image")],
+    table: [t("创建表格", "Create table")],
+    code: [t("行内代码", "Inline code")],
+  };
+  for (const button of $$(".format-tools [data-command]")) {
+    const [label] = toolbarLabels[button.dataset.command] || [];
+    if (label && !button.getAttribute("aria-label")) {
+      button.setAttribute("aria-label", label);
+      button.title = label;
+    }
+  }
+  $("#toolbar-more").onclick = (event) => {
+    const items = $$(".format-tools [data-command]")
+      .filter((button) => button.hidden)
+      .map((button) => {
+        const [label, id] = toolbarLabels[button.dataset.command] || [
+          button.dataset.command,
+        ];
+        return { id: id || button.dataset.command, label };
+      });
+    commandMenu(event.currentTarget, items, (id) => run(id));
+  };
+  toolbarObserver?.disconnect();
+  toolbarObserver = new ResizeObserver(() => {
+    cancelAnimationFrame(toolbarFrame);
+    toolbarFrame = requestAnimationFrame(fitToolbar);
+  });
+  toolbarObserver.observe($(".toolbar"));
+  fitSidebarToWindow();
   $("#file-filter").oninput = () => {
     clearTimeout(filterTimer);
     filterTimer = setTimeout(renderSidebar, 80);
@@ -667,6 +865,7 @@ function makeEditor(text) {
     onChange: changed,
     onSelection: updateStatus,
     onLink: (href) => run("followLink", href),
+    onSlashCommand: (id) => run(id),
   });
   $("#editor-host").addEventListener(
     "compositionstart",
@@ -951,14 +1150,16 @@ function updateStatus() {
     }
   }
   const stats = statisticsCache;
-  $("#statistics").textContent =
-    stats.words +
-    " " +
-    t("字 / 词", "words") +
-    " · " +
-    stats.readingMinutes +
-    " " +
-    t("分钟", "min");
+  const count = stats.words.toLocaleString(settings.locale);
+  $("#statistics").textContent = t(
+    `字数 ${count} · 约 ${stats.readingMinutes} 分钟`,
+    `${count} words · ${stats.readingMinutes} min`,
+  );
+  // Chinese characters and other words are counted separately; show both.
+  $("#statistics").title = t(
+    `中日韩字符 ${stats.cjk} · 其他词 ${stats.words - stats.cjk} · 字符 ${stats.characters}（点击查看统计）`,
+    `CJK characters ${stats.cjk} · other words ${stats.words - stats.cjk} · characters ${stats.characters} (click for statistics)`,
+  );
   const line = editor.view.state.doc.lineAt(sel.head);
   $("#cursor-status").textContent =
     t("行 ", "Ln ") +
@@ -1195,6 +1396,28 @@ async function commitClose(request) {
     });
   }
 }
+// A newly opened document starts below its YAML front matter, so the metadata
+// stays collapsed instead of being shown as raw source at the cursor.
+function initialSelection(text) {
+  const source = normalizeSource(String(text || ""));
+  const match = /^---[ \t]*\n[\s\S]*?\n(?:---|\.\.\.)[ \t]*(?:\n|$)/.exec(
+    source,
+  );
+  if (!match) return undefined;
+  let position = match[0].length;
+  while (source[position] === "\n") position++;
+  // A title heading right after the metadata would show its "#" at the
+  // cursor; start on the following text instead.
+  const line = source.slice(position, source.indexOf("\n", position) >>> 0);
+  if (/^#{1,6}\s/.test(line)) {
+    const next = source.slice(position + line.length).search(/\n\s*\n\S/);
+    if (next >= 0) {
+      position += line.length + next;
+      while (/\s/.test(source[position] || "")) position++;
+    }
+  }
+  return { anchor: position, head: position };
+}
 async function loadDocument(doc, selection) {
   clearTimeout(saveTimer);
   clearTimeout(recoveryTimer);
@@ -1208,7 +1431,8 @@ async function loadDocument(doc, selection) {
   current = doc;
   savedText = doc.text;
   recoveryId = crypto.randomUUID();
-  editor.setDocument(doc.text, selection);
+  closeSidebarOverlay();
+  editor.setDocument(doc.text, selection ?? initialSelection(doc.text));
   editor.setSettings({
     ...settings,
     basePath: doc.path,
@@ -1655,9 +1879,13 @@ function renderSidebar() {
       t("搜索文件夹", "Search folder") +
       '" autocomplete="off" required><label class="inline" title="' +
       t("正则表达式", "Regular expression") +
-      '"><input type="checkbox" name="regex">Regex</label><label class="inline" title="' +
+      '"><input type="checkbox" name="regex">' +
+      t("正则", "Regex") +
+      '</label><label class="inline" title="' +
       t("区分大小写", "Match case") +
-      '"><input type="checkbox" name="case">Aa</label><label class="inline"><input type="checkbox" name="wholeWord">' +
+      '"><input type="checkbox" name="case">' +
+      t("区分大小写", "Match case") +
+      '</label><label class="inline"><input type="checkbox" name="wholeWord">' +
       t("整词", "Whole word") +
       '</label><button class="primary">' +
       t("搜索", "Search") +
@@ -1670,7 +1898,18 @@ function renderSidebar() {
       ) +
       '</p><div id="search-results"></div>';
     let searchGeneration = 0,
-      searchId = null;
+      searchId = null,
+      typingTimer = 0;
+    // Search while typing: after a short pause, once two characters are in.
+    const searchSoon = () => {
+      clearTimeout(typingTimer);
+      const form = $("#global-search");
+      if (!folder || form.query.value.trim().length < 2) return;
+      typingTimer = setTimeout(() => {
+        if (form.isConnected) form.requestSubmit();
+      }, 450);
+    };
+    $("#global-search").addEventListener("input", searchSoon);
     $("#cancel-search").onclick = () => {
       searchGeneration++;
       if (searchId) invoke("cancelSearch", { id: searchId }).catch(() => {});
@@ -2237,6 +2476,7 @@ function commandList() {
     ["source", "切换源码模式", "Toggle source"],
     ["focus", "切换专注模式", "Toggle focus"],
     ["typewriter", "切换打字机模式", "Toggle typewriter"],
+    ["zen", "切换沉浸模式", "Toggle immersive mode"],
     ["fullscreen", "全屏", "Full screen"],
     ["sidebar", "切换侧边栏", "Toggle sidebar"],
     ["aiAssistant", "切换AI写作助手", "Toggle AI Writing Assistant"],
@@ -2972,13 +3212,16 @@ async function execute(name, arg) {
       await persistSession();
       return;
     case "settings":
-      return showPreferences(settings, updateSettings, invoke);
+      return showPreferences(settings, updateSettings, invoke, {
+        ...preferenceOptions(),
+      });
     case "aiAssistant":
       return aiAssistant?.toggle();
     case "aiModels":
       return showAIModelSettings({ invoke, t });
     case "defaultApps":
       return showPreferences(settings, updateSettings, invoke, {
+        ...preferenceOptions(),
         section: "files",
       });
     case "about":
@@ -3066,8 +3309,10 @@ async function execute(name, arg) {
     case "typewriter":
       return updateSettings({ typewriterMode: !settings.typewriterMode });
     case "sidebar":
-      document.body.classList.toggle("sidebar-hidden");
+      toggleSidebar();
       return;
+    case "zen":
+      return toggleZen();
     case "fullscreen":
       return invoke("windowAction", { action: "fullscreen" });
     case "zoomIn":
@@ -3744,7 +3989,17 @@ async function init() {
       } catch (e) {
         toast(e.message, true);
       }
-    else editor.setMode(mode);
+    else {
+      editor.setMode(mode);
+      // Start below the welcome title so it renders instead of showing "#".
+      const welcomeText = editor.view.state.doc.toString();
+      const body = welcomeText.search(/\n\s*\n\S/);
+      if (!current.path && body > 0)
+        editor.setSelection(
+          { anchor: welcomeText.indexOf("\n", body + 1) + 1 },
+          { scrollIntoView: false },
+        );
+    }
   } finally {
     bootstrapLoading = false;
     applyAppearance();

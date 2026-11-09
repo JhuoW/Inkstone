@@ -1,3 +1,4 @@
+import { displayError } from "./errors.js";
 import { $, $$, esc, modal, toast, promptText, ask } from "./ui.js";
 import { getLocale, t as translate } from "./i18n.js";
 import { readDocumentConfig } from "./document-config.js";
@@ -230,7 +231,7 @@ export async function manageResources({
       if (pendingId && !committing)
         await invoke("cancelImageOperation", { id: pendingId }).catch(() => {});
       pendingId = null;
-      status.textContent = error.message;
+      status.textContent = displayError(error);
       toast(error.message, true);
     } finally {
       committing = false;

@@ -1775,6 +1775,7 @@ function menu() {
         ),
         action(label("专注模式", "Focus mode"), "focus"),
         action(label("打字机模式", "Typewriter mode"), "typewriter"),
+        action(label("沉浸模式", "Immersive mode"), "zen", "Ctrl+Shift+Enter"),
         action(
           label("AI写作助手", "AI Writing Assistant"),
           "aiAssistant",

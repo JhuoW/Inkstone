@@ -1,6 +1,40 @@
 import { $, $$, esc, modal, toast, promptText, ask } from "./ui.js";
 import { resolveAsset } from "./markdown.js";
 import { showAIModelSettings } from "./ai-model-settings.js";
+import { displayError } from "./errors.js";
+import {
+  bindingFromEvent,
+  formatShortcut,
+  normalizeShortcut,
+} from "./shortcuts.js";
+
+// Font choices offered before the free-form CSS font list.
+const fontPresets = [
+  [
+    "sans",
+    "无衬线（默认）",
+    "Sans serif (default)",
+    '"Segoe UI", "Noto Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
+  ],
+  [
+    "serif",
+    "衬线 / 宋体",
+    "Serif / Song",
+    'Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif',
+  ],
+  [
+    "kai",
+    "楷体",
+    "Kai",
+    'Georgia, KaiTi, "Kaiti SC", STKaiti, "AR PL UKai CN", serif',
+  ],
+  [
+    "mono",
+    "等宽",
+    "Monospace",
+    '"Cascadia Code", Consolas, "Liberation Mono", "Microsoft YaHei", monospace',
+  ],
+];
 
 export const defaults = {
   aiPanelOpen: false,
@@ -60,12 +94,16 @@ export const defaults = {
     bookmarks: true,
   },
 };
-export function showPreferences(
-  settings,
-  apply,
-  invoke,
-  { section = "writing", focus } = {},
-) {
+export function showPreferences(settings, apply, invoke, options = {}) {
+  const { section = "writing", focus } = options;
+  // Commands and built-in bindings come from the app, so the shortcut editor
+  // shows the same names and defaults as the command palette and menus.
+  const commandEntries = () =>
+    (typeof options.commands === "function"
+      ? options.commands()
+      : options.commands || []
+    ).filter((command) => !command.id.startsWith("snippet:"));
+  const shortcutDefaults = options.shortcutDefaults || {};
   const en = settings.locale === "en";
   const t = (zh, english) => (en ? english : zh);
   const field = (key, label, type = "text", extra = "") => {
@@ -232,10 +270,18 @@ export function showPreferences(
       ) +
       group(
         t("编辑器排版", "Editor typography"),
-        field(
-          "fontFamily",
-          t("正文字体（CSS font-family）", "Font family (CSS)"),
-        ) +
+        `<label class="setting-row"><span>${t("正文字体", "Font")}</span><select id="font-preset">${fontPresets
+          .map(
+            ([id, zh, english]) =>
+              `<option value="${id}">${t(zh, english)}</option>`,
+          )
+          .join(
+            "",
+          )}<option value="custom">${t("自定义", "Custom")}</option></select></label>` +
+          field(
+            "fontFamily",
+            t("字体列表（CSS font-family）", "Font list (CSS font-family)"),
+          ) +
           field(
             "fontSize",
             t("字号（px）", "Font size (px)"),
@@ -355,35 +401,49 @@ export function showPreferences(
     tools: group(
       "Pandoc",
       field("pandocPath", t("可执行文件路径", "Executable path")) +
+        `<button type="button" id="browse-pandoc">${t("浏览…", "Browse…")}</button>` +
         hint(
           t(
-            "Pandoc 是本地文档转换程序，核心编辑和原生导出无需安装。",
-            "Pandoc converts documents locally. Core editing and native exports work without it.",
+            "Pandoc 是本地文档转换程序，核心编辑和原生导出无需安装。填写 pandoc 时会在系统 PATH 中自动查找。",
+            "Pandoc converts documents locally. Core editing and native exports work without it. With “pandoc”, Inkstone looks it up on your system PATH.",
           ),
         ) +
         `<button type="button" id="detect-tools">${t("检测外部工具", "Check tools")}</button><pre id="tool-results" role="status" aria-live="polite"></pre>`,
     ),
     advanced:
       group(
+        t("键盘快捷键", "Keyboard shortcuts"),
+        hint(
+          t(
+            "点击快捷键后直接按下新的组合键；Backspace 恢复默认，Esc 取消。",
+            "Click a shortcut, then press the new keys. Backspace restores the default; Esc cancels.",
+          ),
+        ) +
+          `<input type="search" id="shortcut-filter" placeholder="${t("搜索命令…", "Search commands…")}" aria-label="${t("搜索命令", "Search commands")}" autocomplete="off">` +
+          `<div class="shortcut-list" id="shortcut-list" role="list"></div>` +
+          hint("", "shortcut-status"),
+      ) +
+      group(
         t("文本片段", "Text snippets"),
         hint(
           t(
-            "在命令面板中插入片段。以 JSON 对象配置片段名称与内容。",
-            "Insert snippets from the command palette. Use a JSON object of snippet names and text.",
+            "片段可从命令面板插入，也可在正文中输入分号加名称（如 ;date）触发。",
+            "Insert snippets from the command palette, or type a semicolon and the name (for example ;date) in the document.",
           ),
         ) +
-          `<label class="setting-stack"><span>${t("文本片段 JSON", "Text snippets JSON")}</span><textarea name="snippets" rows="7" spellcheck="false" autocomplete="off">${esc(JSON.stringify(settings.snippets, null, 2))}</textarea></label>`,
+          `<div class="snippet-editor" id="snippet-editor"></div><button type="button" id="add-snippet">${t("添加片段", "Add snippet")}</button>` +
+          hint("", "snippet-status"),
       ) +
       group(
-        t("键盘快捷键", "Keyboard shortcuts"),
-        `<label class="setting-stack"><span>${t('快捷键 JSON，如 {"bold":"Mod-b"}', 'Shortcuts JSON, e.g. {"bold":"Mod-b"}')}</span><textarea name="shortcuts" rows="7" spellcheck="false" autocomplete="off">${esc(JSON.stringify(settings.shortcuts, null, 2))}</textarea></label>` +
+        t("以 JSON 编辑（高级）", "Edit as JSON (advanced)"),
+        `<label class="setting-stack"><span>${t('快捷键 JSON，如 {"bold":"Mod-b"}', 'Shortcuts JSON, e.g. {"bold":"Mod-b"}')}</span><textarea name="shortcuts" rows="4" spellcheck="false" autocomplete="off">${esc(JSON.stringify(settings.shortcuts, null, 2))}</textarea></label>` +
           hint(
             t(
               "Mod 表示 Ctrl。可组合 Shift 和 Alt。",
               "Mod means Ctrl. Combine with Shift and Alt.",
-            ) +
-              "<br>bold, italic, save, open, quickOpen, source, focus, typewriter, settings, export, find, aiAssistant",
-          ),
+            ),
+          ) +
+          `<label class="setting-stack"><span>${t("文本片段 JSON", "Text snippets JSON")}</span><textarea name="snippets" rows="4" spellcheck="false" autocomplete="off">${esc(JSON.stringify(settings.snippets, null, 2))}</textarea></label>`,
       ),
   };
   const d = modal(
@@ -442,10 +502,12 @@ export function showPreferences(
     };
   });
   $(".settings-form", d.el).onsubmit = (event) => event.preventDefault();
-  $(".settings-form", d.el).onchange = async (e) => {
+  // Every named field saves through here, including values written by the
+  // shortcut recorder, snippet list, font presets and sliders.
+  const handleChange = async (e) => {
     const el = e.target,
       key = el.name;
-    if (!key) return;
+    if (!key) return false;
     el.removeAttribute("aria-invalid");
     el.removeAttribute("aria-describedby");
     el.closest("label")?.querySelector(".setting-error")?.remove();
@@ -474,16 +536,24 @@ export function showPreferences(
       };
       await apply(patch);
       settings = { ...settings, ...patch };
-      if (!d.el.isConnected) return;
+      if (!d.el.isConnected) return true;
       if (key === "spellcheck") await refreshSpellcheckStatus();
+      // Rebuild the lists only after a direct JSON edit; rebuilding after the
+      // list's own save would take focus from the field being typed in.
+      if (key === "shortcuts" && !e.fromEditor) renderShortcuts();
+      if (key === "snippets" && !e.fromEditor) renderSnippets();
+      if (key === "fontFamily") syncFontPreset();
+      if (["fontSize", "lineHeight", "contentWidth"].includes(key))
+        syncSlider(key);
       $("#settings-result", d.el).textContent = t("已保存", "Saved");
+      return true;
     } catch (err) {
-      if (!d.el.isConnected) return;
+      if (!d.el.isConnected) return false;
       el.setAttribute("aria-invalid", "true");
       const error = document.createElement("small");
       error.className = "setting-error";
       error.id = `settings-error-${key}`;
-      error.textContent = err.message;
+      error.textContent = displayError(err);
       el.setAttribute("aria-describedby", error.id);
       el.closest("label")?.append(error);
       toast(err.message, true);
@@ -491,6 +561,302 @@ export function showPreferences(
         "设置未保存，请修正",
         "Not saved; correct the value",
       );
+      return false;
+    }
+  };
+  $(".settings-form", d.el).onchange = handleChange;
+  // Write a value into a named field and save it as if the user had edited it.
+  const commitField = (name, value) => {
+    const el = $(`[name="${name}"]`, d.el);
+    el.value = value;
+    return handleChange({ target: el, fromEditor: true });
+  };
+
+  // ----- Keyboard shortcuts: record a combination instead of writing JSON.
+  const effectiveShortcuts = () => ({
+    ...shortcutDefaults,
+    ...(settings.shortcuts || {}),
+  });
+  const shortcutStatus = (text) => {
+    $("#shortcut-status", d.el).textContent = text;
+  };
+  const renderShortcuts = () => {
+    const list = $("#shortcut-list", d.el);
+    if (!list) return;
+    const filter = $("#shortcut-filter", d.el).value.trim().toLowerCase();
+    const bindings = effectiveShortcuts();
+    list.replaceChildren(
+      ...commandEntries()
+        .filter(
+          (command) =>
+            !filter ||
+            command.label.toLowerCase().includes(filter) ||
+            command.id.toLowerCase().includes(filter) ||
+            formatShortcut(bindings[command.id]).toLowerCase().includes(filter),
+        )
+        .map((command) => {
+          const row = document.createElement("div");
+          row.className = "shortcut-row";
+          row.setAttribute("role", "listitem");
+          const name = document.createElement("span");
+          name.textContent = command.label;
+          const key = document.createElement("button");
+          key.type = "button";
+          key.className = "shortcut-key";
+          key.dataset.shortcutFor = command.id;
+          const custom = Object.hasOwn(settings.shortcuts || {}, command.id);
+          key.classList.toggle("custom", custom);
+          key.textContent =
+            formatShortcut(bindings[command.id]) || t("未设置", "Not set");
+          key.setAttribute(
+            "aria-label",
+            `${command.label}: ${key.textContent}. ${t("点击后按下新的快捷键", "Click, then press new keys")}`,
+          );
+          key.onclick = () => record(key, command);
+          row.append(name, key);
+          if (custom) {
+            const reset = document.createElement("button");
+            reset.type = "button";
+            reset.className = "shortcut-reset";
+            reset.textContent = t("恢复默认", "Default");
+            reset.onclick = () => saveShortcut(command, null);
+            row.append(reset);
+          }
+          return row;
+        }),
+    );
+  };
+  const saveShortcut = async (command, binding) => {
+    const next = { ...(settings.shortcuts || {}) };
+    if (binding) next[command.id] = binding;
+    else delete next[command.id];
+    const saved = await commitField("shortcuts", JSON.stringify(next, null, 2));
+    if (!d.el.isConnected) return;
+    shortcutStatus(
+      saved
+        ? binding
+          ? t(
+              `${command.label} 已设为 ${formatShortcut(binding)}`,
+              `${command.label} is now ${formatShortcut(binding)}`,
+            )
+          : t(
+              `${command.label} 已恢复默认`,
+              `${command.label} restored to its default`,
+            )
+        : t("快捷键未保存", "Shortcut not saved"),
+    );
+    renderShortcuts();
+    $(`[data-shortcut-for="${command.id}"]`, d.el)?.focus();
+  };
+  const record = (button, command) => {
+    if (button.classList.contains("recording")) return;
+    const previous = button.textContent;
+    button.classList.add("recording");
+    button.textContent = t("请按下快捷键…", "Press keys…");
+    shortcutStatus(
+      t(
+        "按下新的组合键；Backspace 恢复默认，Esc 取消。",
+        "Press the new combination; Backspace restores the default, Esc cancels.",
+      ),
+    );
+    const stop = () => {
+      button.classList.remove("recording");
+      button.removeEventListener("keydown", onKey, true);
+      button.removeEventListener("blur", onBlur);
+    };
+    const onBlur = () => {
+      stop();
+      button.textContent = previous;
+    };
+    const onKey = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.isComposing) return;
+      if (event.key === "Escape" || event.key === "Tab") {
+        onBlur();
+        shortcutStatus("");
+        return;
+      }
+      if (
+        ["Backspace", "Delete"].includes(event.key) &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        !event.metaKey
+      ) {
+        stop();
+        void saveShortcut(command, null);
+        return;
+      }
+      const binding = bindingFromEvent(event);
+      if (binding === undefined) return;
+      if (!binding) {
+        shortcutStatus(
+          t(
+            "请使用 Ctrl、Alt 组合键或 F1–F24（Shift 不能单独与符号键组合）。",
+            "Use Ctrl or Alt with a key, or F1–F24. Shift with a symbol key is not supported.",
+          ),
+        );
+        return;
+      }
+      const normalized = normalizeShortcut(binding);
+      const owner = commandEntries().find(
+        (other) =>
+          other.id !== command.id &&
+          normalizeShortcut(effectiveShortcuts()[other.id] || "") ===
+            normalized,
+      );
+      if (owner) {
+        shortcutStatus(
+          t(
+            `${formatShortcut(binding)} 已被“${owner.label}”使用，请先修改它。`,
+            `${formatShortcut(binding)} is already used by “${owner.label}”. Change that one first.`,
+          ),
+        );
+        return;
+      }
+      stop();
+      void saveShortcut(command, binding);
+    };
+    button.addEventListener("keydown", onKey, true);
+    button.addEventListener("blur", onBlur);
+  };
+  $("#shortcut-filter", d.el).oninput = renderShortcuts;
+  renderShortcuts();
+
+  // ----- Text snippets: editable name and text rows.
+  const snippetStatus = (text) => {
+    $("#snippet-status", d.el).textContent = text;
+  };
+  const renderSnippets = (
+    entries = Object.entries(settings.snippets || {}),
+  ) => {
+    const editor = $("#snippet-editor", d.el);
+    if (!editor) return;
+    editor.replaceChildren(
+      ...entries.map(([name, text]) => {
+        const row = document.createElement("div");
+        row.className = "snippet-row";
+        const nameInput = document.createElement("input");
+        nameInput.className = "snippet-name";
+        nameInput.value = name;
+        nameInput.placeholder = t("名称", "Name");
+        nameInput.setAttribute("aria-label", t("片段名称", "Snippet name"));
+        const textInput = document.createElement("textarea");
+        textInput.className = "snippet-text";
+        textInput.rows = 2;
+        textInput.spellcheck = false;
+        textInput.value = text;
+        textInput.placeholder = t("插入的内容", "Text to insert");
+        textInput.setAttribute("aria-label", t("片段内容", "Snippet text"));
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "snippet-remove";
+        remove.textContent = t("删除", "Delete");
+        remove.onclick = () => {
+          row.remove();
+          void saveSnippets();
+        };
+        row.append(nameInput, textInput, remove);
+        return row;
+      }),
+    );
+  };
+  const saveSnippets = async () => {
+    const rows = $$(".snippet-row", d.el).map((row) => [
+      $(".snippet-name", row).value.trim(),
+      $(".snippet-text", row).value,
+    ]);
+    const complete = rows.filter(([name]) => name);
+    const names = complete.map(([name]) => name);
+    if (names.some((name) => /\s/.test(name))) {
+      snippetStatus(
+        t("片段名称不能包含空格", "Snippet names cannot contain spaces"),
+      );
+      return;
+    }
+    if (new Set(names).size !== names.length) {
+      snippetStatus(t("片段名称不能重复", "Snippet names must be unique"));
+      return;
+    }
+    const saved = await commitField(
+      "snippets",
+      JSON.stringify(Object.fromEntries(complete), null, 2),
+    );
+    if (d.el.isConnected)
+      snippetStatus(saved ? t("片段已保存", "Snippets saved") : "");
+  };
+  $("#snippet-editor", d.el).addEventListener("change", (event) => {
+    event.stopPropagation();
+    void saveSnippets();
+  });
+  $("#add-snippet", d.el).onclick = () => {
+    renderSnippets([...Object.entries(settings.snippets || {}), ["", ""]]);
+    $$(".snippet-name", d.el).at(-1)?.focus();
+  };
+  renderSnippets();
+
+  // ----- Typography: font presets and sliders that preview while dragging.
+  const syncFontPreset = () => {
+    const value = $('[name="fontFamily"]', d.el).value.trim();
+    const preset = fontPresets.find(([, , , css]) => css === value);
+    $("#font-preset", d.el).value = preset ? preset[0] : "custom";
+  };
+  $("#font-preset", d.el).onchange = (event) => {
+    event.stopPropagation();
+    const preset = fontPresets.find(([id]) => id === event.target.value);
+    if (preset) void commitField("fontFamily", preset[3]);
+    else $('[name="fontFamily"]', d.el).focus();
+  };
+  syncFontPreset();
+  const sliders = {};
+  for (const name of ["fontSize", "lineHeight", "contentWidth"]) {
+    const number = $(`[name="${name}"]`, d.el);
+    if (!number) continue;
+    const range = document.createElement("input");
+    range.type = "range";
+    range.min = number.min;
+    range.max = number.max;
+    range.step = number.step || "1";
+    range.value = number.value;
+    range.className = "setting-slider";
+    range.setAttribute(
+      "aria-label",
+      number.closest("label").firstChild.textContent,
+    );
+    let timer;
+    range.addEventListener("input", (event) => {
+      event.stopPropagation();
+      number.value = range.value;
+      clearTimeout(timer);
+      timer = setTimeout(() => void handleChange({ target: number }), 120);
+    });
+    range.addEventListener("change", (event) => event.stopPropagation());
+    number.after(range);
+    number.closest("label").classList.add("setting-row-slider");
+    sliders[name] = range;
+  }
+  const syncSlider = (name) => {
+    if (sliders[name]) sliders[name].value = $(`[name="${name}"]`, d.el).value;
+  };
+
+  // ----- Pandoc: choose the executable with a file dialog.
+  $("#browse-pandoc", d.el).onclick = async () => {
+    try {
+      const path = await invoke("pickPath", {
+        title: t("选择 Pandoc 程序", "Choose the Pandoc program"),
+        // Linux executables have no extension, so only Windows filters by .exe.
+        filters: [
+          ...(/Windows/.test(navigator.userAgent)
+            ? [{ name: "Pandoc", extensions: ["exe"] }]
+            : []),
+          { name: t("全部文件", "All files"), extensions: ["*"] },
+        ],
+      });
+      if (!path || !d.el.isConnected) return;
+      if (await commitField("pandocPath", path))
+        $("#detect-tools", d.el).click();
+    } catch (error) {
+      toast(error.message, true);
     }
   };
   const refreshSpellcheckStatus = async () => {
@@ -512,7 +878,7 @@ export function showPreferences(
             ) + (status.error ? " " + status.error : "");
     } catch (error) {
       const element = $("#spellcheck-status", d.el);
-      if (element) element.textContent = error.message;
+      if (element) element.textContent = displayError(error);
     }
   };
   refreshSpellcheckStatus();
@@ -551,7 +917,7 @@ export function showPreferences(
         }
       } catch (error) {
         if (d.el.isConnected) {
-          status.textContent = error.message;
+          status.textContent = displayError(error);
           button.disabled = true;
         }
       } finally {
@@ -621,7 +987,7 @@ export function showPreferences(
         )
         .join("\n\n");
     } catch (e) {
-      result.textContent = e.message;
+      result.textContent = displayError(e);
       toast(e.message, true);
     } finally {
       button.disabled = false;
@@ -763,6 +1129,7 @@ export function showPreferences(
       : null;
     d.close();
     showPreferences({ ...settings, ...event.detail }, apply, invoke, {
+      ...options,
       section: activeSection,
       focus: activeName,
     });

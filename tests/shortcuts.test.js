@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeShortcut, shortcutMatches } from "../src/shortcuts.js";
+import {
+  normalizeShortcut,
+  shortcutMatches,
+  formatShortcut,
+  bindingFromEvent,
+} from "../src/shortcuts.js";
 
 test("native shortcut aliases normalize to CodeMirror and DOM key names", () => {
   for (const [binding, normalized, key] of [
@@ -71,4 +76,37 @@ test("unsupported shortcut names and duplicate modifiers are ignored safely", ()
     assert.equal(normalizeShortcut(binding), null);
     assert.equal(shortcutMatches({ key: "s", ctrlKey: true }, binding), false);
   }
+});
+
+test("shortcut recorder converts physical keys and refuses unusable combinations", () => {
+  const press = (code, key, modifiers = {}) =>
+    bindingFromEvent({ code, key, ...modifiers });
+  assert.equal(press("KeyB", "b", { ctrlKey: true }), "Mod-b");
+  assert.equal(
+    press("KeyA", "A", { ctrlKey: true, shiftKey: true }),
+    "Mod-Shift-a",
+  );
+  assert.equal(
+    press("Digit3", "#", { ctrlKey: true, shiftKey: true }),
+    "Mod-Shift-3",
+  );
+  assert.equal(press("Slash", "/", { ctrlKey: true }), "Mod-/");
+  assert.equal(press("F8", "F8"), "F8");
+  assert.equal(
+    press("Enter", "Enter", { ctrlKey: true, shiftKey: true }),
+    "Mod-Shift-Enter",
+  );
+  // Waiting for a key, plain letters, and layout-dependent shifted symbols.
+  assert.equal(press("ShiftLeft", "Shift", { shiftKey: true }), undefined);
+  assert.equal(press("KeyB", "b"), null);
+  assert.equal(press("KeyB", "B", { shiftKey: true }), null);
+  assert.equal(press("Slash", "?", { ctrlKey: true, shiftKey: true }), null);
+});
+
+test("shortcuts display like menu accelerators", () => {
+  assert.equal(formatShortcut("Mod-Shift-a"), "Ctrl+Shift+A");
+  assert.equal(formatShortcut("Mod-/"), "Ctrl+/");
+  assert.equal(formatShortcut("F11"), "F11");
+  assert.equal(formatShortcut("Mod-Shift-Enter"), "Ctrl+Shift+Enter");
+  assert.equal(formatShortcut("not a shortcut!"), "");
 });

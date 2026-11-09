@@ -1,6 +1,6 @@
 import { showAIModelSettings } from "./ai-model-settings.js";
 import { icon } from "./ui.js";
-import { localizeError } from "./errors.js";
+import { displayError } from "./errors.js";
 import "./ai-assistant.css";
 import {
   resolveAIRevision,
@@ -45,7 +45,7 @@ export function createAIAssistant({
   host.innerHTML = `<div class="ai-resizer" role="separator" tabindex="0" aria-orientation="horizontal" aria-label="${t("AI 面板高度", "AI panel height")}"></div>
     <header class="ai-header"><strong>${t("AI写作助手", "AI Writing Assistant")}</strong><span class="ai-model-label">${t("按需分析当前文档", "Review the current document on demand")}</span><button type="button" data-ai-clear-chat>${t("清空对话", "Clear chat")}</button><button type="button" data-ai-configure>${t("模型", "Models")}</button><button type="button" data-ai-close class="icon-button" aria-label="${t("收起 AI 面板", "Hide AI panel")}" title="${t("收起 AI 面板", "Hide AI panel")}">${icon.close}</button></header>
     <div class="ai-controls"><label><span class="sr-only">${t("分析范围", "Analysis scope")}</span><select data-ai-scope title="${t("分析范围", "Analysis scope")}"><option value="document">${t("整篇文档", "Whole document")}</option><option value="selection">${t("选中段落", "Selection")}</option></select></label><label><span class="sr-only">${t("文档类型", "Document type")}</span><select data-ai-type title="${t("文档类型", "Document type")}"><option value="general">${t("一般写作", "General writing")}</option><option value="academic">${t("学术论文", "Academic paper")}</option><option value="technical">${t("技术文档", "Technical document")}</option></select></label><button type="button" data-ai-analyze class="primary">${t("分析与评分", "Analyze & score")}</button><button type="button" data-ai-cancel hidden>${t("取消", "Cancel")}</button><span class="ai-status" role="status" aria-live="polite"></span></div>
-    <div class="ai-content" tabindex="0"><p class="ai-empty">${t("分析结构、逻辑与表达，或就当前文档提问。建议需由你确认后应用；继续编辑不会使其余建议失效。AI 可能出错，请核实事实与引用。", "Review structure, reasoning and clarity, or ask about your document. You decide which revisions to apply, and editing keeps the remaining suggestions usable. AI can make mistakes; verify facts and references.")}</p><div class="ai-results"></div><div class="ai-chat-log"></div><pre class="ai-stream" hidden></pre></div>
+    <div class="ai-content" tabindex="0"><p class="ai-empty">${t("分析结构、逻辑与表达，或就当前文档提问。建议需由你确认后应用；继续编辑不会使其余建议失效。AI 可能出错，请核实事实与引用。", "Review structure, reasoning and clarity, or ask about your document. You decide which revisions to apply, and editing keeps the remaining suggestions usable. AI can make mistakes; verify facts and references.")}</p><div class="ai-setup-callout" hidden><button type="button" class="primary" data-ai-setup>${t("设置模型", "Set up a model")}</button><span>${t("选择云端服务或本地模型（Ollama、LM Studio）后即可分析和对话。", "Choose a cloud service or a local model (Ollama, LM Studio) to start analyzing and chatting.")}</span></div><div class="ai-results"></div><div class="ai-chat-log"></div><pre class="ai-stream" hidden></pre></div>
     <form class="ai-chat-form"><label class="sr-only" for="ai-chat-question">${t("询问当前文档", "Ask about this document")}</label><textarea id="ai-chat-question" rows="1" maxlength="8000" placeholder="${t("询问当前文档…（Enter 发送，Shift+Enter 换行）", "Ask about this document… (Enter to send, Shift+Enter for a new line)")}"></textarea><button type="submit">${t("发送", "Send")}</button></form>`;
   const $ = (selector) => host.querySelector(selector);
   const status = (value) => {
@@ -143,8 +143,10 @@ export function createAIAssistant({
         const provider = settings.providers?.find(
           (item) => item.id === settings.provider,
         );
-        $(".ai-model-label").textContent =
-          `${provider?.label || (settings.provider === "local" ? t("本地", "Local") : settings.provider)} · ${settings.model || t("未配置模型", "No model configured")}`;
+        $(".ai-model-label").textContent = settings.ready
+          ? `${provider?.label || (settings.provider === "local" ? t("本地", "Local") : settings.provider)} · ${settings.model}`
+          : t("尚未设置模型", "No model set up yet");
+        $(".ai-setup-callout").hidden = Boolean(settings.ready);
       })
       .catch(() => {});
   }
@@ -160,7 +162,7 @@ export function createAIAssistant({
     return open;
   }
   function showError(error) {
-    status(localizeError(error));
+    status(displayError(error));
   }
   function appendChat(role, text) {
     const article = document.createElement("article");
@@ -823,7 +825,7 @@ export function createAIAssistant({
     if (event.type === "error") {
       status(
         event.message
-          ? localizeError(event.message)
+          ? displayError(event.message)
           : t("模型请求失败", "Model request failed"),
       );
       return;
@@ -852,7 +854,7 @@ export function createAIAssistant({
       ? onConfigure(options)
       : showAIModelSettings({ invoke, t, ...options });
   }
-  $("[data-ai-configure]").onclick = () => {
+  $("[data-ai-configure]").onclick = $("[data-ai-setup]").onclick = () => {
     cancel();
     Promise.resolve(configure()).then(updateModelLabel).catch(showError);
   };

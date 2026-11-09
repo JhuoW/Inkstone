@@ -4,7 +4,7 @@ Use the highlighted **AI Writing Assistant** button (pen-nib icon), centered in 
 
 ## Connect a model
 
-Open **Preferences → AI / Models** or the panel's **Models** button. If you start analysis or chat without a configured model, **AI Model Setup** opens automatically. Test and save the configuration to continue the pending action. Cancel leaves your document and question untouched. If the document changes during setup, Inkstone asks you to start the action again instead of sending stale content.
+Open **Preferences → AI / Models**, the panel's **Models** button, or **Set up a model**, which the panel shows until a model is configured. If you start analysis or chat without a configured model, **AI Model Setup** opens automatically. Before anything is configured, the dialog does not contact any server on its own: choose a provider, or select **Refresh** for the one already selected, to load its models. For Ollama or LM Studio, start the local server first. Test and save the configuration to continue the pending action. Cancel leaves your document and question untouched. If the document changes during setup, Inkstone asks you to start the action again instead of sending stale content.
 
 - Choose **OpenAI**, **Anthropic (Claude)**, **Google (Gemini)**, **Alibaba Cloud (Qwen)**, **DeepSeek**, **xAI (Grok)**, **Mistral**, **Groq**, **Ollama**, **LM Studio**, or **Custom OpenAI-Compatible API**.
 - Known providers fill their official endpoint and a documented default model. Qwen also offers region selection; the region must match your API key. Endpoints remain editable for proxies or your own server. Each provider remembers its own saved endpoint, model and options.

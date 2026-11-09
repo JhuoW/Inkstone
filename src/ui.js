@@ -1,6 +1,6 @@
 import { brandMark } from "./branding.js";
 import { t } from "./i18n.js";
-import { localizeError } from "./errors.js";
+import { displayError } from "./errors.js";
 export const $ = (selector, root = document) => root.querySelector(selector);
 export const $$ = (selector, root = document) => [
   ...root.querySelectorAll(selector),
@@ -22,7 +22,7 @@ export function toast(message, error = false) {
   el.replaceChildren();
   const content = document.createElement("span");
   // Error toasts may carry desktop errors that bypassed the invoke wrapper.
-  content.textContent = error ? localizeError(message) : message;
+  content.textContent = error ? displayError(message) : message;
   const dismiss = document.createElement("button");
   dismiss.type = "button";
   dismiss.className = "toast-dismiss";

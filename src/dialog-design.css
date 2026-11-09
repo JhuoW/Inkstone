@@ -505,3 +505,127 @@
     flex-basis: 100%;
   }
 }
+
+/* Preferences: typography sliders beside their numeric fields. */
+.preferences-dialog .setting-row.setting-row-slider {
+  grid-template-columns: minmax(130px, 0.8fr) 96px minmax(80px, 1fr);
+}
+.preferences-dialog .setting-row input.setting-slider {
+  min-height: 24px;
+  padding: 0;
+  accent-color: var(--accent);
+}
+/* Preferences: shortcut recorder and snippet list. */
+.preferences-dialog #shortcut-filter {
+  margin: 0 0 8px;
+}
+.preferences-dialog .shortcut-list {
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overscroll-behavior: contain;
+}
+.preferences-dialog .shortcut-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.preferences-dialog .shortcut-row:last-child {
+  border-bottom: 0;
+}
+.preferences-dialog .shortcut-key {
+  min-width: 132px;
+  min-height: 28px;
+  font-family: var(--code-font);
+  font-size: 12px;
+  color: var(--muted);
+}
+.preferences-dialog .shortcut-key.custom {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.preferences-dialog .shortcut-key.recording {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.preferences-dialog .shortcut-reset,
+.preferences-dialog .snippet-remove {
+  min-height: 28px;
+  font-size: 12px;
+}
+.preferences-dialog #shortcut-status:empty,
+.preferences-dialog #snippet-status:empty {
+  display: none;
+}
+.preferences-dialog .snippet-editor {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.preferences-dialog .snippet-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.35fr) minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+}
+.preferences-dialog .snippet-row textarea {
+  min-height: 32px;
+}
+@media (max-width: 640px) {
+  .preferences-dialog .snippet-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .preferences-dialog .snippet-row textarea {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Export: common formats first, rarely used options folded away. */
+.export-dialog .export-format-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.export-dialog .export-format-tiles button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 52px;
+  padding: 8px 12px;
+  text-align: left;
+}
+.export-dialog .export-format-tiles strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+.export-dialog .export-format-tiles small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.export-dialog .export-format-tiles button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.export-dialog .export-advanced {
+  margin: 4px 0 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.export-dialog .export-advanced summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.export-dialog .export-advanced[hidden] {
+  display: none;
+}

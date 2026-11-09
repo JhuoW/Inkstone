@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   cleanErrorMessage,
+  displayError,
   errorCode,
   localizeError,
   localizedError,
@@ -97,5 +98,30 @@ test("Localized errors keep the raw message and code for branching", () => {
   assert.equal(
     localizeError(error, "zh-CN"),
     localizeError(error.raw, "zh-CN"),
+  );
+});
+
+test("Displayed errors drop internal codes in both languages", () => {
+  assert.equal(
+    displayError(
+      remote(
+        "CONFLICT: The file changed while saving. Your edits have not overwritten it.",
+      ),
+      "en",
+    ),
+    "The file changed while saving. Your edits have not overwritten it.",
+  );
+  assert.equal(
+    displayError("AI: Request cancelled.", "en"),
+    "Request cancelled.",
+  );
+  assert.equal(
+    displayError("CLOSE: 请先完成或取消当前关闭操作，再打开新窗口。", "zh-CN"),
+    "请先完成或取消当前关闭操作，再打开新窗口。",
+  );
+  // Ordinary sentences are left alone.
+  assert.equal(
+    displayError("Open a folder first", "en"),
+    "Open a folder first",
   );
 });

@@ -425,3 +425,19 @@
     justify-self: start;
   }
 }
+
+/* Shown until a model is configured. */
+.ai-setup-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 640px;
+  margin: 4px auto 12px;
+  color: var(--muted);
+  text-align: center;
+}
+.ai-setup-callout[hidden] {
+  display: none;
+}

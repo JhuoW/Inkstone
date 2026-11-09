@@ -1,3 +1,4 @@
+import { displayError } from "./errors.js";
 import { modal, esc } from "./ui.js";
 
 let activeSetup = null;
@@ -281,7 +282,7 @@ export function showAIModelSettings({ invoke, t, required = false }) {
       listMessage(
         t("无法获取实时模型列表。", "Could not load the live model list.") +
           " " +
-          error.message +
+          displayError(error) +
           (modelList.length
             ? t(
                 " 仍可选择文档中的参考模型，并测试连接确认权限。",
@@ -339,7 +340,7 @@ export function showAIModelSettings({ invoke, t, required = false }) {
       scheduleDiscovery();
       return true;
     } catch (error) {
-      if (!closed && ticket === generation) message(error.message);
+      if (!closed && ticket === generation) message(displayError(error));
       return false;
     }
   }
@@ -367,7 +368,7 @@ export function showAIModelSettings({ invoke, t, required = false }) {
     select.value = known?.endpoint || "__custom__";
     select.closest(".setting-row").hidden = !options.length;
   }
-  function selectProvider(id) {
+  function selectProvider(id, { discoverNow = true } = {}) {
     stopOperation(false);
     snapshotFields();
     selected = id;
@@ -416,7 +417,14 @@ export function showAIModelSettings({ invoke, t, required = false }) {
     showModels(provider.models, "reference");
     updateControls();
     message("");
-    scheduleDiscovery();
+    if (discoverNow) scheduleDiscovery();
+    else
+      listMessage(
+        t(
+          "选择服务商后即可获取模型列表。使用 Ollama 或 LM Studio 时，请先启动本地服务，再点击“刷新”。",
+          "Choose a provider to load its models. For Ollama or LM Studio, start the local server first, then select Refresh.",
+        ),
+      );
   }
   async function testConnection(save) {
     if (closed || saving || operation === "test") return;
@@ -441,7 +449,7 @@ export function showAIModelSettings({ invoke, t, required = false }) {
         finish(false);
         d.close();
       } catch (error) {
-        if (!closed) message(error.message);
+        if (!closed) message(displayError(error));
       } finally {
         if (!closed) {
           saving = false;
@@ -501,7 +509,7 @@ export function showAIModelSettings({ invoke, t, required = false }) {
           ),
         );
     } catch (error) {
-      if (!closed && ticket === generation) message(error.message);
+      if (!closed && ticket === generation) message(displayError(error));
     } finally {
       if (!closed && ticket === generation) {
         saving = false;
@@ -627,11 +635,18 @@ export function showAIModelSettings({ invoke, t, required = false }) {
     const initial = providers.some((p) => p.id === settings.provider)
       ? settings.provider
       : "ollama";
-    selectProvider(initial);
+    // Before anything is configured, do not contact the default local server
+    // just because the dialog opened; that only produced a connection error.
+    const configured =
+      settings.profileSaved ||
+      Object.values(settings.profiles || {}).some(
+        (profile) => profile.profileSaved,
+      );
+    selectProvider(initial, { discoverNow: configured });
     input("provider").focus();
   }
   void initialize().catch((error) => {
-    if (!closed) message(error.message);
+    if (!closed) message(displayError(error));
   });
   return promise;
 }

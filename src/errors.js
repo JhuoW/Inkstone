@@ -394,6 +394,14 @@ export function localizeError(error, locale = getLocale()) {
   return message;
 }
 
+/**
+ * Text to show people: localized and without the internal "CODE:" prefix.
+ * Code that branches on errors should use error.code or error.raw instead.
+ */
+export function displayError(error, locale = getLocale()) {
+  return localizeError(error, locale).replace(/^[A-Z][A-Z_]+:\s+/, "");
+}
+
 /** An Error whose message is localized while code and raw text stay available. */
 export function localizedError(error, locale = getLocale()) {
   const raw = rawErrorMessage(error);

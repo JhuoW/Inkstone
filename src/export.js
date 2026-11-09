@@ -1,3 +1,4 @@
+import { displayError } from "./errors.js";
 import { $, $$, esc, modal, toast, promptText, ask } from "./ui.js";
 import { getLocale, t as translate } from "./i18n.js";
 import {
@@ -162,21 +163,33 @@ export function showExport({
   ];
   const d = modal(
     print ? t("打印", "Print") : t("导出文档", "Export document"),
-    '<form id="export-form" novalidate autocomplete="off"><div class="export-scroll"><div class="export-profiles"><label>' +
-      t("导出预设", "Export preset") +
-      '<select name="profile"><option value="">' +
-      t("自定义导出预设…", "Custom export preset…") +
-      "</option>" +
-      (settings.exportProfiles || [])
-        .map((p, i) => '<option value="' + i + '">' + esc(p.name) + "</option>")
-        .join("") +
-      '</select></label><button type="button" id="save-export-profile">' +
-      t("保存预设", "Save preset") +
-      '</button><button type="button" id="delete-export-profile">' +
-      t("删除预设", "Delete preset") +
-      '</button></div><div class="export-grid">' +
+    '<form id="export-form" novalidate autocomplete="off"><div class="export-scroll">' +
+      (print
+        ? ""
+        : '<div class="export-format-tiles" role="group" aria-label="' +
+          t("常用格式", "Common formats") +
+          '">' +
+          [
+            ["pdf", "PDF", t("排版好的页面", "Paged document")],
+            ["html", "HTML", t("网页", "Web page")],
+            ["docx", "Word", t("需要 Pandoc", "Needs Pandoc")],
+            ["png", t("图片", "Image"), "PNG"],
+          ]
+            .map(
+              ([value, label, hint]) =>
+                '<button type="button" data-format-tile="' +
+                value +
+                '" aria-pressed="false"><strong>' +
+                label +
+                "</strong><small>" +
+                hint +
+                "</small></button>",
+            )
+            .join("") +
+          "</div>") +
+      '<div class="export-grid">' +
       '<label class="full">' +
-      t("格式", "Format") +
+      (print ? t("格式", "Format") : t("全部格式", "All formats")) +
       '<select name="format">' +
       (print
         ? '<option value="print">' + t("打印", "Print") + "</option>"
@@ -222,22 +235,6 @@ export function showExport({
       "</option></select></label><label>" +
       t("Pandoc 标题编号", "Pandoc heading numbers") +
       '<input type="checkbox" name="numberSections"></label>' +
-      '<label class="full">' +
-      t(
-        "页眉（PDF 支持 HTML，直接打印为纯文本）",
-        "Header (PDF supports HTML; print uses plain text)",
-      ) +
-      '<input name="header" value="' +
-      esc(options.header || "") +
-      '"></label>' +
-      '<label class="full">' +
-      t(
-        "页脚 HTML · pageNumber / totalPages 占位类",
-        "Footer HTML · pageNumber / totalPages classes",
-      ) +
-      '<input name="footer" value="' +
-      esc(options.footer || "") +
-      '" placeholder="&lt;span class=&quot;pageNumber&quot;&gt;&lt;/span&gt;"></label>' +
       "<label>" +
       t("图片宽度（px）", "Image width (px)") +
       '<input type="number" name="width" min="600" max="2400" required value="1200"></label><label>' +
@@ -256,6 +253,37 @@ export function showExport({
       "</option></select></label>" +
       '<label class="full">' +
       t(
+        "Pandoc 额外参数（JSON 字符串数组）",
+        "Pandoc extra arguments (JSON string array)",
+      ) +
+      '<textarea name="args" rows="2" spellcheck="false">[]</textarea></label></div>' +
+      // Rarely changed options stay available without crowding the form.
+      '<details class="export-advanced"' +
+      (options.header || options.footer ? " open" : "") +
+      "><summary>" +
+      t(
+        "高级：页眉页脚、Pandoc 模板",
+        "Advanced: header, footer and Pandoc templates",
+      ) +
+      '</summary><div class="export-grid">' +
+      '<label class="full">' +
+      t(
+        "页眉（PDF 支持 HTML，直接打印为纯文本）",
+        "Header (PDF supports HTML; print uses plain text)",
+      ) +
+      '<input name="header" value="' +
+      esc(options.header || "") +
+      '"></label>' +
+      '<label class="full">' +
+      t(
+        "页脚 HTML · pageNumber / totalPages 占位类",
+        "Footer HTML · pageNumber / totalPages classes",
+      ) +
+      '<input name="footer" value="' +
+      esc(options.footer || "") +
+      '" placeholder="&lt;span class=&quot;pageNumber&quot;&gt;&lt;/span&gt;"></label>' +
+      '<label class="full">' +
+      t(
         "Pandoc 模板或参考文档（可选）",
         "Pandoc template or reference document (optional)",
       ) +
@@ -263,13 +291,20 @@ export function showExport({
       t("选择模板", "Choose template") +
       '</button> <button type="button" id="pick-reference">' +
       t("选择参考 DOCX / ODT / PPTX", "Choose reference DOCX / ODT / PPTX") +
-      '</button></div><small id="template-state"></small></label>' +
-      '<label class="full">' +
-      t(
-        "Pandoc 额外参数（JSON 字符串数组）",
-        "Pandoc extra arguments (JSON string array)",
-      ) +
-      '<textarea name="args" rows="2" spellcheck="false">[]</textarea></label></div>' +
+      '</button></div><small id="template-state"></small></label></div></details>' +
+      '<div class="export-profiles"><label>' +
+      t("导出预设", "Export preset") +
+      '<select name="profile"><option value="">' +
+      t("自定义导出预设…", "Custom export preset…") +
+      "</option>" +
+      (settings.exportProfiles || [])
+        .map((p, i) => '<option value="' + i + '">' + esc(p.name) + "</option>")
+        .join("") +
+      '</select></label><button type="button" id="save-export-profile">' +
+      t("保存预设", "Save preset") +
+      '</button><button type="button" id="delete-export-profile">' +
+      t("删除预设", "Delete preset") +
+      "</button></div>" +
       '<p class="muted">' +
       t(
         "PDF、HTML、PNG 直接离线导出。其他格式需要 Pandoc；演示格式的资源需求由对应工具决定。文档图片、公式和图表在原生导出中嵌入。",
@@ -321,8 +356,21 @@ export function showExport({
         ?.toggleAttribute("hidden", !shown);
     $("#pick-template", d.el).closest("label").hidden = native;
     $("#delete-export-profile", d.el).disabled = form.profile.value === "";
+    // Hide the advanced section when none of its fields apply to this format.
+    const advanced = $(".export-advanced", d.el);
+    advanced.hidden = !$$("label", advanced).some((label) => !label.hidden);
+    for (const tile of $$("[data-format-tile]", d.el))
+      tile.setAttribute(
+        "aria-pressed",
+        String(tile.dataset.formatTile === format),
+      );
   };
   form.format.onchange = showFields;
+  for (const tile of $$("[data-format-tile]", d.el))
+    tile.onclick = () => {
+      form.format.value = tile.dataset.formatTile;
+      form.format.dispatchEvent(new Event("change", { bubbles: true }));
+    };
   showFields();
   let template, referenceDoc;
   const pick = async (reference) => {
@@ -520,7 +568,7 @@ export function showExport({
             : "")
         : t("已取消", "Cancelled");
     } catch (e) {
-      status.textContent = e.message;
+      status.textContent = displayError(e);
       toast(e.message, true);
     } finally {
       controls.forEach(([control, disabled]) => {

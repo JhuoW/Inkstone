@@ -46,7 +46,8 @@ The original `--ink-ink`, `--ink-paper`, `--ink-stone`, `--ink-vermilion` values
 - Chrome: Segoe UI / Noto Sans / Microsoft YaHei / system sans; 13px controls, 12px supporting text, 14px dialog titles. Brand typography is the supplied outlined artwork, not a substitute font.
 - Document defaults remain 17px, 1.75 leading and configurable 780px measure; existing user font and layout preferences are honored. Headings derive from the document scale. Code uses Cascadia Code / Consolas / Liberation Mono.
 - A single spacing scale: 2, 4, 8, 12, 16, 24, 32px. Related controls stay close; sections receive separation. Do not use letter-spaced uppercase UI labels.
-- Form controls and action buttons: 30–32px; icon targets at least 28px. Toolbar may scroll when its available width is constrained, with visible menu access rather than inaccessible clipped actions.
+- Form controls and action buttons: 30–32px; icon targets at least 28px. When the toolbar is too narrow, trailing formatting buttons move into a “⋯” menu instead of scrolling; Insert, Source and Export stay visible. Below 960px window width the sidebar starts hidden and the sidebar button shows it over the document (Esc or a click outside closes it).
+- Immersive mode (Ctrl+Shift+Enter, View menu, command palette) hides the sidebar, title bar, toolbar and status bar; Esc or the faint exit button restores them. It is per window and not saved.
 - Border radius: 3px controls, 4px menus, 6px dialogs. No pill buttons or rounded icon tiles. Elevation belongs only to overlays. Dialog backdrops dim without blur.
 
 ## Icons and interaction

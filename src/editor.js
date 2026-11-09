@@ -43,9 +43,17 @@ import {
   HighlightStyle,
   indentUnit,
   bracketMatching,
+  syntaxTree,
 } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
-import { search, searchKeymap, openSearchPanel } from "@codemirror/search";
+import {
+  search,
+  searchKeymap,
+  openSearchPanel,
+  getSearchQuery,
+  searchPanelOpen,
+} from "@codemirror/search";
+import { yamlFrontmatter } from "@codemirror/lang-yaml";
 import {
   autocompletion,
   closeBrackets,
@@ -651,6 +659,8 @@ export function createEditor(
     onChange = () => {},
     onSelection = () => {},
     onLink = () => {},
+    // Runs an application command chosen from the "/" insert menu.
+    onSlashCommand = null,
     settings: initialSettings = {},
   } = {},
 ) {
@@ -1141,6 +1151,74 @@ export function createEditor(
         }));
     return { from: match.from, options, validFor: /^[:;\w-]*$/ };
   }
+  // "/" at the start of a line opens a searchable insert menu. Typing after the
+  // slash filters by English or Chinese names; choosing an item removes the
+  // typed "/query" and runs the command.
+  const slashItems = [
+    ["heading1", "Heading 1", "一级标题", "h1 title"],
+    ["heading2", "Heading 2", "二级标题", "h2 subtitle"],
+    ["heading3", "Heading 3", "三级标题", "h3"],
+    ["bullet", "Bullet list", "无序列表", "ul list"],
+    ["ordered", "Numbered list", "有序列表", "ol list number"],
+    ["task", "Task list", "任务列表", "todo checkbox"],
+    ["quote", "Quote", "引用", "blockquote"],
+    ["table", "Table", "表格", "grid"],
+    ["codeFence", "Code block", "代码块", "code fence"],
+    ["math", "Math block", "公式", "latex equation formula"],
+    ["insertImage", "Image", "图片", "picture photo"],
+    ["insertImageURL", "Image from URL", "网络图片", "picture url"],
+    ["link", "Link", "链接", "url"],
+    ["footnote", "Footnote", "脚注", "note"],
+    ["toc", "Table of contents", "目录", "toc outline"],
+    ["hr", "Horizontal rule", "分隔线", "divider line"],
+    ["pageBreak", "Page break", "分页符", "page"],
+  ];
+  function slashCompletion(context) {
+    if (!onSlashCommand || settings.readOnly) return null;
+    const line = context.state.doc.lineAt(context.pos);
+    const before = line.text.slice(0, context.pos - line.from);
+    const match = /^(\s*)\/([^\s/]*)$/u.exec(before);
+    if (!match) return null;
+    // Not inside fenced or indented code, where "/" is ordinary text.
+    for (
+      let node = syntaxTree(context.state).resolveInner(context.pos, -1);
+      node;
+      node = node.parent
+    )
+      if (["FencedCode", "CodeBlock", "CodeText"].includes(node.name))
+        return null;
+    const query = match[2].toLowerCase();
+    const zh = settings.locale === "zh-CN";
+    const options = slashItems
+      .filter(
+        ([id, en, zhLabel, terms]) =>
+          !query ||
+          [id, en, zhLabel, terms].some((term) =>
+            term.toLowerCase().includes(query),
+          ),
+      )
+      .map(([id, en, zhLabel], index) => ({
+        label: "/" + (zh ? zhLabel : en),
+        detail: zh ? en : zhLabel,
+        type: "keyword",
+        boost: -index,
+        apply: (view, _completion, from, to) => {
+          view.dispatch({
+            changes: { from, to, insert: "" },
+            selection: { anchor: from },
+            userEvent: "input.complete",
+          });
+          onSlashCommand(id);
+        },
+      }));
+    if (!options.length) return null;
+    return {
+      from: line.from + match[1].length,
+      to: context.pos,
+      options,
+      filter: false,
+    };
+  }
   function smartInput(editor, from, to, inserted) {
     if (
       (!settings.autoPairMarkdown && !settings.smartPunctuationInput) ||
@@ -1261,7 +1339,19 @@ export function createEditor(
               "replaced $ matches": "已替换 $ 处匹配",
               "replaced match on line $": "已替换第 $ 行匹配",
             }
-          : {},
+          : {
+              next: "Next",
+              previous: "Previous",
+              all: "Select all",
+              "match case": "Match case",
+              regexp: "Regex",
+              "by word": "Whole word",
+              replace: "Replace",
+              "replace all": "Replace all",
+              close: "Close",
+              "Go to line": "Go to line",
+              go: "Go",
+            },
       ),
       EditorState.tabSize.of(Number(settings.tabSize) || 2),
       indentUnit.of(" ".repeat(Number(settings.tabSize) || 2)),
@@ -1301,6 +1391,79 @@ export function createEditor(
         { dark: settings.theme === "dark" },
       ),
     ];
+  }
+  // Shows "current / total" next to the find field while the panel is open.
+  function searchMatchCounter() {
+    let frame = 0;
+    const render = (view) => {
+      frame = 0;
+      const panel = view.dom.querySelector(".cm-search");
+      if (!panel) return;
+      let counter = panel.querySelector(".inkstone-search-count");
+      if (!counter) {
+        counter = document.createElement("span");
+        counter.className = "inkstone-search-count";
+        counter.setAttribute("role", "status");
+        counter.setAttribute("aria-live", "polite");
+        panel.querySelector('input[name="search"]')?.after(counter);
+      }
+      // Keep the replace field and its buttons together so they wrap as one
+      // row. Moving the nodes keeps CodeMirror's listeners and tab order.
+      const replace = panel.querySelector('input[name="replace"]');
+      if (
+        replace &&
+        !replace.parentElement.classList.contains("inkstone-replace-row")
+      ) {
+        const row = document.createElement("div");
+        row.className = "inkstone-replace-row";
+        replace.before(row);
+        row.append(
+          replace,
+          ...panel.querySelectorAll(
+            'button[name="replace"], button[name="replaceAll"]',
+          ),
+        );
+      }
+      const zh = settings.locale === "zh-CN";
+      const query = getSearchQuery(view.state);
+      if (!query.search) {
+        counter.textContent = "";
+        return;
+      }
+      if (!query.valid) {
+        counter.textContent = zh ? "表达式无效" : "Invalid pattern";
+        return;
+      }
+      const { from, to } = view.state.selection.main;
+      const limit = 9999;
+      let total = 0,
+        current = 0;
+      const cursor = query.getCursor(view.state);
+      for (let next = cursor.next(); !next.done; next = cursor.next()) {
+        total++;
+        if (next.value.from === from && next.value.to === to) current = total;
+        if (total > limit) break;
+      }
+      counter.textContent = !total
+        ? zh
+          ? "无结果"
+          : "No results"
+        : `${current || "–"} / ${total > limit ? limit + "+" : total}`;
+    };
+    return EditorView.updateListener.of((update) => {
+      if (!searchPanelOpen(update.state)) return;
+      if (
+        frame ||
+        !(
+          update.docChanged ||
+          update.selectionSet ||
+          update.transactions.some((tr) => tr.effects.length) ||
+          !update.view.dom.querySelector(".inkstone-search-count")
+        )
+      )
+        return;
+      frame = requestAnimationFrame(() => render(update.view));
+    });
   }
   function customKeyExtensions() {
     return Prec.highest(
@@ -1355,18 +1518,23 @@ export function createEditor(
         highlightSpecialChars(),
         highlightActiveLine(),
         bracketMatching(),
+        // YAML front matter is highlighted as YAML instead of being read as a
+        // Markdown setext heading with links.
         sourceLanguage.of(
-          markdown({
-            base: markdownLanguage,
-            codeLanguages: resolveCodeLanguage,
-            addKeymap: false,
+          yamlFrontmatter({
+            content: markdown({
+              base: markdownLanguage,
+              codeLanguages: resolveCodeLanguage,
+              addKeymap: false,
+            }),
           }),
         ),
         syntaxHighlighting(inkstoneHighlightStyle, { fallback: true }),
         EditorView.lineWrapping,
         search({ top: true }),
+        searchMatchCounter(),
         customKeys.of(customKeyExtensions()),
-        autocompletion({ override: [completion] }),
+        autocompletion({ override: [completion, slashCompletion] }),
         Prec.highest(EditorView.inputHandler.of(smartInput)),
         keymap.of(baseKeys),
         behavior.of(behaviorExtensions()),

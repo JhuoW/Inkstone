@@ -84,3 +84,66 @@ export function shortcutMatches(event, binding) {
       Boolean(event.shiftKey) === parsed.modifiers.includes("Shift"))
   );
 }
+
+/** Display a binding the way menus show it, for example "Ctrl+Shift+A". */
+export function formatShortcut(binding) {
+  const parsed = parseShortcut(binding);
+  if (!parsed) return "";
+  const key = parsed.key.length === 1 ? parsed.key.toUpperCase() : parsed.key;
+  return [...parsed.modifiers, key].join("+");
+}
+
+const codeKeys = {
+  Minus: "-",
+  Equal: "=",
+  BracketLeft: "[",
+  BracketRight: "]",
+  Backslash: "\\",
+  Semicolon: ";",
+  Quote: "'",
+  Comma: ",",
+  Period: ".",
+  Slash: "/",
+  Backquote: "`",
+  Space: "Space",
+  Enter: "Enter",
+  Backspace: "Backspace",
+  Delete: "Delete",
+  Insert: "Insert",
+  Home: "Home",
+  End: "End",
+  PageUp: "PageUp",
+  PageDown: "PageDown",
+  ArrowUp: "ArrowUp",
+  ArrowDown: "ArrowDown",
+  ArrowLeft: "ArrowLeft",
+  ArrowRight: "ArrowRight",
+};
+
+/**
+ * Convert a keydown event into a stored binding such as "Mod-Shift-a".
+ * Returns undefined while only modifiers are held, and null for combinations
+ * that cannot be used: no Ctrl/Alt/Meta (except function keys), or Shift with
+ * punctuation whose character differs between keyboard layouts.
+ */
+export function bindingFromEvent(event) {
+  if (["Control", "Shift", "Alt", "Meta", "AltGraph"].includes(event.key))
+    return undefined;
+  const code = String(event.code || "");
+  let key = null;
+  if (/^Key[A-Z]$/.test(code)) key = code.slice(3).toLowerCase();
+  else if (/^Digit[0-9]$/.test(code)) key = code.slice(5);
+  else if (/^F(?:[1-9]|1[0-9]|2[0-4])$/.test(code)) key = code;
+  else if (Object.hasOwn(codeKeys, code)) key = codeKeys[code];
+  if (!key) return null;
+  if (key.length === 1 && !/[a-z0-9]/.test(key) && event.shiftKey) return null;
+  const modifiers = [];
+  if (event.ctrlKey) modifiers.push("Mod");
+  if (event.metaKey) modifiers.push("Meta");
+  if (event.altKey) modifiers.push("Alt");
+  if (event.shiftKey) modifiers.push("Shift");
+  if (!/^F\d+$/.test(key) && !modifiers.some((part) => part !== "Shift"))
+    return null;
+  const binding = [...modifiers, key].join("-");
+  return parseShortcut(binding) ? binding : null;
+}

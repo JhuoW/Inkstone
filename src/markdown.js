@@ -241,8 +241,8 @@ function extensions(md) {
       return true;
     },
   );
-  md.renderer.rules.frontmatter = (tokens, idx) =>
-    `<details class="frontmatter"><summary>YAML · metadata</summary><pre>${escapeHTML(tokens[idx].content)}</pre></details>\n`;
+  md.renderer.rules.frontmatter = (tokens, idx, _options, env) =>
+    `<details class="frontmatter"><summary>${env?.options?.locale === "zh-CN" ? "文档属性 · YAML" : "Document properties · YAML"}</summary><pre>${escapeHTML(tokens[idx].content)}</pre></details>\n`;
   md.core.ruler.after("inline", "inkstone_extensions", (state) => {
     const ids = new Map();
     for (let i = 0; i < state.tokens.length; i++) {
