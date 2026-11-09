@@ -542,10 +542,14 @@ kbd {
 .breadcrumb > span {
   color: var(--muted);
 }
+/* The folder yields space before the file name. A percentage cap here was
+   measured against this content-sized row and cut even short folder names. */
 .breadcrumb > span:first-child {
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 30%;
+  max-width: 220px;
+  min-width: 3em;
+  flex-shrink: 4;
 }
 .breadcrumb strong {
   font-size: 13px;
@@ -553,6 +557,7 @@ kbd {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 4em;
 }
 #dirty-dot {
   font-size: 10px;

@@ -1153,7 +1153,7 @@ function updateStatus() {
   const count = stats.words.toLocaleString(settings.locale);
   $("#statistics").textContent = t(
     `字数 ${count} · 约 ${stats.readingMinutes} 分钟`,
-    `${count} words · ${stats.readingMinutes} min`,
+    `${count} ${stats.words === 1 ? "word" : "words"} · ${stats.readingMinutes} min`,
   );
   // Chinese characters and other words are counted separately; show both.
   $("#statistics").title = t(
@@ -3991,14 +3991,12 @@ async function init() {
       }
     else {
       editor.setMode(mode);
-      // Start below the welcome title so it renders instead of showing "#".
+      // Start on the first plain paragraph below the welcome title, so neither
+      // the title's "#" nor a quote's ">" is shown at the cursor.
       const welcomeText = editor.view.state.doc.toString();
-      const body = welcomeText.search(/\n\s*\n\S/);
+      const body = welcomeText.search(/\n(?=[\p{L}\p{N}])/u);
       if (!current.path && body > 0)
-        editor.setSelection(
-          { anchor: welcomeText.indexOf("\n", body + 1) + 1 },
-          { scrollIntoView: false },
-        );
+        editor.setSelection({ anchor: body + 1 }, { scrollIntoView: false });
     }
   } finally {
     bootstrapLoading = false;

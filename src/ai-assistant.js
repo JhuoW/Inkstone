@@ -380,7 +380,9 @@ export function createAIAssistant({
       report.cards.length
         ? t(
             `修改建议 ${report.cards.length} 条`,
-            `${report.cards.length} suggestions`,
+            report.cards.length === 1
+              ? "1 suggestion"
+              : `${report.cards.length} suggestions`,
           )
         : t("已处理全部建议", "All suggestions handled"),
     ];
@@ -607,7 +609,9 @@ export function createAIAssistant({
         note.className = "ai-suggestions-omitted";
         note.textContent = t(
           `另有 ${omitted} 条建议引用的原文不存在或不唯一，已省略`,
-          `${omitted} more suggestions quoted text that is missing or not unique and were omitted`,
+          omitted === 1
+            ? "1 more suggestion quoted text that is missing or not unique and was omitted"
+            : `${omitted} more suggestions quoted text that is missing or not unique and were omitted`,
         );
         toolbar.append(note);
       }
