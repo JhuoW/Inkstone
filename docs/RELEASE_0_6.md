@@ -38,14 +38,14 @@ Windows 真实窗口的专用测试文稿显示单份 `a+b=c`，点击 `b` 后�
 
 实际 NSIS 在独立的中文及空格目录完成新安装，英语语言交接、四种扩展的 OpenWith 及正确引用路径的打开命令通过，原有默认关联和其他编辑器的类保持安装前状态。卸载退出码为 0，测试安装程序文件、自身 ProgID 和卸载项均移除；受保护注册信息与本次安装前快照逐字一致，未留下测试安装。被动解出的 NSIS 应用负载与实际安装版是分别验证的程序形态。
 
-主要证据：
+主要证据（详细记录已从仓库移除，以下链接指向归档提交 `f821158`）：
 
-- [浏览器结果](../artifacts/windows-validation/0.6.0/browser-final/summary.json)
-- [Electron 结果](../artifacts/windows-validation/0.6.0/playwright-results.json) 与 [源码记录](../artifacts/windows-validation/0.6.0/source-provenance.json)
-- [PE 校验](../artifacts/windows-validation/0.6.0/windows-package-validation/static-results.json) 与 [包内源码一致性](../artifacts/windows-validation/0.6.0/ui-redesign/release/source-match.json)
-- [Windows 窗口手工记录](../artifacts/windows-validation/0.6.0/manual-windows/results.json) 与 [扩展及 NSIS 夹具汇总](../artifacts/windows-validation/0.6.0/extension-final/results.json)
-- [NSIS 中英语言钩子](../artifacts/windows-validation/0.6.0/installer-language-validation/results.json) 与 [临时专用关联夹具](../artifacts/windows-validation/0.6.0/installer-association-validation/results.json)
-- [四种程序形态原生检查](../artifacts/windows-validation/0.6.0/package-native-final-results.json) 与 [实际安装/卸载汇总](../artifacts/windows-validation/0.6.0/actual-installer-validation/summary.json)
+- [浏览器结果](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/browser-final/summary.json)
+- [Electron 结果](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/playwright-results.json) 与 [源码记录](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/source-provenance.json)
+- [PE 校验](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/windows-package-validation/static-results.json) 与 [包内源码一致性](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/ui-redesign/release/source-match.json)
+- [Windows 窗口手工记录](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/manual-windows/results.json) 与 [扩展及 NSIS 夹具汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/extension-final/results.json)
+- [NSIS 中英语言钩子](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/installer-language-validation/results.json) 与 [临时专用关联夹具](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/installer-association-validation/results.json)
+- [四种程序形态原生检查](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/package-native-final-results.json) 与 [实际安装/卸载汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.0/actual-installer-validation/summary.json)
 
 ## Windows 产物
 

@@ -1,7 +1,0 @@
-PASS Editing headings preserves their size and following-content position
-PASS User writing and code fonts survive active and rendered states
-PASS Rendered code and formula errors remain readable in light and dark themes
-PASS Source syntax stays readable while theme switches preserve selection and undo
-PASS Formula re-entry, source synchronization and undo work with themed typography
-PASS Search keeps visible focus and wraps controls in a narrow editor
-PASS Table cell focus remains visible and Tab plus undo preserve the Markdown

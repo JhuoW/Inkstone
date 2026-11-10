@@ -1,8 +1,0 @@
-h1(#中文格式验收). 中文格式验收
-
-Inkstone offline writing. 中文段落。
-
-h2(#第二节). 第二节
-
-* 第一项
-* Second item

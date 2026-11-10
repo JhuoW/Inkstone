@@ -43,14 +43,14 @@
 
 对实际安装程序使用新隔离配置，确认安装语言种子为 `locale:en, configured:true`，首次启动不再出现第二次语言选择。首次默认应用提示选择 Not now 后标记持久化，新窗口与重启不重复提示。固定 `ms-settings:defaultapps?registeredAppUser=Inkstone` 调用由捕获桩验证，不将调用捕获声称为已经修改系统默认设置。
 
-现有证据：
+现有证据（详细记录已从仓库移除，以下链接指向归档提交 `f821158`）：
 
-- [浏览器汇总](../artifacts/windows-validation/0.6.1/browser-final/summary.json) 与 [About 浏览器结果](../artifacts/windows-validation/0.6.1/about-dialog/results.json)
-- [NSIS 语言策略与钩子](../artifacts/windows-validation/0.6.1/installer-language-validation/results.json)
-- [临时专用关联夹具](../artifacts/windows-validation/0.6.1/installer-association-validation/results.json)
-- [完整 Electron 结果](../artifacts/windows-validation/0.6.1/electron-final/playwright-results.json) 与 [结果/哈希汇总](../artifacts/windows-validation/0.6.1/electron-final/summary.json)
-- [扩展及安装器夹具汇总](../artifacts/windows-validation/0.6.1/extension-final/results.json) 与 [三种包内程序原生汇总](../artifacts/windows-validation/0.6.1/package-native-final-results.json)
-- [PE 校验](../artifacts/windows-validation/0.6.1/windows-package-validation/static-results.json)、[包内源码一致性](../artifacts/windows-validation/0.6.1/ui-redesign/release/source-match.json) 及 [许可证与生产依赖校验](../artifacts/windows-validation/0.6.1/package-static-identity.json)
+- [浏览器汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/browser-final/summary.json) 与 [About 浏览器结果](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/about-dialog/results.json)
+- [NSIS 语言策略与钩子](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/installer-language-validation/results.json)
+- [临时专用关联夹具](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/installer-association-validation/results.json)
+- [完整 Electron 结果](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/electron-final/playwright-results.json) 与 [结果/哈希汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/electron-final/summary.json)
+- [扩展及安装器夹具汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/extension-final/results.json) 与 [三种包内程序原生汇总](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/package-native-final-results.json)
+- [PE 校验](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/windows-package-validation/static-results.json)、[包内源码一致性](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/ui-redesign/release/source-match.json) 及 [许可证与生产依赖校验](https://github.com/JhuoW/Inkstone/blob/f8211586bca40d549c63442c0aa59b19b0ac4089/artifacts/windows-validation/0.6.1/package-static-identity.json)
 
 ## Windows 产物
 

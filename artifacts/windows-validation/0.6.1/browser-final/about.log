@@ -1,5 +1,0 @@
-PASS English/light and Chinese/dark show runtime version and original brand assets
-PASS License view shows exact bundled text offline and Back returns to its launcher
-PASS Trusted source and license links use openExternal without navigating the editor
-PASS Native dialog traps keyboard focus; Escape restores writing selection unchanged
-PASS Short and narrow windows keep About, license scrolling and Close reachable

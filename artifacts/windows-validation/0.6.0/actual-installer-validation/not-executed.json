@@ -1,9 +1,0 @@
-{
-  "version": "0.6.0",
-  "installerExecuted": false,
-  "reason": "Existing Inkstone 0.4.0 installation and Inkstone.Markdown association detected; fresh install test stopped before mutation.",
-  "existingExecutable": "C:\\Users\\wei\\AppData\\Local\\Programs\\Inkstone\\Inkstone.exe",
-  "existingFileVersion": "0.4.0",
-  "freshNSISInstallUninstallVerified": false,
-  "SupersededBy": "summary.json: subsequent fresh install and uninstall passed after no existing installation was present."
-}
