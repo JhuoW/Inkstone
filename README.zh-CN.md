@@ -15,9 +15,12 @@
 
 ## 下载
 
-**[下载最新 Windows 安装版](https://github.com/JhuoW/Inkstone/releases/latest)**
+**[下载最新版本](https://github.com/JhuoW/Inkstone/releases/latest)**
 
-运行安装程序即可安装或升级。右击 Markdown 文件，在“打开方式”中选择 Inkstone；也可通过“工具 → 默认 Markdown 应用”打开 Windows 默认应用设置。
+- **Windows**：运行 `Inkstone-<版本>-windows-x64.exe` 即可安装或升级。右击 Markdown 文件，在“打开方式”中选择 Inkstone；也可通过“工具 → 默认 Markdown 应用”打开 Windows 默认应用设置。安装程序暂未进行代码签名，首次运行时 Windows SmartScreen 可能会提示，选择“更多信息 → 仍要运行”即可。
+- **Linux（x64）**：给 `.AppImage` 添加可执行权限后直接运行；Debian 和 Ubuntu 可安装 `.deb`；也可解压 `.tar.gz` 使用。
+
+从 0.10.0 起，Windows 安装版和 AppImage 支持自动更新：有新版本时 Inkstone 会提示你，下载和安装都由你确认。
 
 ## 功能
 
@@ -54,14 +57,14 @@
 
 ## 开发
 
-需要 **Node.js 22.12+**。主要发布 Windows 版本，也可从源码构建 Linux 版本。
+需要 **Node.js 22.12+**。Inkstone 面向 Windows 和 Linux 构建与发布。
 
 ```sh
 npm ci
 npm start
 ```
 
-使用 `npm test` 运行单元测试，`npm run dist:win` 构建 Windows 安装程序。详细信息见 [0.9.2 发布记录](docs/releases/v0.9.2.md)、[架构说明](docs/ARCHITECTURE.md)和 [Electron API](electron/API.md)。
+使用 `npm test` 运行单元测试，`npm run dist:win` 构建 Windows 安装程序。详细信息见 [0.10.0 发布记录](docs/releases/v0.10.0.md)、[架构说明](docs/ARCHITECTURE.md)和 [Electron API](electron/API.md)。
 
 ## 许可证与贡献者
 

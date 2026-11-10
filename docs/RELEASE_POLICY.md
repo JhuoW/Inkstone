@@ -43,3 +43,7 @@
 ## 0.9.2 细节修复与 README 截图
 
 0.9.2 修复中文欢迎页首次打开时引用显示“>”、标题栏短文件夹名被截断以及英文单复数，并用当前界面重新截取 README 截图。属于小范围问题修复，按小更新递增 PATCH。用户明确要求发布，按标签工作流发布 GitHub Release，具体范围见 [0.9.2 发布记录](releases/v0.9.2.md)。
+
+## 0.10.0 自动更新、系统托盘与 Linux 安装包
+
+0.10.0 新增自动更新、系统托盘与关闭行为设置、单实例运行，完善保存失败与退出流程，并首次在 GitHub Release 中发布 Linux 的 AppImage、deb 和 tar.gz。属于主要功能更新，按规则递增 MINOR 并将 PATCH 归零（0.9.2 → 0.10.0）。用户明确要求发布，按标签工作流发布 GitHub Release，具体范围见 [0.10.0 发布记录](releases/v0.10.0.md)。Windows 安装程序仍未签名；配置 Azure Artifact Signing 后，标签构建会自动签名，见 [发布签名](RELEASE_SIGNING.md)。

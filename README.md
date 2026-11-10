@@ -15,9 +15,12 @@ Inkstone is an **AI-powered local Markdown editor** for focused writing, with LL
 
 ## Download
 
-**[Download the latest Windows installer](https://github.com/JhuoW/Inkstone/releases/latest)**
+**[Download the latest release](https://github.com/JhuoW/Inkstone/releases/latest)**
 
-Run the installer to install or upgrade Inkstone. Choose it from **Open with** for Markdown files, or use **Tools → Default Markdown app** to open Windows default-app settings.
+- **Windows**: run `Inkstone-<version>-windows-x64.exe` to install or upgrade. Choose Inkstone from **Open with** for Markdown files, or use **Tools → Default Markdown app** to open Windows default-app settings. The installer is not code-signed yet, so Windows SmartScreen may warn the first time; choose **More info → Run anyway**.
+- **Linux (x64)**: make the `.AppImage` executable and run it, install the `.deb` on Debian or Ubuntu, or unpack the `.tar.gz`.
+
+From 0.10.0 on, the Windows installation and the AppImage update themselves: Inkstone tells you when a new version is out and downloads and installs it only when you agree.
 
 ## Features
 
@@ -54,14 +57,14 @@ Insert a table or use its context menu to add, move, and remove rows and columns
 
 ## Development
 
-Requires **Node.js 22.12+**. Windows is the primary release platform; Linux source builds are also available.
+Requires **Node.js 22.12+**. Inkstone is built and released for Windows and Linux.
 
 ```sh
 npm ci
 npm start
 ```
 
-Use `npm test` for unit tests and `npm run dist:win` to build the Windows installer. See the [0.9.2 release notes](docs/releases/v0.9.2.md), [architecture](docs/ARCHITECTURE.md) and the [Electron API](electron/API.md) for details.
+Use `npm test` for unit tests and `npm run dist:win` to build the Windows installer. See the [0.10.0 release notes](docs/releases/v0.10.0.md), [architecture](docs/ARCHITECTURE.md) and the [Electron API](electron/API.md) for details.
 
 ## License & contributor
 
