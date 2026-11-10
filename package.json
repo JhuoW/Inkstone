@@ -24,7 +24,8 @@
     "test:all": "npm test && npm run test:editor && npm run test:stability && npm run test:math && npm run test:ui && npm run test:editor-design && npm run test:e2e",
     "test:stability": "node tests/editor-stability-browser.mjs",
     "verify:packages": "node scripts/verify-packages.mjs",
-    "format": "prettier --write src electron tests scripts/*.mjs *.js index.html package.json",
+    "format": "prettier --write src electron tests \"scripts/*.mjs\" \"*.js\" index.html package.json website \".github/**/*.yml\"",
+    "format:check": "prettier --check src electron tests \"scripts/*.mjs\" \"*.js\" index.html package.json website \".github/**/*.yml\"",
     "test:native": "node scripts/verify-native.mjs",
     "test:interactive-native": "node scripts/verify-editor-interactions.mjs",
     "package:source": "node scripts/package-source.mjs",
@@ -102,7 +103,14 @@
       "language": "1033",
       "include": "build/installer.nsh"
     },
-    "publish": null
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "JhuoW",
+        "repo": "Inkstone",
+        "releaseType": "release"
+      }
+    ]
   },
   "devDependencies": {
     "@codemirror/autocomplete": "^6.20.4",
@@ -151,6 +159,7 @@
     }
   },
   "dependencies": {
+    "electron-updater": "^6.8.11",
     "entities": "^8.1.0",
     "iconv-lite": "^0.7.2",
     "markdown-it": "^15.0.3"

@@ -5,10 +5,12 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync, spawn } from "node:child_process";
 import * as ResEdit from "resedit";
+import { artifactPath } from "./artifact-path.mjs";
 const root = process.cwd();
 const version = JSON.parse(await fs.readFile("package.json", "utf8")).version;
 const output = path.resolve(
-  process.env.INKSTONE_INSTALLER_UI_OUTPUT || "artifacts/windows-installer-ui",
+  process.env.INKSTONE_INSTALLER_UI_OUTPUT ||
+    artifactPath("windows-installer-ui"),
 );
 await fs.mkdir(output, { recursive: true });
 const result = {

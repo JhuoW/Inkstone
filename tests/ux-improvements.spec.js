@@ -364,3 +364,20 @@ test("status bar names the count clearly and explains it on hover", async () => 
   await expect(page.locator("#focus-button")).toHaveClass(/active/);
   await page.locator("#focus-button").click();
 });
+
+test("diagnostic information is copied without document text or paths", async () => {
+  await page.evaluate(
+    () => void Promise.resolve(__inkstone.execute("copyDiagnostics")),
+  );
+  await expect(page.locator("#toast")).toContainText(
+    "Diagnostic information copied",
+  );
+  const report = await application.evaluate(({ clipboard }) =>
+    clipboard.readText(),
+  );
+  expect(report).toContain("## Inkstone diagnostics");
+  expect(report).toContain("development run");
+  expect(report).toContain('"locale": "en"');
+  expect(report).not.toContain("Alpha beta");
+  expect(report).not.toContain(path.basename(directory));
+});

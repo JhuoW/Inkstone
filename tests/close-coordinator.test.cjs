@@ -154,3 +154,26 @@ test("normal save decisions have no readiness deadline after the renderer is rea
   coordinator.respond(1, pending.requestId, "prepare", false);
   assert.equal(await result, false);
 });
+test("a batch choice reaches only the windows it was made for", async () => {
+  const { coordinator, next, answer } = fixture();
+  coordinator.ready(1);
+  coordinator.ready(2);
+  const quit = coordinator.request([1, 2], "quit", {
+    mode: "save",
+    ids: [2],
+  });
+  const first = await next();
+  assert.equal(first.batch, undefined);
+  answer(first, true);
+  const second = await next();
+  assert.equal(second.batch, "save");
+  answer(second, true);
+  answer(await next(), true);
+  answer(await next(), true);
+  assert.equal(await quit, true);
+  // "review" and unknown modes are not batches: every window asks.
+  const { coordinator: other, next: nextOther } = fixture();
+  other.ready(1);
+  void other.request([1], "quit", { mode: "review", ids: [1] });
+  assert.equal((await nextOther()).batch, undefined);
+});

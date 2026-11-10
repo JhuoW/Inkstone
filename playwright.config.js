@@ -1,5 +1,8 @@
 import { artifactPath } from "./scripts/artifact-path.mjs";
 import { defineConfig } from "@playwright/test";
+// Closing the last window exits instead of asking about the tray, unless a
+// test saves another closeAction. Tests pass process.env to the app.
+process.env.INKSTONE_CLOSE_ACTION ??= "quit";
 export default defineConfig({
   testDir: "./tests",
   testMatch: [
@@ -15,6 +18,8 @@ export default defineConfig({
     "code-fences.spec.js",
     "ai-assistant.spec.js",
     "ux-improvements.spec.js",
+    "updates.spec.js",
+    "lifecycle.spec.js",
   ],
   timeout: 90000,
   workers: 1,

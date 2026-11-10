@@ -35,28 +35,57 @@ jobs:
       - run: npm ci --prefix integrations/vscode
       - run: npm test --prefix integrations/vscode
       - run: npm run licenses
+      # Release tags are signed with Azure Artifact Signing once its secrets and
+      # variables exist (docs/RELEASE_SIGNING.md). Other builds stay unsigned.
       - name: Build Windows installer with bounded download retries
         run: |
+          $sign = @()
+          if ($env:GITHUB_REF -like 'refs/tags/v*' -and $env:AZURE_CLIENT_ID) {
+            foreach ($name in 'AZURE_TENANT_ID', 'AZURE_CLIENT_SECRET', 'AZURE_SIGNING_ENDPOINT', 'AZURE_SIGNING_ACCOUNT', 'AZURE_SIGNING_PROFILE', 'AZURE_SIGNING_PUBLISHER') {
+              if (-not [Environment]::GetEnvironmentVariable($name)) { throw "Code signing is partly configured: $name is missing." }
+            }
+            $sign = @(
+              "-c.win.azureSignOptions.publisherName=$env:AZURE_SIGNING_PUBLISHER",
+              "-c.win.azureSignOptions.endpoint=$env:AZURE_SIGNING_ENDPOINT",
+              "-c.win.azureSignOptions.codeSigningAccountName=$env:AZURE_SIGNING_ACCOUNT",
+              "-c.win.azureSignOptions.certificateProfileName=$env:AZURE_SIGNING_PROFILE"
+            )
+            "SIGNING_ENABLED=true" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            Write-Output "Signing as $env:AZURE_SIGNING_PUBLISHER with Azure Artifact Signing"
+          }
+          npm run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           for ($attempt = 1; $attempt -le 3; $attempt++) {
-            npm run dist:win
+            node node_modules/electron-builder/cli.js --win nsis --x64 --publish never @sign
             if ($LASTEXITCODE -eq 0) { exit 0 }
             if ($attempt -lt 3) { Start-Sleep -Seconds (10 * $attempt) }
           }
           exit 1
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-      - name: Run Windows editing and context menu regressions
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SIGNING_ENDPOINT: ${{ vars.AZURE_SIGNING_ENDPOINT }}
+          AZURE_SIGNING_ACCOUNT: ${{ vars.AZURE_SIGNING_ACCOUNT }}
+          AZURE_SIGNING_PROFILE: ${{ vars.AZURE_SIGNING_PROFILE }}
+          AZURE_SIGNING_PUBLISHER: ${{ vars.AZURE_SIGNING_PUBLISHER }}
+      - name: Verify update metadata
+        run: node scripts/verify-update-metadata.mjs win
+        env:
+          AZURE_SIGNING_PUBLISHER: ${{ vars.AZURE_SIGNING_PUBLISHER }}
+      - name: Run Windows editing, context menu, update and close/tray regressions
         id: windows_regressions
-        run: node node_modules/playwright/cli.js test tests/windows-regressions.spec.js tests/context-menu.spec.js tests/native-context.spec.js tests/code-fences.spec.js tests/ai-assistant.spec.js
+        run: node node_modules/playwright/cli.js test tests/windows-regressions.spec.js tests/context-menu.spec.js tests/native-context.spec.js tests/code-fences.spec.js tests/ai-assistant.spec.js tests/updates.spec.js tests/lifecycle.spec.js
       - name: Upload failed Windows regression diagnostics
         if: ${{ failure() && steps.windows_regressions.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
         with:
           name: windows-regression-diagnostics
           path: |
-            artifacts/windows-validation/test-results/
-            artifacts/windows-validation/playwright-results.json
-            artifacts/windows-validation/playwright-report/
+            artifacts/runs/windows/test-results/
+            artifacts/runs/windows/playwright-results.json
+            artifacts/runs/windows/playwright-report/
           retention-days: 7
       - name: Verify native installer language and file associations
         run: |
@@ -81,16 +110,24 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $version = node -p "require('./package.json').version"
           $installer = "Inkstone-$version-windows-x64.exe"
+          if ($env:SIGNING_ENABLED -eq 'true') {
+            foreach ($file in "release/$installer", "release/win-unpacked/Inkstone.exe") {
+              $signature = Get-AuthenticodeSignature -FilePath $file
+              if ($signature.Status -ne 'Valid') { throw "$file is not validly signed: $($signature.Status)" }
+              Write-Output "$file is signed by $($signature.SignerCertificate.Subject)"
+            }
+          }
           $digest = (Get-FileHash -Algorithm SHA256 -LiteralPath "release/$installer").Hash.ToLowerInvariant()
-          Set-Content -LiteralPath release/SHA256SUMS.txt -Encoding ascii -Value "$digest  $installer"
+          Set-Content -LiteralPath release/SHA256SUMS-windows.txt -Encoding ascii -Value "$digest  $installer"
       - name: Upload the verified Windows installer
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
-          name: windows-installer
+          name: windows-release
           path: |
             release/Inkstone-*-windows-x64.exe
-            release/SHA256SUMS.txt
+            release/latest.yml
+            release/SHA256SUMS-windows.txt
           if-no-files-found: error
           retention-days: 7
   linux:
@@ -110,6 +147,8 @@ jobs:
             if [ "$attempt" -lt 3 ]; then sleep "$((10 * attempt))"; fi
           done
           exit 1
+      - name: Check formatting
+        run: npm run format:check
       - run: npm test
       - run: npm run licenses
       - name: Build Linux packages with bounded download retries
@@ -125,8 +164,31 @@ jobs:
         run: xvfb-run -a npm run test:native
       - name: Extract and validate each Linux package
         run: xvfb-run -a npm run verify:packages
+      - name: Verify update metadata
+        run: node scripts/verify-update-metadata.mjs linux
+      - name: Prepare the Linux release packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          cd release
+          sha256sum "Inkstone-$version.AppImage" "inkstone-editor_${version}_amd64.deb" "inkstone-editor-$version.tar.gz" > SHA256SUMS-linux.txt
+          cat SHA256SUMS-linux.txt
+      - name: Upload the verified Linux packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-release
+          path: |
+            release/Inkstone-*.AppImage
+            release/inkstone-editor_*_amd64.deb
+            release/inkstone-editor-*.tar.gz
+            release/latest-linux.yml
+            release/SHA256SUMS-linux.txt
+          if-no-files-found: error
+          retention-days: 7
   release:
-    name: Publish verified Windows installer
+    name: Publish verified release
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [windows, linux]
     runs-on: ubuntu-latest
@@ -136,8 +198,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: windows-installer
+          pattern: "*-release"
           path: release-assets
+          merge-multiple: true
       - name: Publish the latest release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -147,11 +210,25 @@ jobs:
           version="${tag#v}"
           export RELEASE_DOCS="https://github.com/$GITHUB_REPOSITORY/blob/$tag/docs/"
           node -e 'const fs=require("node:fs"); const text=fs.readFileSync(process.argv[1],"utf8"); fs.writeFileSync("release-notes.md", text.replaceAll("](../", "]("+process.env.RELEASE_DOCS));' "docs/releases/$tag.md"
-          (cd release-assets && sha256sum --check SHA256SUMS.txt)
+          (
+            cd release-assets
+            sha256sum --check SHA256SUMS-windows.txt
+            sha256sum --check SHA256SUMS-linux.txt
+            cat SHA256SUMS-windows.txt SHA256SUMS-linux.txt > SHA256SUMS.txt
+            rm SHA256SUMS-windows.txt SHA256SUMS-linux.txt
+            # The update feeds must describe the files being published.
+            grep -q "path: Inkstone-$version-windows-x64.exe" latest.yml
+            grep -q "url: Inkstone-$version.AppImage" latest-linux.yml
+          )
           gh release create "$tag" \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag --latest \
             --title "Inkstone $version" \
             --notes-file release-notes.md \
             "release-assets/Inkstone-$version-windows-x64.exe" \
+            "release-assets/Inkstone-$version.AppImage" \
+            "release-assets/inkstone-editor_${version}_amd64.deb" \
+            "release-assets/inkstone-editor-$version.tar.gz" \
+            release-assets/latest.yml \
+            release-assets/latest-linux.yml \
             release-assets/SHA256SUMS.txt

@@ -76,6 +76,8 @@ export const defaults = {
   sequenceTheme: "simple",
   recordRecent: true,
   wheelZoom: true,
+  autoCheckUpdates: true,
+  closeAction: "ask",
   showHidden: false,
   showAllFiles: false,
   includeGlobs: "",
@@ -350,6 +352,20 @@ export function showPreferences(settings, apply, invoke, options = {}) {
           ),
       ) +
       group(
+        t("关闭窗口", "Closing the window"),
+        select("closeAction", t("点击关闭按钮时", "When I close the window"), [
+          ["ask", t("每次询问", "Ask every time")],
+          ["tray", t("最小化到托盘", "Minimize to tray")],
+          ["quit", t("退出 Inkstone", "Exit Inkstone")],
+        ]) +
+          hint(
+            t(
+              "最小化到托盘后 Inkstone 在后台运行，不占用任务栏，自动保存照常进行；点击托盘图标恢复窗口。从托盘菜单或“文件 > 退出”退出时，会先检查未保存的修改。打开多个窗口时，关闭按钮只关闭当前窗口。",
+              "In the tray, Inkstone keeps running without a taskbar button and auto save continues; click the tray icon to reopen it. Exiting from the tray menu or File > Quit checks for unsaved changes first. With several windows open, the close button closes only that window.",
+            ),
+          ),
+      ) +
+      group(
         t("文件浏览", "File browser"),
         select("fileSort", t("排序", "Sort"), [
           ["name", t("名称", "Name")],
@@ -444,6 +460,21 @@ export function showPreferences(settings, apply, invoke, options = {}) {
             ),
           ) +
           `<label class="setting-stack"><span>${t("文本片段 JSON", "Text snippets JSON")}</span><textarea name="snippets" rows="4" spellcheck="false" autocomplete="off">${esc(JSON.stringify(settings.snippets, null, 2))}</textarea></label>`,
+      ) +
+      group(
+        t("更新", "Updates"),
+        field(
+          "autoCheckUpdates",
+          t("自动检查更新", "Check for updates automatically"),
+          "checkbox",
+        ) +
+          hint(
+            t(
+              "启动后及每天向 GitHub 查询一次新版本，只读取版本信息；下载和安装都需要你确认。",
+              "Inkstone asks GitHub for a new version after starting and once a day. It only reads version information; downloading and installing wait for you.",
+            ),
+          ) +
+          `<button type="button" id="check-updates-now">${t("立即检查", "Check now")}</button>`,
       ),
   };
   const d = modal(
@@ -838,6 +869,10 @@ export function showPreferences(settings, apply, invoke, options = {}) {
   const syncSlider = (name) => {
     if (sliders[name]) sliders[name].value = $(`[name="${name}"]`, d.el).value;
   };
+
+  $("#check-updates-now", d.el).onclick = () => void options.checkUpdates?.();
+  $("#check-updates-now", d.el).hidden =
+    typeof options.checkUpdates !== "function";
 
   // ----- Pandoc: choose the executable with a file dialog.
   $("#browse-pandoc", d.el).onclick = async () => {

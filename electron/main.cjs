@@ -13,21 +13,36 @@ const {
   net,
   session,
   safeStorage,
+  Tray,
+  nativeImage,
 } = require("electron");
 const { AIService } = require("./ai-service.cjs");
+const { UpdateService } = require("./updates.cjs");
 const fs = require("node:fs/promises");
 const fsSync = require("node:fs");
 const path = require("node:path");
-const os = require("node:os");
 const crypto = require("node:crypto");
 const { pathToFileURL, fileURLToPath } = require("node:url");
 const { execFile } = require("node:child_process");
 const { Worker } = require("node:worker_threads");
 const { FileStore, atomicWrite, hash, exists } = require("./storage.cjs");
-const { filterPaths, patterns } = require("./glob.cjs");
+const { filterPaths } = require("./glob.cjs");
 const { rebaseLocalLinks } = require("./links.cjs");
-const { embedExportDiagrams } = require("./export-diagrams.cjs");
 const { removeRetiredSettings } = require("./settings-migration.cjs");
+const {
+  defaults,
+  boundedString,
+  nativeAccelerator,
+  validateSettings: validateSettingsPatch,
+} = require("./settings-schema.cjs");
+const { applicationMenu } = require("./menu.cjs");
+const { createTray } = require("./tray.cjs");
+const { closeChoice, unsavedDocuments } = require("./close-prompts.cjs");
+const { createExportService } = require("./export.cjs");
+const { createDiagnostics } = require("./diagnostics.cjs");
+// Recent problems for "Copy diagnostic information"; paths under home become ~.
+const diagnostics = createDiagnostics({ home: require("node:os").homedir() });
+diagnostics.captureConsole();
 const { CloseCoordinator } = require("./close-coordinator.cjs");
 const { initialLanguage, resolveSystemLanguage } = require("./language.cjs");
 const { createDefaultApps } = require("./default-apps.cjs");
@@ -50,6 +65,18 @@ if (!["win32", "linux"].includes(process.platform)) {
 
 if (process.env.INKSTONE_USER_DATA)
   app.setPath("userData", path.resolve(process.env.INKSTONE_USER_DATA));
+// One Inkstone per profile. Starting it again, or opening a file from the
+// shell, goes to the running copy, which may be waiting in the tray.
+const launchArguments = process.argv.slice(app.isPackaged ? 1 : 2);
+if (
+  !app.requestSingleInstanceLock({
+    args: launchArguments,
+    cwd: process.cwd(),
+  })
+) {
+  app.quit();
+  return;
+}
 protocol.registerSchemesAsPrivileged([
   {
     scheme: "inkstone-dictionary",
@@ -66,64 +93,6 @@ protocol.registerSchemesAsPrivileged([
     },
   },
 ]);
-const defaults = {
-  theme: "system",
-  locale: "en",
-  firstRunComplete: false,
-  defaultAppPrompted: false,
-  fontFamily:
-    '"Segoe UI", "Noto Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
-  fontSize: 17,
-  lineHeight: 1.75,
-  contentWidth: 780,
-  sidebarWidth: 256,
-  aiPanelOpen: false,
-  aiPanelHeight: 260,
-  lineNumbers: false,
-  strictMarkdown: true,
-  cjkEmphasis: false,
-  codeWrap: true,
-  defaultCodeLanguage: "javascript",
-  themeLibrary: {},
-  activeThemeName: "",
-  outlineNumbering: false,
-  sortDescending: false,
-  foldersFirst: true,
-  exportSoftBreaks: false,
-  autoPair: true,
-  smartPunctuation: false,
-  spellcheck: true,
-  focusMode: false,
-  typewriterMode: false,
-  tabSize: 2,
-  customCSS: "",
-  pandocPath: "",
-  includeGlobs: "",
-  excludeGlobs: "",
-  autoSave: true,
-  autoSaveDelay: 1500,
-  recentFiles: [],
-  pinnedFolders: [],
-  shortcuts: {},
-  snippets: { date: "{{date}}", note: "> [!NOTE]\n> " },
-  exportProfiles: [],
-  imageFolder: "assets",
-  sequenceTheme: "simple",
-  recordRecent: true,
-  wheelZoom: true,
-  showHidden: false,
-  showAllFiles: false,
-  fileSort: "name",
-  pins: [],
-  exportOptions: {
-    pageSize: "A4",
-    landscape: false,
-    margins: 18,
-    header: "",
-    footer: "",
-    bookmarks: true,
-  },
-};
 const states = new Map();
 const roots = new Set();
 const watchers = new Map();
@@ -134,6 +103,9 @@ let languageConfigured = false;
 let defaultAppPromptClaimed = false;
 const defaultApps = createDefaultApps({ app, shell });
 let quitApproved = false;
+// Set by "restart to update"; the approved quit then installs and relaunches.
+let restartForUpdate = false;
+let updates;
 const activeSearches = new Map();
 let store,
   settings = { ...defaults },
@@ -224,6 +196,7 @@ function broadcast(event, payload) {
 const closeCoordinator = new CloseCoordinator({
   isOpen: (id) => states.has(id) && !!BrowserWindow.fromId(id),
   send: (id, event, payload) => {
+    if (event === "close-aborted") restartForUpdate = false;
     const win = BrowserWindow.fromId(id);
     if (win) {
       send(win, event, payload);
@@ -234,6 +207,7 @@ const closeCoordinator = new CloseCoordinator({
   onUnready: async (id) => {
     const win = BrowserWindow.fromId(id);
     if (!win || win.isDestroyed()) return "cancel";
+    reveal(win);
     const choice = await dialog.showMessageBox(win, {
       type: "warning",
       title: localize("Editor is not responding", "编辑器未响应"),
@@ -266,238 +240,182 @@ const closeCoordinator = new CloseCoordinator({
         else win.close();
       }
     }
-    if (reason === "quit") app.quit();
+    if (reason !== "quit") return;
+    if (restartForUpdate && updates?.state.status === "downloaded")
+      updates.installAndRestart();
+    else app.quit();
   },
 });
-const boundedString = (value, max = 1024) =>
-  typeof value === "string" && value.length <= max;
-function nativeAccelerator(binding) {
-  if (typeof binding !== "string" || !binding.trim() || binding.length > 128)
-    return null;
-  const raw = binding.trim(),
-    parts = raw.endsWith("--")
-      ? [...raw.slice(0, -2).split("-").filter(Boolean), "-"]
-      : raw.split("-");
-  const key = parts.pop();
-  if (!key || parts.some((part) => !part)) return null;
-  const modifiers = {
-    mod: "Ctrl",
-    ctrl: "Ctrl",
-    alt: "Alt",
-    shift: "Shift",
-    meta: "Super",
-  };
-  const converted = parts.map((part) =>
-    Object.hasOwn(modifiers, part.toLowerCase())
-      ? modifiers[part.toLowerCase()]
-      : null,
-  );
-  if (
-    converted.some((part) => !part) ||
-    new Set(converted).size !== converted.length
-  )
-    return null;
-  const named = {
-    arrowup: "Up",
-    arrowdown: "Down",
-    arrowleft: "Left",
-    arrowright: "Right",
-    home: "Home",
-    end: "End",
-    pageup: "PageUp",
-    pagedown: "PageDown",
-    enter: "Enter",
-    return: "Enter",
-    escape: "Escape",
-    esc: "Escape",
-    tab: "Tab",
-    space: "Space",
-    backspace: "Backspace",
-    delete: "Delete",
-    insert: "Insert",
-    plus: "Plus",
-    minus: "-",
-  };
-  let nativeKey = Object.hasOwn(named, key.toLowerCase())
-    ? named[key.toLowerCase()]
-    : null;
-  if (!nativeKey && /^f(?:[1-9]|1[0-9]|2[0-4])$/i.test(key))
-    nativeKey = key.toUpperCase();
-  if (
-    !nativeKey &&
-    key.length === 1 &&
-    "abcdefghijklmnopqrstuvwxyz0123456789,./;=[]\\'`+-".includes(
-      key.toLowerCase(),
-    )
-  )
-    nativeKey = key === "+" ? "Plus" : key.toUpperCase();
-  return nativeKey ? [...converted, nativeKey].join("+") : null;
+// Second launches wait until settings are loaded and the first window exists.
+let markStarted;
+const started = new Promise((resolve) => {
+  markStarted = resolve;
+});
+const openWindows = () =>
+  [...states.keys()]
+    .map((id) => BrowserWindow.fromId(id))
+    .filter((win) => win && !win.isDestroyed());
+let lastFocusedWindow = null;
+/** Brings a window forward, including one waiting in the tray. */
+function reveal(win) {
+  if (!win || win.isDestroyed()) return;
+  if (!win.isVisible()) win.show();
+  if (win.isMinimized()) win.restore();
+  win.focus();
 }
-function validateSettings(patch) {
-  if (!patch || typeof patch !== "object" || Array.isArray(patch))
-    throw Error("Settings must be a JSON object.");
-  patch = removeRetiredSettings(patch).settings;
-  const value = { ...removeRetiredSettings(settings).settings };
-  const booleans = [
-    "aiPanelOpen",
-    "lineNumbers",
-    "strictMarkdown",
-    "cjkEmphasis",
-    "codeWrap",
-    "outlineNumbering",
-    "sortDescending",
-    "foldersFirst",
-    "exportSoftBreaks",
-    "autoPair",
-    "smartPunctuation",
-    "spellcheck",
-    "focusMode",
-    "typewriterMode",
-    "autoSave",
-    "showHidden",
-    "showAllFiles",
-    "mathNumbering",
-    "autoPairMarkdown",
-    "smartPunctuationInput",
-    "softBreaks",
-    "recordRecent",
-    "wheelZoom",
-    "firstRunComplete",
-    "defaultAppPrompted",
-  ];
-  const strings = [
-    "fontFamily",
-    "activeThemeName",
-    "customCSS",
-    "pandocPath",
-    "imageFolder",
-  ];
-  for (const key of booleans)
-    if (key in patch) {
-      if (typeof patch[key] !== "boolean")
-        throw Error(`Invalid setting: ${key}`);
-      value[key] = patch[key];
-    }
-  for (const key of strings)
-    if (key in patch) {
-      if (!boundedString(patch[key], key === "customCSS" ? 200000 : 4096))
-        throw Error(`Invalid setting: ${key}`);
-      value[key] = patch[key];
-    }
-  for (const [key, min, max] of [
-    ["sidebarWidth", 180, 500],
-    ["aiPanelHeight", 100, 1200],
-    ["fontSize", 10, 64],
-    ["lineHeight", 1, 3],
-    ["contentWidth", 360, 1800],
-    ["tabSize", 1, 8],
-    ["autoSaveDelay", 300, 60000],
-  ])
-    if (key in patch) {
-      if (!Number.isFinite(patch[key]) || patch[key] < min || patch[key] > max)
-        throw Error(`Invalid setting: ${key}`);
-      value[key] = patch[key];
-    }
-  if ("sequenceTheme" in patch) {
-    if (!["simple", "hand"].includes(patch.sequenceTheme))
-      throw Error("Invalid sequence theme");
-    value.sequenceTheme = patch.sequenceTheme;
+function showWindows() {
+  const windows = openWindows();
+  if (!windows.length) {
+    if (!closeCoordinator.busy && !quitApproved) createWindow();
+    return;
   }
-  if ("theme" in patch) {
-    if (!["light", "dark", "system"].includes(patch.theme))
-      throw Error("Invalid theme");
-    value.theme = patch.theme;
+  for (const win of windows) {
+    if (!win.isVisible()) win.show();
+    if (win.isMinimized()) win.restore();
   }
-  if ("locale" in patch) {
-    if (!["zh-CN", "en"].includes(patch.locale))
-      throw Error("Invalid language");
-    value.locale = patch.locale;
-  }
-  for (const key of ["pinnedFolders", "pins", "recentFiles", "exportProfiles"])
-    if (key in patch) {
-      if (!Array.isArray(patch[key]) || patch[key].length > 100)
-        throw Error(`Invalid setting: ${key}`);
-      if (
-        key !== "exportProfiles" &&
-        patch[key].some((item) => !boundedString(item, 4096))
-      )
-        throw Error(`Invalid setting: ${key} must contain paths as strings`);
-      value[key] = patch[key];
-    }
-  for (const key of ["includeGlobs", "excludeGlobs"])
-    if (key in patch) {
-      if (!(typeof patch[key] === "string" || Array.isArray(patch[key])))
-        throw Error(`Invalid ${key}`);
-      value[key] = patterns(patch[key]);
-    }
-  if ("defaultCodeLanguage" in patch) {
-    if (
-      typeof patch.defaultCodeLanguage !== "string" ||
-      patch.defaultCodeLanguage.length > 80 ||
-      !/^[\w+-]*$/.test(patch.defaultCodeLanguage)
-    )
-      throw Error("Invalid default code language");
-    value.defaultCodeLanguage = patch.defaultCodeLanguage;
-  }
-  if ("themeLibrary" in patch) {
-    const library = patch.themeLibrary;
-    if (
-      !library ||
-      typeof library !== "object" ||
-      Array.isArray(library) ||
-      ![Object.prototype, null].includes(Object.getPrototypeOf(library)) ||
-      Object.keys(library).length > 30 ||
-      Object.entries(library).some(
-        ([name, css]) =>
-          !name ||
-          name.length > 200 ||
-          ["__proto__", "constructor", "prototype"].includes(name) ||
-          !boundedString(css, 1024 * 1024),
-      )
-    )
-      throw Error("Invalid theme library");
-    value.themeLibrary = Object.fromEntries(Object.entries(library));
-  }
-  if ("fileSort" in patch) {
-    if (!["name", "modified", "created", "size"].includes(patch.fileSort))
-      throw Error("Invalid file sort");
-    value.fileSort = patch.fileSort;
-  }
-  if ("exportOptions" in patch) {
-    if (
-      !patch.exportOptions ||
-      typeof patch.exportOptions !== "object" ||
-      Array.isArray(patch.exportOptions)
-    )
-      throw Error("Invalid export options");
-    value.exportOptions = patch.exportOptions;
-  }
-  if ("snippets" in patch) {
-    if (
-      !patch.snippets ||
-      typeof patch.snippets !== "object" ||
-      Array.isArray(patch.snippets) ||
-      Object.values(patch.snippets).some((v) => typeof v !== "string")
-    )
-      throw Error("Invalid text snippets");
-    value.snippets = patch.snippets;
-  }
-  if ("shortcuts" in patch) {
-    if (
-      !patch.shortcuts ||
-      typeof patch.shortcuts !== "object" ||
-      Array.isArray(patch.shortcuts)
-    )
-      throw Error("Invalid shortcuts");
-    for (const [command, binding] of Object.entries(patch.shortcuts))
-      if (!nativeAccelerator(binding))
-        throw Error(
-          `Invalid shortcut for ${command}: use Mod/Ctrl/Meta/Alt/Shift modifiers and a supported key.`,
-        );
-    value.shortcuts = patch.shortcuts;
-  }
-  return value;
+  reveal(windows.find((win) => win.id === lastFocusedWindow) || windows.at(-1));
 }
+const trayIcon = createTray({
+  Tray,
+  Menu,
+  nativeImage,
+  icon: path.join(
+    __dirname,
+    process.platform === "win32" ? "../build/icon.ico" : "../build/icon.png",
+  ),
+  localize: (en, zh) => localize(en, zh),
+  recentFiles: () =>
+    settings.recordRecent === false ? [] : settings.recentFiles || [],
+  actions: {
+    show: showWindows,
+    open: (file) =>
+      void openInWindow(file).catch((error) =>
+        dialog.showErrorBox(localize("Open failed", "无法打开"), error.message),
+      ),
+    quit: () => void requestQuit(),
+  },
+});
+// The icon stays while the close button may minimize to the tray, and while
+// any window is hidden there.
+function syncTray() {
+  const hidden = openWindows().some((win) => !win.isVisible());
+  if (settings.closeAction !== "quit" || hidden) {
+    trayIcon.show();
+    trayIcon.refresh();
+  } else trayIcon.destroy();
+}
+function hideToTray(win) {
+  trayIcon.show();
+  win.hide();
+  return true;
+}
+let closeChoicePending = null;
+async function chooseCloseAction(win) {
+  if (["tray", "quit"].includes(settings.closeAction))
+    return settings.closeAction;
+  closeChoicePending ??= (async () => {
+    const prompt = closeChoice(localize);
+    const { action, remember } = prompt.decide(
+      await dialog.showMessageBox(win, prompt.options),
+    );
+    if (remember)
+      await handlers
+        .updateSettings({ closeAction: action })
+        .catch((error) => console.error(error));
+    return action;
+  })().finally(() => {
+    closeChoicePending = null;
+  });
+  return closeChoicePending;
+}
+// The close button, Alt+F4 and Ctrl+W. Closing one of several windows closes
+// just that window; closing the last one minimizes to the tray or exits, as
+// the user chose. Exiting runs the unsaved-changes check; the tray does not.
+async function requestWindowClose(win) {
+  if (closeCoordinator.busy || quitApproved || !win.isVisible())
+    return closeCoordinator.request([win.id], "close");
+  if (openWindows().some((other) => other !== win && other.isVisible()))
+    return closeCoordinator.request([win.id], "close");
+  const action = await chooseCloseAction(win);
+  if (win.isDestroyed()) return false;
+  if (action === "tray") return hideToTray(win);
+  if (action !== "quit") return false;
+  // Windows hidden in the tray exit too.
+  return openWindows().length > 1
+    ? requestQuit()
+    : closeCoordinator.request([win.id], "close");
+}
+let quitChoicePending = null;
+// Every way of exiting: the menu, Ctrl+Q, the tray, restarting to update and
+// Windows shutdown. With several unsaved documents, one choice covers them
+// all, or the user reviews each window in turn.
+async function requestQuit() {
+  const ids = () => [...states.keys()];
+  if (closeCoordinator.busy || quitApproved)
+    return closeCoordinator.request(ids(), "quit");
+  quitChoicePending ??= (async () => {
+    const unsaved = openWindows().filter((win) => states.get(win.id)?.dirty);
+    let batch = null;
+    if (unsaved.length > 1) {
+      const parent = BrowserWindow.getFocusedWindow();
+      const prompt = unsavedDocuments(
+        localize,
+        unsaved.map((win) => {
+          const file = states.get(win.id).path;
+          return file ? path.basename(file) : localize("Untitled", "未命名");
+        }),
+      );
+      // Without a visible Inkstone window (exiting from the tray), the box
+      // has no parent.
+      const decision = prompt.decide(
+        parent?.isVisible()
+          ? await dialog.showMessageBox(parent, prompt.options)
+          : await dialog.showMessageBox(prompt.options),
+      );
+      if (decision === "cancel") return false;
+      if (decision !== "review")
+        batch = { mode: decision, ids: unsaved.map((win) => win.id) };
+    }
+    return closeCoordinator.request(ids(), "quit", batch);
+  })().finally(() => {
+    quitChoicePending = null;
+  });
+  return quitChoicePending;
+}
+const samePath = (a, b) =>
+  process.platform === "win32"
+    ? path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase()
+    : path.resolve(a) === path.resolve(b);
+/** Shows the window that has the file open, or opens it in a new window. */
+async function openInWindow(file) {
+  const granted = await grant(file);
+  const existing = openWindows().find((win) => {
+    const current = states.get(win.id)?.path;
+    return current && samePath(current, granted);
+  });
+  if (existing) return reveal(existing);
+  createWindow(granted);
+}
+// Files and folders passed to a second launch, such as double-clicking a
+// Markdown file while Inkstone runs.
+async function openLaunchArguments(args, cwd) {
+  const files = [];
+  let folder = false;
+  for (const arg of args) {
+    if (typeof arg !== "string" || arg.startsWith("-")) continue;
+    const absolute = path.resolve(cwd, arg);
+    if (!(await exists(absolute))) continue;
+    if ((await fs.stat(absolute)).isDirectory()) {
+      savedSession.folder = await grant(absolute, true);
+      folder = true;
+    } else files.push(absolute);
+  }
+  if (files.length) for (const file of files) await openInWindow(file);
+  else if (folder) createWindow();
+  else showWindows();
+}
+// Validation lives in settings-schema.cjs; it merges into the current settings.
+const validateSettings = (patch) => validateSettingsPatch(patch, settings);
 async function remember(file) {
   if (settings.recordRecent === false) return;
   settings.recentFiles = [
@@ -506,6 +424,7 @@ async function remember(file) {
   ].slice(0, 30);
   if (!settingsPersistenceBlocked) await store.writeJson("settings", settings);
   app.addRecentDocument(file);
+  trayIcon.refresh();
 }
 function pruneWatchers() {
   const activeFiles = new Set(
@@ -809,627 +728,17 @@ async function downloadImage(payload, win) {
     win,
   );
 }
-async function detectTools() {
-  const command = settings.pandocPath || "pandoc";
-  try {
-    const output = await run(command, ["--version"], { timeout: 6000 });
-    const input = await run(command, ["--list-input-formats"], {
-      timeout: 6000,
-    });
-    const formats = await run(command, ["--list-output-formats"], {
-      timeout: 6000,
-    });
-    return {
-      pandoc: {
-        available: true,
-        path: command,
-        version: output.stdout.split("\n")[0],
-        inputFormats: input.stdout.trim().split(/\r?\n/),
-        outputFormats: formats.stdout.trim().split(/\r?\n/),
-      },
-    };
-  } catch (error) {
-    return {
-      pandoc: { available: false, path: command, error: error.message },
-    };
-  }
-}
-const importFormats = {
-  ltx: "latex",
-  rest: "rst",
-  rtf: "rtf",
-  pptx: "pptx",
-  adoc: "asciidoc",
-  asciidoc: "asciidoc",
-  dokuwiki: "dokuwiki",
-  t2t: "t2t",
-  fb2: "fb2",
-  docbook: "docbook",
-  json: "json",
-  docx: "docx",
-  odt: "odt",
-  epub: "epub",
-  tex: "latex",
-  latex: "latex",
-  rst: "rst",
-  html: "html",
-  htm: "html",
-  wiki: "mediawiki",
-  org: "org",
-  textile: "textile",
-  opml: "opml",
-};
-const exportFormats = {
-  "pandoc-pdf": "latex",
-  markdown: "markdown",
-  gfm: "gfm",
-  commonmark: "commonmark",
-  markdown_strict: "markdown_strict",
-  markdown_mmd: "markdown_mmd",
-  ltx: "latex",
-  rest: "rst",
-  dokuwiki: "dokuwiki",
-  text: "plain",
-  txt: "plain",
-  plain: "plain",
-  s5: "s5",
-  slidy: "slidy",
-  slideous: "slideous",
-  dzslides: "dzslides",
-  docbook: "docbook",
-  fb2: "fb2",
-  texinfo: "texinfo",
-  man: "man",
-  t2t: "t2t",
-  docx: "docx",
-  odt: "odt",
-  rtf: "rtf",
-  epub: "epub",
-  tex: "latex",
-  latex: "latex",
-  rst: "rst",
-  wiki: "mediawiki",
-  mediawiki: "mediawiki",
-  org: "org",
-  textile: "textile",
-  opml: "opml",
-  pptx: "pptx",
-  revealjs: "revealjs",
-  beamer: "beamer",
-  asciidoc: "asciidoc",
-  json: "json",
-};
-async function writeExport(file, bytes, revision) {
-  await atomicWrite(file, bytes, {
-    beforeRename: async () => {
-      if ((await store.revision(file)) !== revision)
-        throw Error(
-          "CONFLICT: Export destination changed while rendering. The existing file was not overwritten; choose a new destination.",
-        );
-    },
-  });
-}
-async function runPandoc(payload, win) {
-  const command = settings.pandocPath || "pandoc";
-  if (payload.direction === "format") {
-    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-format-"));
-    try {
-      const input = path.join(temp, "input.md");
-      await fs.writeFile(input, payload.text || "", "utf8");
-      const result = await run(command, [
-        "--from",
-        "markdown",
-        "--to",
-        "markdown",
-        "--wrap=none",
-        input,
-      ]);
-      return { text: result.stdout, warnings: result.stderr };
-    } finally {
-      await fs.rm(temp, { recursive: true, force: true });
-    }
-  }
-  if (payload.direction === "import") {
-    let source = payload.path;
-    if (!source) {
-      const result = await dialog.showOpenDialog(win, {
-        title: localize("Import with Pandoc", "使用 Pandoc 导入"),
-        buttonLabel: localize("Import", "导入"),
-        properties: ["openFile"],
-        filters: [
-          {
-            name: localize("Pandoc documents", "Pandoc 文档"),
-            extensions: Object.keys(importFormats),
-          },
-        ],
-      });
-      if (result.canceled) return null;
-      source = await grant(result.filePaths[0]);
-    } else source = await authorized(source);
-    const format =
-      importFormats[payload.format] ||
-      payload.format ||
-      importFormats[path.extname(source).slice(1).toLowerCase()];
-    if (!Object.values(importFormats).includes(format))
-      throw Error(
-        "FORMAT: This import format is unsupported. Choose a supported document format; PDF import is not provided.",
-      );
-    const temporary = await fs.mkdtemp(
-      path.join(os.tmpdir(), "inkstone-import-"),
-    );
-    try {
-      const mediaDir = path.join(temporary, "media");
-      const output = await run(
-        command,
-        [
-          "--from",
-          format,
-          "--to",
-          "gfm+tex_math_dollars",
-          "--wrap=none",
-          "--extract-media",
-          mediaDir,
-          source,
-        ],
-        { cwd: path.dirname(source) },
-      );
-      let text = output.stdout;
-      async function embed(dir) {
-        for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
-          const file = path.join(dir, entry.name);
-          if (entry.isDirectory()) await embed(file);
-          else {
-            const mime = mimeTypes[path.extname(file).toLowerCase()];
-            if (mime && mime.startsWith("image/")) {
-              const data = `data:${mime};base64,${(await fs.readFile(file)).toString("base64")}`;
-              const forwardPath = file.split(path.sep).join("/");
-              const references = new Set([
-                file,
-                forwardPath,
-                encodeURI(file),
-                encodeURI(forwardPath),
-                pathToFileURL(file).href,
-                file.replaceAll("\\", "\\\\"),
-              ]);
-              // Pandoc versions emit native Windows paths, URI paths, or escaped
-              // Markdown paths. Embed every form before deleting extracted media.
-              // Longest first prevents matching a path inside its file: URL.
-              for (const reference of [...references].sort(
-                (a, b) => b.length - a.length,
-              ))
-                text = text.replaceAll(reference, data);
-            }
-          }
-        }
-      }
-      if (await exists(mediaDir)) await embed(mediaDir);
-      return {
-        path: null,
-        text,
-        revision: null,
-        importedFrom: source,
-        warnings: output.stderr,
-      };
-    } finally {
-      await fs.rm(temporary, { recursive: true, force: true });
-    }
-  }
-  const format = exportFormats[payload.format];
-  if (!format) throw Error("FORMAT: Unsupported Pandoc export format.");
-  let target = payload.path;
-  const extension =
-    payload.format === "pandoc-pdf"
-      ? "pdf"
-      : payload.format === "latex"
-        ? "tex"
-        : ["revealjs", "s5", "slidy", "slideous", "dzslides"].includes(
-              payload.format,
-            )
-          ? "html"
-          : [
-                "markdown",
-                "gfm",
-                "commonmark",
-                "markdown_strict",
-                "markdown_mmd",
-              ].includes(payload.format)
-            ? "md"
-            : payload.format;
-  if (!target) {
-    const result = await dialog.showSaveDialog(win, {
-      title: localize("Export with Pandoc", "使用 Pandoc 导出"),
-      buttonLabel: localize("Export", "导出"),
-      defaultPath: `${payload.title || "Untitled"}.${extension}`,
-      filters: [{ name: payload.format, extensions: [extension] }],
-    });
-    if (result.canceled) return null;
-    target = result.filePath;
-    await grant(path.dirname(target), true);
-  } else target = await authorized(target);
-  const targetRevision = await store.revision(target);
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-pandoc-"));
-  try {
-    const input = path.join(tempDir, "source.md");
-    const output = path.join(tempDir, `output${path.extname(target)}`);
-    const diagrams = await embedExportDiagrams(
-      payload.text || "",
-      payload.diagramAssets,
-      tempDir,
-    );
-    await fs.writeFile(input, diagrams.text, "utf8");
-    const args = [
-      "--from",
-      "markdown+tex_math_dollars+yaml_metadata_block+raw_html+footnotes+superscript+subscript+task_lists",
-      "--to",
-      format,
-      "--standalone",
-      "--output",
-      output,
-    ];
-    if (payload.documentPath) {
-      const doc = await authorized(payload.documentPath);
-      args.push("--resource-path", path.dirname(doc));
-    }
-    if (payload.template)
-      args.push("--template", await authorized(payload.template));
-    if (payload.referenceDoc)
-      args.push("--reference-doc", await authorized(payload.referenceDoc));
-    if (payload.toc) args.push("--toc");
-    if (payload.numberSections) args.push("--number-sections");
-    // Custom options are separate argv values; output/input and filter execution are never overridden.
-    if (payload.args?.length) {
-      if (
-        !Array.isArray(payload.args) ||
-        payload.args.some(
-          (arg) =>
-            !boundedString(arg, 4096) ||
-            !/^--(?:metadata=|variable=|pdf-engine=|slide-level=|highlight-style=|columns=|wrap=|mathjax(?:=|$)|katex(?:=|$)|self-contained$|embed-resources$)/.test(
-              arg,
-            ),
-        )
-      )
-        throw Error(
-          "INVALID: Custom Pandoc arguments must be approved formatting options; filters and output overrides are not accepted.",
-        );
-      args.push(...payload.args);
-    }
-    args.push(input);
-    const result = await run(command, args, {
-      timeout: 120000,
-      cwd: payload.documentPath ? path.dirname(payload.documentPath) : tempDir,
-    });
-    await writeExport(target, await fs.readFile(output), targetRevision);
-    return {
-      path: target,
-      format,
-      warnings: [
-        ...diagrams.warnings,
-        ...(result.stderr ? [result.stderr] : []),
-      ],
-      embeddedDiagrams: diagrams.count,
-    };
-  } finally {
-    await fs.rm(tempDir, { recursive: true, force: true });
-  }
-}
-function htmlEscape(text) {
-  return String(text || "").replace(
-    /[&<>"']/g,
-    (ch) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        ch
-      ],
-  );
-}
-async function assetData(file) {
-  file = await authorized(file);
-  const mime = mimeTypes[path.extname(file).toLowerCase()];
-  if (!mime)
-    throw Error(
-      "ASSET: Only image, media, font and CSS resources can be loaded.",
-    );
-  const stat = await fs.stat(file);
-  if (stat.size > 100 * 1024 * 1024)
-    throw Error("ASSET: Resource exceeds 100 MB.");
-  return `data:${mime};base64,${(await fs.readFile(file)).toString("base64")}`;
-}
-async function sanitizeExportHTML(html, { plain = false } = {}) {
-  const sandbox = new BrowserWindow({
-    show: false,
-    width: 800,
-    height: 600,
-    webPreferences: {
-      sandbox: true,
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-  sandbox.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
-  try {
-    await sandbox.loadURL(
-      "data:text/html;charset=utf-8," +
-        encodeURIComponent(
-          "<!doctype html><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'\">",
-        ),
-    );
-    const purifier = await fs.readFile(
-      path.join(__dirname, "vendor/purify.min.js"),
-      "utf8",
-    );
-    await sandbox.webContents.executeJavaScript(purifier);
-    return await sandbox.webContents.executeJavaScript(
-      `(()=>{const content=document.createElement('template');content.innerHTML=DOMPurify.sanitize(${JSON.stringify(html)}, {USE_PROFILES:{html:true,svg:true,svgFilters:true,mathMl:true},ADD_TAGS:['foreignObject','foreignobject'],HTML_INTEGRATION_POINTS:{foreignobject:true,'annotation-xml':true},ADD_ATTR:['xmlns','xmlns:xlink'],ADD_DATA_URI_TAGS:['audio','video','source'],FORBID_TAGS:['script','iframe','object','embed','form','base','meta','link'],ALLOWED_URI_REGEXP:/^(?:(?:https?|mailto|inkstone-asset):|[^a-z]|[a-z+.\\-]+(?:[^a-z+.\\-:]|$))/i});for(const image of content.content.querySelectorAll('img'))image.setAttribute('loading','eager');if(${JSON.stringify(plain)})for(const formula of content.content.querySelectorAll('.katex')){const math=formula.querySelector('math');if(math)formula.replaceWith(math.cloneNode(true));}return content.innerHTML;})()`,
-    );
-  } finally {
-    sandbox.destroy();
-  }
-}
-async function exportFile(payload, win) {
-  const format = payload.format || "pdf";
-  if (
-    !["html", "html-plain", "pdf", "png", "jpg", "jpeg", "print"].includes(
-      format,
-    )
-  )
-    return runPandoc({ ...payload, direction: "export" }, win);
-  if (typeof payload.html !== "string")
-    throw Error("EXPORT: Rendered document HTML is required.");
-  let target = payload.path;
-  if (format !== "print") {
-    if (!target) {
-      const result = await dialog.showSaveDialog(win, {
-        title: localize("Export", "导出"),
-        buttonLabel: localize("Export", "导出"),
-        defaultPath: `${payload.title || localize("Untitled", "未命名")}.${format.startsWith("html") ? "html" : ["jpg", "jpeg"].includes(format) ? "jpg" : format}`,
-      });
-      if (result.canceled) return null;
-      target = result.filePath;
-      await grant(path.dirname(target), true);
-    } else target = await authorized(target);
-  }
-  const targetRevision = target ? await store.revision(target) : null;
-  const warnings = [];
-  let html = await sanitizeExportHTML(payload.html, {
-    plain: format === "html-plain",
-  });
-  // Embed local resources so exported documents remain useful after moving them.
-  const references = [
-    ...new Set(
-      [...html.matchAll(/(?:src|poster)=["']([^"']+)["']/g)].map((m) => m[1]),
-    ),
-  ];
-  for (const ref of references) {
-    try {
-      let file;
-      if (ref.startsWith("inkstone-asset:"))
-        file = new URL(ref.replaceAll("&amp;", "&")).searchParams.get("path");
-      else if (ref.startsWith("file:")) file = fileURLToPath(ref);
-      else if (
-        !/^(?:[a-z][a-z\d+.-]*:|#|\/\/)/i.test(ref) &&
-        payload.documentPath
-      )
-        file = path.resolve(
-          path.dirname(await authorized(payload.documentPath)),
-          decodeURIComponent(ref),
-        );
-      if (file) html = html.replaceAll(ref, await assetData(file));
-    } catch (e) {
-      warnings.push(`Missing resource ${ref}: ${e.message}`);
-    }
-  }
-  let css = format === "html-plain" ? "" : String(payload.css || "");
-  const distDir = path.resolve(__dirname, "../dist");
-  // Bundle Vite-generated font/image URLs present in the exported theme CSS.
-  const cssRefs = [
-    ...new Set(
-      [...css.matchAll(/url\(["']?([^"')]+)["']?\)/g)].map((m) => m[1]),
-    ),
-  ];
-  for (const ref of cssRefs) {
-    if (/^(?:data:|https?:)/.test(ref)) continue;
-    if (ref.startsWith("inkstone-asset:")) {
-      try {
-        css = css.replaceAll(
-          ref,
-          await assetData(new URL(ref).searchParams.get("path")),
-        );
-      } catch (error) {
-        warnings.push(`Missing CSS resource ${ref}: ${error.message}`);
-      }
-      continue;
-    }
-    let file = path.resolve(
-      distDir,
-      ref.replace(/^\.\//, "").replace(/^\//, ""),
-    );
-    if (!(await exists(file))) {
-      const alternate = path.resolve(
-        distDir,
-        "assets",
-        ref.replace(/^\.\//, ""),
-      );
-      if (isWithin(alternate, distDir)) file = alternate;
-    }
-    if (isWithin(file, distDir) && (await exists(file))) {
-      const mime = mimeTypes[path.extname(file)] || "application/octet-stream";
-      css = css.replaceAll(
-        ref,
-        `data:${mime};base64,${(await fs.readFile(file)).toString("base64")}`,
-      );
-    }
-  }
-  const baseCSS = `body{margin:0;color:#202322;background:white;font:18px/1.7 ${String(settings.fontFamily).replace(/[<>]/g, "")};}article{max-width:900px;margin:0 auto;padding:40px;}img,svg,video{max-width:100%;}pre{white-space:pre-wrap;}table{border-collapse:collapse;}td,th{border:1px solid #aaa;padding:6px;}@media print{article{max-width:none;padding:0;}h1,h2,h3,h4{break-after:avoid;}pre,blockquote,figure,tr{break-inside:avoid;}.page-break{break-before:page;}}`;
-  const style =
-    format === "html-plain"
-      ? ""
-      : `<style>${(baseCSS + css).replace(/<\/style/gi, "<\\/style")}</style>`;
-  const document = `<!doctype html><html lang="${settings.locale}"${payload.rtl ? ' dir="rtl"' : ""}><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: https: http: inkstone-asset:; style-src 'unsafe-inline'; font-src data: inkstone-asset:; media-src data: https: http: inkstone-asset:; script-src 'none'"><title>${htmlEscape(payload.title || "Inkstone document")}</title>${style}</head><body><article class="markdown-body">${html}</article></body></html>`;
-
-  if (format.startsWith("html")) {
-    await writeExport(target, document, targetRevision);
-    return { path: target, format, warnings };
-  }
-  const exportWindow = new BrowserWindow({
-    show: false,
-    width: Math.max(600, Math.min(2400, payload.width || 1200)),
-    height: 900,
-    webPreferences: {
-      sandbox: true,
-      contextIsolation: true,
-      nodeIntegration: false,
-      backgroundThrottling: false,
-    },
-  });
-  exportWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
-  exportWindow.webContents.on("will-navigate", (event) =>
-    event.preventDefault(),
-  );
-  try {
-    await exportWindow.loadURL(
-      `data:text/html;charset=utf-8,${encodeURIComponent(document)}`,
-    );
-    const resourceStatus = await exportWindow.webContents.executeJavaScript(
-      `Promise.race([Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?Promise.resolve(i.naturalWidth>0):new Promise(r=>{i.onload=()=>r(true);i.onerror=()=>r(false)}))]).then(r=>({ready:true,missing:r.slice(1).filter(x=>!x).length})),new Promise(r=>setTimeout(()=>r({ready:false}),15000))])`,
-    );
-    if (!resourceStatus.ready)
-      throw Error(
-        "EXPORT: Images or fonts did not finish loading within 15 seconds.",
-      );
-    if (resourceStatus.missing)
-      warnings.push(`${resourceStatus.missing} image(s) could not be loaded.`);
-    if (format === "print") {
-      const marginInput =
-        typeof payload.margins === "number"
-          ? Object.fromEntries(
-              ["top", "bottom", "left", "right"].map((key) => [
-                key,
-                payload.margins / 25.4,
-              ]),
-            )
-          : payload.margins || {};
-      const printMargins = {
-        marginType: "custom",
-        ...Object.fromEntries(
-          ["top", "bottom", "left", "right"].map((key) => [
-            key,
-            Math.round(
-              Math.max(0, Math.min(5, Number(marginInput[key]) || 0.5)) * 96,
-            ),
-          ]),
-        ),
-      };
-      await new Promise((resolve, reject) =>
-        exportWindow.webContents.print(
-          {
-            printBackground: true,
-            silent: false,
-            pageSize: [
-              "A0",
-              "A1",
-              "A2",
-              "A3",
-              "A4",
-              "A5",
-              "A6",
-              "Legal",
-              "Letter",
-              "Tabloid",
-            ].includes(payload.pageSize)
-              ? payload.pageSize
-              : "A4",
-            landscape: !!payload.landscape,
-            margins: printMargins,
-            header: String(payload.header || "").replace(/<[^>]*>/g, ""),
-            footer: String(payload.footer || "").replace(/<[^>]*>/g, ""),
-          },
-          (success, reason) =>
-            success ? resolve() : reject(Error(`PRINT: ${reason}`)),
-        ),
-      );
-      return { format, warnings };
-    }
-    if (format === "pdf") {
-      const pageSize = [
-        "A0",
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "Legal",
-        "Letter",
-        "Tabloid",
-        "Ledger",
-      ].includes(payload.pageSize)
-        ? payload.pageSize
-        : "A4";
-      const margins =
-        typeof payload.margins === "number"
-          ? Object.fromEntries(
-              ["top", "bottom", "left", "right"].map((key) => [
-                key,
-                payload.margins / 25.4,
-              ]),
-            )
-          : payload.margins || {};
-      const marginValues = { top: 0.5, bottom: 0.5, left: 0.5, right: 0.5 };
-      for (const key of Object.keys(marginValues))
-        if (
-          Number.isFinite(margins[key]) &&
-          margins[key] >= 0 &&
-          margins[key] <= 5
-        )
-          marginValues[key] = margins[key];
-      const data = await exportWindow.webContents.printToPDF({
-        printBackground: true,
-        pageSize,
-        landscape: !!payload.landscape,
-        margins: marginValues,
-        preferCSSPageSize: true,
-        displayHeaderFooter: !!(payload.header || payload.footer),
-        headerTemplate: payload.header || "<span></span>",
-        footerTemplate: payload.footer || "<span></span>",
-        generateDocumentOutline: payload.bookmarks !== false,
-        generateTaggedPDF: true,
-        scale: Math.max(0.5, Math.min(2, payload.scale || 1)),
-      });
-      await writeExport(target, data, targetRevision);
-    } else {
-      const height = await exportWindow.webContents.executeJavaScript(
-        "Math.ceil(document.documentElement.scrollHeight)",
-      );
-      if (height > 32760)
-        throw Error(
-          "EXPORT: PNG output exceeds 32,760 pixels. Split the document or export PDF.",
-        );
-      exportWindow.setContentSize(
-        Math.max(600, Math.min(2400, payload.width || 1200)),
-        Math.max(200, height),
-      );
-      await new Promise((resolve) => setTimeout(resolve, 150));
-      const image = await exportWindow.webContents.capturePage();
-      await writeExport(
-        target,
-        ["jpg", "jpeg"].includes(format)
-          ? image.toJPEG(
-              Math.max(
-                0,
-                Math.min(
-                  100,
-                  Number.isFinite(payload.quality) ? payload.quality : 90,
-                ),
-              ),
-            )
-          : image.toPNG(),
-        targetRevision,
-      );
-    }
-    return { path: target, format, warnings };
-  } finally {
-    exportWindow.destroy();
-  }
-}
+// Export, import and Pandoc live in export.cjs.
+const { detectTools, runPandoc, exportFile, assetData } = createExportService({
+  settings: () => settings,
+  store: () => store,
+  authorized,
+  grant,
+  isWithin,
+  localize,
+  mimeTypes,
+  run,
+});
 async function images(payload, win) {
   if (!payload.documentPath)
     throw Error("IMAGES: Save the document before inserting local images.");
@@ -1655,159 +964,17 @@ async function fileOperation(payload) {
   };
 }
 function menu() {
-  const english = settings.locale === "en";
-  const label = (zh, en) => (english ? en : zh);
-  const action = (text, command, accelerator) => ({
-    id: command,
-    label: text,
-    accelerator:
-      nativeAccelerator(settings.shortcuts?.[command]) || accelerator,
-    click: (_item, win) => {
-      if (win) send(win, "command", command);
+  const template = applicationMenu({
+    locale: settings.locale,
+    shortcuts: settings.shortcuts,
+    sendCommand: (win, command) => send(win, "command", command),
+    newWindow: () => {
+      if (!closeCoordinator.busy) createWindow();
     },
+    quit: () => void requestQuit(),
   });
-  const template = [
-    {
-      label: label("文件", "File"),
-      submenu: [
-        action(label("新建文稿", "New document"), "new", "Ctrl+N"),
-        {
-          label: label("新建窗口", "New window"),
-          accelerator: "Ctrl+Shift+N",
-          click: () => {
-            if (!closeCoordinator.busy) createWindow();
-          },
-        },
-        action(label("打开…", "Open…"), "open", "Ctrl+O"),
-        action(
-          label("打开文件夹…", "Open folder…"),
-          "openFolder",
-          "Ctrl+Shift+O",
-        ),
-        { type: "separator" },
-        action(label("保存", "Save"), "save", "Ctrl+S"),
-        action(label("另存为…", "Save as…"), "saveAs", "Ctrl+Shift+S"),
-        action(label("导入…", "Import…"), "import"),
-        action(label("导出…", "Export…"), "export", "Ctrl+Shift+E"),
-        action(label("打印…", "Print…"), "print", undefined),
-        { type: "separator" },
-        { role: "close", label: label("关闭窗口", "Close window") },
-        {
-          id: "quit",
-          label: label("退出", "Quit"),
-          accelerator: nativeAccelerator(settings.shortcuts?.quit) || "Ctrl+Q",
-          click: () => {
-            void closeCoordinator.request([...states.keys()], "quit");
-          },
-        },
-      ],
-    },
-    {
-      label: label("编辑", "Edit"),
-      submenu: [
-        action(label("撤销", "Undo"), "undo", "Ctrl+Z"),
-        action(label("重做", "Redo"), "redo", "Ctrl+Shift+Z"),
-        { type: "separator" },
-        { role: "cut", label: label("剪切", "Cut") },
-        { role: "copy", label: label("复制", "Copy") },
-        { role: "paste", label: label("粘贴", "Paste") },
-        {
-          role: "pasteAndMatchStyle",
-          label: label("粘贴为纯文本", "Paste as plain text"),
-        },
-        { role: "selectAll", label: label("全选", "Select all") },
-        { type: "separator" },
-        action(label("查找 / 替换", "Find / replace"), "find", "Ctrl+F"),
-        action(
-          label("全局搜索", "Search in folder"),
-          "globalSearch",
-          "Ctrl+Shift+F",
-        ),
-      ],
-    },
-    {
-      label: label("段落", "Paragraph"),
-      submenu: [
-        ...Array.from({ length: 6 }, (_, i) =>
-          action(
-            label(`${i + 1} 级标题`, `Heading ${i + 1}`),
-            `heading${i + 1}`,
-            `Ctrl+${i + 1}`,
-          ),
-        ),
-        { type: "separator" },
-        action(label("引用", "Quote"), "quote"),
-        action(label("无序列表", "Bullet list"), "bullet"),
-        action(label("有序列表", "Numbered list"), "ordered"),
-        action(label("任务列表", "Task list"), "task"),
-        action(label("表格", "Table"), "table"),
-        action(label("代码块", "Code fence"), "codeFence"),
-        action(label("数学公式", "Math block"), "math"),
-      ],
-    },
-    {
-      label: label("格式", "Format"),
-      submenu: [
-        action(label("粗体", "Bold"), "bold", "Ctrl+B"),
-        action(label("斜体", "Italic"), "italic", "Ctrl+I"),
-        action(label("删除线", "Strikethrough"), "strike"),
-        action(label("高亮", "Highlight"), "highlight"),
-        action(label("行内代码", "Inline code"), "code", "Ctrl+Shift+`"),
-        action(label("链接", "Link"), "link", "Ctrl+K"),
-        action(label("图片…", "Image…"), "insertImage"),
-        action(
-          label("从 URL 插入图片", "Insert image from URL"),
-          "insertImageURL",
-        ),
-      ],
-    },
-    {
-      label: label("视图", "View"),
-      submenu: [
-        action(label("源码模式", "Source mode"), "source", "Ctrl+/"),
-        action(label("侧边栏", "Sidebar"), "sidebar", "Ctrl+Shift+L"),
-        action(label("大纲", "Outline"), "outline"),
-        action(label("快速打开", "Quick open"), "quickOpen", "Ctrl+P"),
-        action(
-          label("命令面板", "Command palette"),
-          "commands",
-          "Ctrl+Shift+P",
-        ),
-        action(label("专注模式", "Focus mode"), "focus"),
-        action(label("打字机模式", "Typewriter mode"), "typewriter"),
-        action(label("沉浸模式", "Immersive mode"), "zen", "Ctrl+Shift+Enter"),
-        action(
-          label("AI写作助手", "AI Writing Assistant"),
-          "aiAssistant",
-          "Ctrl+Shift+A",
-        ),
-        { type: "separator" },
-        action(label("重置缩放", "Reset zoom"), "zoomReset", "Ctrl+0"),
-        action(label("放大", "Zoom in"), "zoomIn", "Ctrl+Plus"),
-        action(label("缩小", "Zoom out"), "zoomOut", "Ctrl+-"),
-        {
-          role: "togglefullscreen",
-          label: label("切换全屏", "Toggle fullscreen"),
-        },
-      ],
-    },
-    {
-      label: label("工具", "Tools"),
-      submenu: [
-        action(label("偏好设置…", "Preferences…"), "settings", "Ctrl+,"),
-        action(
-          label("Markdown 默认打开方式…", "Default Markdown app…"),
-          "defaultApps",
-        ),
-        action(label("版本历史…", "Version history…"), "history"),
-        action(label("格式整理", "Format Markdown"), "format"),
-        action(label("字数统计", "Statistics"), "statistics"),
-        { type: "separator" },
-        action(label("关于墨石", "About Inkstone"), "about"),
-      ],
-    },
-  ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  syncTray();
 }
 function contextMenu(win, params = {}) {
   const template = [];
@@ -1896,12 +1063,23 @@ function createWindow(file) {
     recoveryIds: new Set(),
   });
   win.once("ready-to-show", () => win.show());
+  win.on("focus", () => {
+    lastFocusedWindow = win.id;
+  });
   win.on("close", (event) => {
     const state = states.get(win.id);
     if (state && !state.confirmed) {
       event.preventDefault();
-      void closeCoordinator.request([win.id], "close");
+      void requestWindowClose(win);
     }
+  });
+  // Windows shutdown, restart or sign-out: with unsaved changes, hold it and
+  // ask as for any other exit. Windows offers "Shut down anyway"; recovery
+  // drafts written while typing are kept in that case.
+  win.on("query-session-end", (event) => {
+    if (![...states.values()].some((state) => state.dirty)) return;
+    event.preventDefault();
+    void requestQuit();
   });
   win.on("closed", () => {
     aiService?.close(win.id);
@@ -1946,13 +1124,18 @@ function createWindow(file) {
     if (/^https?:\/\//i.test(url)) shell.openExternal(url);
   });
   win.on("unresponsive", () => {
+    diagnostics.record("warn", "An editor window stopped responding.");
     states.get(win.id).unresponsive = true;
     closeCoordinator.unresponsive(win.id);
   });
   win.on("responsive", () => {
     if (states.has(win.id)) states.get(win.id).unresponsive = false;
   });
-  win.webContents.on("render-process-gone", () => {
+  win.webContents.on("render-process-gone", (_event, details) => {
+    diagnostics.record(
+      "error",
+      `An editor process stopped (${details?.reason}, exit code ${details?.exitCode}).`,
+    );
     aiService?.cancel(win.id);
     closeCoordinator.removed(win.id);
     dialog
@@ -1986,6 +1169,41 @@ const ai = () =>
     directory: app.getPath("userData"),
     safeStorage,
   }));
+// Packaged builds check GitHub Releases. INKSTONE_UPDATE_FEED_URL points any
+// build at a generic update feed instead (used by tests and mirrors).
+function updateService() {
+  if (updates) return updates;
+  const feed = process.env.INKSTONE_UPDATE_FEED_URL;
+  let updater = null;
+  if (app.isPackaged || feed) {
+    updater = require("electron-updater").autoUpdater;
+    if (feed) {
+      updater.forceDevUpdateConfig = true;
+      updater.setFeedURL({ provider: "generic", url: feed });
+    }
+  }
+  updates = new UpdateService({
+    updater,
+    version: app.getVersion(),
+    canInstall:
+      process.platform === "win32" ||
+      (process.platform === "linux" && Boolean(process.env.APPIMAGE)),
+    publish: (state) => broadcast("update-status", state),
+    log: (error) => console.warn("Update check failed:", error?.message),
+    installOnQuit: process.env.INKSTONE_UPDATE_INSTALL_ON_QUIT !== "0",
+  });
+  return updates;
+}
+function scheduleUpdateChecks() {
+  const service = updateService();
+  if (service.state.status === "unsupported") return;
+  const delay = Number(process.env.INKSTONE_UPDATE_CHECK_DELAY) || 15000;
+  const check = () => {
+    if (settings.autoCheckUpdates !== false) void service.check();
+  };
+  setTimeout(check, delay);
+  setInterval(check, 24 * 60 * 60 * 1000);
+}
 const handlers = {
   aiGetSettings: (payload) => ai().getSettings(payload),
   aiSaveSettings: (payload) => ai().saveSettings(payload),
@@ -1994,6 +1212,60 @@ const handlers = {
   aiStart: (payload, win) =>
     ai().start(win.id, payload, (event) => send(win, "ai-response", event)),
   aiCancel: (payload, win) => ai().cancel(win.id, payload.id),
+  async getDiagnostics() {
+    let model;
+    try {
+      const value = await ai().getSettings();
+      model = {
+        provider: value.provider,
+        model: value.model,
+        ready: value.ready,
+      };
+    } catch {
+      model = { provider: "unreadable configuration" };
+    }
+    return diagnostics.report({
+      version: app.getVersion(),
+      packaged: app.isPackaged,
+      versions: process.versions,
+      os: {
+        platform: process.platform,
+        release: require("node:os").release(),
+        arch: process.arch,
+        locale: app.getLocale(),
+      },
+      settings,
+      update: updateService().snapshot(),
+      ai: model,
+      windows: states.size,
+      watchers: {
+        files: watchers.size,
+        folders: [...folderWatchers.values()].reduce(
+          (sum, group) => sum + group.directories.size,
+          0,
+        ),
+      },
+      gpu: app.getGPUFeatureStatus(),
+    });
+  },
+  // Uncaught renderer errors, kept for the diagnostic report only.
+  reportProblem(payload) {
+    if (boundedString(payload?.message, 4000))
+      diagnostics.record("renderer", payload.message);
+    return true;
+  },
+  getUpdateStatus: () => updateService().snapshot(),
+  checkForUpdates: () => updateService().check({ manual: true }),
+  downloadUpdate: () => updateService().download(),
+  restartToUpdate() {
+    updateService().assertReady();
+    restartForUpdate = true;
+    // The usual quit flow asks about unsaved changes before installing.
+    void requestQuit().then((approved) => {
+      if (approved === false) restartForUpdate = false;
+    });
+    return true;
+  },
   async getAboutInfo() {
     return {
       name: "Inkstone",
@@ -2066,6 +1338,7 @@ const handlers = {
     let file = payload.path,
       revision = payload.revision;
     if (!file || payload.saveAs) {
+      reveal(win);
       const choice = await dialog.showSaveDialog(win, {
         title: localize("Save Markdown", "保存文稿"),
         buttonLabel: localize("Save", "保存"),
@@ -2392,10 +1665,14 @@ const handlers = {
         closeCoordinator.ready(win.id);
         return true;
       case "requestClose":
-        void closeCoordinator.request([win.id], "close");
+        void requestWindowClose(win);
         return true;
       case "quit":
-        void closeCoordinator.request([...states.keys()], "quit");
+        void requestQuit();
+        return true;
+      // Before asking about unsaved changes, so a window in the tray is seen.
+      case "reveal":
+        reveal(win);
         return true;
       case "closeResponse":
         return closeCoordinator.respond(
@@ -2716,9 +1993,9 @@ app
       }
     });
     menu();
-    const argumentsToOpen = process.argv
-      .slice(app.isPackaged ? 1 : 2)
-      .filter((arg) => !arg.startsWith("-"));
+    const argumentsToOpen = launchArguments.filter(
+      (arg) => !arg.startsWith("-"),
+    );
     for (const arg of argumentsToOpen) {
       const absolute = path.resolve(arg);
       if (await exists(absolute)) {
@@ -2739,6 +2016,8 @@ app
           );
         }
     else createWindow();
+    markStarted();
+    scheduleUpdateChecks();
   })
   .catch((error) => {
     console.error(error);
@@ -2750,9 +2029,19 @@ app.on("window-all-closed", () => {
 app.on("before-quit", (event) => {
   if (quitApproved || !states.size) return;
   event.preventDefault();
-  void closeCoordinator.request([...states.keys()], "quit");
+  void requestQuit();
+});
+app.on("second-instance", (_event, argv, workingDirectory, data) => {
+  const args = Array.isArray(data?.args) ? data.args : argv.slice(1);
+  const cwd = typeof data?.cwd === "string" ? data.cwd : workingDirectory;
+  void started
+    .then(() => openLaunchArguments(args, cwd))
+    .catch((error) =>
+      dialog.showErrorBox(localize("Open failed", "无法打开"), error.message),
+    );
 });
 app.on("will-quit", () => {
+  trayIcon.destroy();
   aiService?.dispose();
   for (const watcher of watchers.values()) watcher.close();
   for (const group of folderWatchers.values()) {

@@ -1,6 +1,7 @@
 import { _electron as electron } from "playwright";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { artifactPath } from "./artifact-path.mjs";
 import { execFileSync } from "node:child_process";
 import crypto from "node:crypto";
 import { createRequire } from "node:module";
@@ -55,7 +56,7 @@ if (process.platform !== "linux")
   );
 const root = process.cwd(),
   work = path.join(root, ".tools", "package-validation"),
-  evidence = path.join(root, "artifacts", "package-validation");
+  evidence = artifactPath("package-validation");
 await fs.mkdir(work, { recursive: true });
 await fs.mkdir(evidence, { recursive: true });
 const version = JSON.parse(await fs.readFile("package.json", "utf8")).version;

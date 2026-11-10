@@ -1,0 +1,36 @@
+name: Website
+on:
+  push:
+    branches: [master]
+    paths: ["website/**", ".github/workflows/website.yml"]
+  pull_request:
+    paths: ["website/**", ".github/workflows/website.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Verify both language pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          # The website check uses Chromium only.
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - run: npx playwright install --with-deps chromium
+      - name: Check layout, links and local assets from 320 to 1440 pixels
+        run: node website/verify.mjs
+        env:
+          INKSTONE_WEBSITE_EVIDENCE: website-evidence
+      - name: Upload screenshots of a failed check
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-evidence
+          path: website-evidence
+          retention-days: 7

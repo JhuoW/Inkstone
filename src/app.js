@@ -52,6 +52,12 @@ import { createAIAssistant } from "./ai-assistant.js";
 import { showAIModelSettings } from "./ai-model-settings.js";
 import { combineAIRevisions } from "./ai-revisions.js";
 import { localizedError, rawErrorMessage } from "./errors.js";
+import { createUpdateNotice } from "./update-notice.js";
+import {
+  builtInShortcuts,
+  defaultShortcuts,
+  commandList as commandCatalog,
+} from "./commands.js";
 import "./ai-assistant.css";
 
 const native = window.inkstone;
@@ -111,6 +117,7 @@ let needsLanguageChoice = false,
   navigationLocked = false,
   bootstrapLoading = false,
   startupRecoveryCount = 0,
+  updateNotice = null,
   outlineButtons = [],
   activeOutlineButton = null;
 const pendingRecoveries = new Set();
@@ -180,58 +187,10 @@ const guarded =
       console.error(e);
     }
   };
-const defaultShortcuts = {
-  new: "Mod-n",
-  open: "Mod-o",
-  save: "Mod-s",
-  saveAs: "Mod-Shift-s",
-  quickOpen: "Mod-p",
-  commands: "Mod-Shift-p",
-  settings: "Mod-,",
-  source: "Mod-/",
-  quit: "Mod-q",
-  close: "Mod-w",
-  focus: "F8",
-  typewriter: "F9",
-  fullscreen: "F11",
-  export: "Mod-Shift-e",
-  aiAssistant: "Mod-Shift-a",
-  zen: "Mod-Shift-Enter",
-};
-// Bindings provided by the native menu and editor keymap. Preferences shows
-// them as defaults and refuses a new shortcut that would collide with one.
-const builtInShortcuts = {
-  new: "Mod-n",
-  newWindow: "Mod-Shift-n",
-  open: "Mod-o",
-  openFolder: "Mod-Shift-o",
-  save: "Mod-s",
-  saveAs: "Mod-Shift-s",
-  export: "Mod-Shift-e",
-  undo: "Mod-z",
-  redo: "Mod-Shift-z",
-  find: "Mod-f",
-  globalSearch: "Mod-Shift-f",
-  bold: "Mod-b",
-  italic: "Mod-i",
-  strike: "Mod-Shift-x",
-  link: "Mod-k",
-  table: "Mod-Alt-t",
-  source: "Mod-/",
-  sidebar: "Mod-Shift-l",
-  quickOpen: "Mod-p",
-  commands: "Mod-Shift-p",
-  zoomReset: "Mod-0",
-  zoomIn: "Mod-+",
-  zoomOut: "Mod--",
-  settings: "Mod-,",
-  ...Object.fromEntries(
-    [1, 2, 3, 4, 5, 6].map((level) => [`heading${level}`, `Mod-${level}`]),
-  ),
-};
 const preferenceOptions = () => ({
   commands: () => commandList(),
   shortcutDefaults: { ...builtInShortcuts, ...defaultShortcuts },
+  checkUpdates: () => run("checkUpdates"),
 });
 function commandShortcut(id) {
   const key = { ...defaultShortcuts, ...settings.shortcuts }[id];
@@ -492,7 +451,7 @@ function shell() {
     '<button id="zen-exit" data-command="zen" hidden>' +
     t("退出沉浸模式", "Exit immersive mode") +
     "</button>" +
-    '<div id="language-onboarding" hidden></div><div id="recovery-notice" class="recovery-notice" hidden></div><div id="conflict-banner" hidden role="alert"></div><div id="editor-area"><div id="editor-host"></div><div id="ai-assistant-host" hidden></div></div><div id="floating-toolbar" hidden>' +
+    '<div id="language-onboarding" hidden></div><div id="recovery-notice" class="recovery-notice" hidden></div><div id="update-notice" class="recovery-notice update-notice" role="status" aria-live="polite" hidden></div><div id="conflict-banner" hidden role="alert"></div><div id="editor-area"><div id="editor-host"></div><div id="ai-assistant-host" hidden></div></div><div id="floating-toolbar" hidden>' +
     [
       ["bold", "bold"],
       ["italic", "italic"],
@@ -700,6 +659,7 @@ function shell() {
   resize.setAttribute("aria-valuenow", settings.sidebarWidth || 256);
   renderLanguageChoice();
   renderRecoveryNotice();
+  updateNotice?.refresh();
 }
 
 function renderLanguageChoice() {
@@ -846,6 +806,7 @@ function acceptSettings(patch) {
   applyAppearance();
   renderLanguageChoice();
   renderRecoveryNotice();
+  updateNotice?.refresh();
   if (languageChanged) {
     updateStatus();
     document.dispatchEvent(
@@ -1051,7 +1012,7 @@ function changed(_text, metadata = {}) {
   clearTimeout(saveTimer);
   if (settings.autoSave && current.path && !conflict && !resourceCommitting)
     saveTimer = setTimeout(
-      () => run("save"),
+      () => run("autoSave"),
       Math.max(500, settings.autoSaveDelay),
     );
   clearTimeout(outlineTimer);
@@ -1237,7 +1198,9 @@ function updateStatus() {
     (basename(current.path) || t("未命名", "Untitled")) +
     " — Inkstone";
 }
-async function mayLeave({ deferDiscard = false } = {}) {
+// Asks before the document is closed or replaced. `batch` is a choice already
+// made for several documents at once when exiting ("save" or "discard").
+async function mayLeave({ deferDiscard = false, batch = null } = {}) {
   if (leavePending) return leavePending;
   pausePersistence();
   let allowed = false;
@@ -1250,23 +1213,37 @@ async function mayLeave({ deferDiscard = false } = {}) {
     }
     if (busySave) await busySave;
     if (!dirty()) return true;
-    const result = await ask(
-      t("保存当前文档？", "Save this document?"),
-      current.path
-        ? t(
-            "文档有未保存的修改。关闭前是否保存？",
-            "This document has unsaved changes. Would you like to save them?",
-          )
-        : t(
-            "这份新文档尚未保存到本机。",
-            "This new document has not been saved to a file yet.",
-          ),
-      [
-        { label: t("保存", "Save"), value: "save" },
-        { label: t("不保存", "Don't Save"), value: "discard" },
-        { label: t("取消", "Cancel"), value: "cancel" },
-      ],
-    );
+    // With auto save on, a named document is saved now, as it would have
+    // been a moment later. Only a failed save asks.
+    if (!batch && settings.autoSave && current.path && !conflict) {
+      const saved = await saveDocument(false, current.encoding, {
+        quiet: true,
+      });
+      if (saved && !dirty()) {
+        if (deferDiscard) closeDisposition = "save";
+        return true;
+      }
+    }
+    if (!batch) await revealWindow();
+    const result =
+      batch ||
+      (await ask(
+        t("保存当前文档？", "Save this document?"),
+        current.path
+          ? t(
+              "文档有未保存的修改。关闭前是否保存？",
+              "This document has unsaved changes. Would you like to save them?",
+            )
+          : t(
+              "这份新文档尚未保存到本机。",
+              "This new document has not been saved to a file yet.",
+            ),
+        [
+          { label: t("保存", "Save"), value: "save" },
+          { label: t("不保存", "Don't Save"), value: "discard" },
+          { label: t("取消", "Cancel"), value: "cancel" },
+        ],
+      ));
     if (result === "save") {
       const saved = !!(await saveDocument()) && !dirty();
       if (saved && deferDiscard) closeDisposition = "save";
@@ -1296,7 +1273,7 @@ async function handleExternalChange(event) {
     return;
   }
   if (dirty() || event.deleted) {
-    showConflict();
+    showConflict(event.deleted ? "missing" : "changed");
     return;
   }
   const snapshot = {
@@ -1336,7 +1313,7 @@ async function prepareClose(request) {
   closeApprovedSnapshot = null;
   try {
     await lockForClose();
-    const allow = await mayLeave({ deferDiscard: true });
+    const allow = await mayLeave({ deferDiscard: true, batch: request.batch });
     if (allow)
       closeApprovedSnapshot = {
         generation,
@@ -1591,10 +1568,72 @@ async function chooseEncoding(conversion = false) {
     };
   });
 }
-async function saveDocument(saveAs = false, encoding = current.encoding) {
+// Save failures the user can do something about: the file was moved or
+// deleted, is read-only, is in use, or the disk is full.
+const recoverableSaveErrors = [
+  "MISSING",
+  "READONLY",
+  "PERMISSION",
+  "BUSY",
+  "DISK_FULL",
+];
+let saveFailure = null;
+const revealWindow = () =>
+  invoke("windowAction", { action: "reveal" }).catch(() => {});
+/**
+ * Saves, and when that fails in a way the user can resolve, explains why and
+ * offers to save at the original location, retry, or Save As. The document
+ * stays open and dirty whenever nothing was written. With `quiet` (timed auto
+ * save, or closing with auto save on) failures only show the banner.
+ */
+async function saveDocument(
+  saveAs = false,
+  encoding = current.encoding,
+  { quiet = false, recreate = false } = {},
+) {
+  for (;;) {
+    const saved = await writeDocument(saveAs, encoding, { recreate });
+    const failure = saveFailure;
+    saveFailure = null;
+    if (saved || quiet || !failure) return saved;
+    await revealWindow();
+    const missing = failure.code === "MISSING";
+    const choice = await ask(
+      missing
+        ? t("文件已被移动或删除", "The file was moved or deleted")
+        : t("无法保存此文件", "Couldn't save this file"),
+      failure.message,
+      [
+        ...(missing
+          ? [
+              {
+                label: t("保存到原位置", "Save to Original Location"),
+                value: "recreate",
+              },
+              { label: t("另存为…", "Save As…"), value: "saveAs" },
+            ]
+          : [
+              { label: t("另存为…", "Save As…"), value: "saveAs" },
+              { label: t("重试", "Try Again"), value: "retry" },
+            ]),
+        { label: t("取消", "Cancel"), value: null },
+      ],
+    );
+    if (!choice) return false;
+    saveAs = choice === "saveAs";
+    recreate = choice === "recreate";
+  }
+}
+// One write. Recoverable failures are left in saveFailure.
+async function writeDocument(
+  saveAs = false,
+  encoding = current.encoding,
+  { recreate = false } = {},
+) {
   if (resourceCommitting) return false;
   clearTimeout(saveTimer);
   if (busySave) return busySave;
+  saveFailure = null;
   const text = editor.getText(),
     expectedGeneration = generation,
     oldRecovery = recoveryId;
@@ -1603,7 +1642,8 @@ async function saveDocument(saveAs = false, encoding = current.encoding) {
       const doc = await invoke("saveFile", {
         path: current.path,
         text,
-        revision: current.revision,
+        // No revision: create the file again where it was.
+        revision: recreate ? null : current.revision,
         saveAs,
         preserveLinks: true,
         encoding,
@@ -1667,8 +1707,15 @@ async function saveDocument(saveAs = false, encoding = current.encoding) {
       if (dirty()) changed();
       return true;
     } catch (e) {
+      const code = recoverableSaveErrors.find((name) => failedWith(e, name));
       if (failedWith(e, "CONFLICT")) showConflict();
-      else toast(e.message, true);
+      else if (code) {
+        saveFailure = {
+          code,
+          message: e.message.replace(/^[A-Z][A-Z_]+:\s+/, ""),
+        };
+        showConflict(code === "MISSING" ? "missing" : "unwritable");
+      } else toast(e.message, true);
       return false;
     } finally {
       busySave = null;
@@ -1687,11 +1734,47 @@ async function persistSession() {
     encoding: current.encoding,
   });
 }
-function showConflict() {
+// Pauses auto save and explains why: "changed" on disk, "missing" (moved or
+// deleted) or "unwritable" (read-only, in use, no permission or disk full).
+function showConflict(kind = "changed") {
   conflict = true;
   clearTimeout(saveTimer);
   const b = $("#conflict-banner");
   b.hidden = false;
+  if (kind !== "changed") {
+    const missing = kind === "missing";
+    b.innerHTML =
+      "<span>" +
+      (missing
+        ? t(
+            "文件已被移动或删除。你的内容仍保留，自动保存已暂停。",
+            "The file was moved or deleted. Your text is preserved; auto save is paused.",
+          )
+        : t(
+            "无法写入此文件。你的内容仍保留，自动保存已暂停。",
+            "This file can't be written. Your text is preserved; auto save is paused.",
+          )) +
+      '</span><button data-conflict="' +
+      (missing ? "recreate" : "retry") +
+      '">' +
+      (missing
+        ? t("保存到原位置", "Save to original location")
+        : t("重试", "Try again")) +
+      '</button><button data-conflict="saveAs">' +
+      t("另存为…", "Save As…") +
+      "</button>";
+    b.querySelectorAll("button").forEach(
+      (btn) =>
+        (btn.onclick = guarded(() =>
+          btn.dataset.conflict === "saveAs"
+            ? saveDocument(true)
+            : saveDocument(false, current.encoding, {
+                recreate: btn.dataset.conflict === "recreate",
+              }),
+        )),
+    );
+    return;
+  }
   b.innerHTML =
     "<span>" +
     t(
@@ -2450,109 +2533,7 @@ async function quickOpen(commands = false) {
   input.focus();
 }
 function commandList() {
-  const list = [
-    ["new", "新建文档", "New document"],
-    ["open", "打开文档", "Open document"],
-    ["openFolder", "打开文件夹", "Open folder"],
-    ["newFile", "在文件夹中创建文档", "Create file in folder"],
-    ["newFolder", "新建子文件夹", "New subfolder"],
-    ["save", "保存", "Save"],
-    ["saveAs", "另存为", "Save as"],
-    ["convertEncoding", "转换文件编码", "Convert file encoding"],
-    ["reopenClosed", "重新打开上一个文档", "Reopen previous document"],
-    [
-      "undoFileOperation",
-      "撤销上次文件移动/重命名",
-      "Undo file move or rename",
-    ],
-    ["quickOpen", "快速打开", "Quick open"],
-    ["import", "导入文档（Pandoc）", "Import (Pandoc)"],
-    ["export", "导出文档", "Export"],
-    ["repeatExport", "重复上次导出", "Repeat last export"],
-    ["print", "打印", "Print"],
-    ["newWindow", "新窗口", "New window"],
-    ["close", "关闭窗口", "Close window"],
-    ["quit", "退出 Inkstone", "Quit Inkstone"],
-    ["source", "切换源码模式", "Toggle source"],
-    ["focus", "切换专注模式", "Toggle focus"],
-    ["typewriter", "切换打字机模式", "Toggle typewriter"],
-    ["zen", "切换沉浸模式", "Toggle immersive mode"],
-    ["fullscreen", "全屏", "Full screen"],
-    ["sidebar", "切换侧边栏", "Toggle sidebar"],
-    ["aiAssistant", "切换AI写作助手", "Toggle AI Writing Assistant"],
-    ["aiModels", "AI / 模型设置", "AI / Models"],
-    ["zoomIn", "放大", "Zoom in"],
-    ["zoomOut", "缩小", "Zoom out"],
-    ["zoomReset", "重置缩放", "Reset zoom"],
-    ["find", "查找 / 正则", "Find / Regex"],
-    ["replace", "替换", "Replace"],
-    ["undo", "撤销", "Undo"],
-    ["redo", "重做", "Redo"],
-    ["deleteBlock", "删除当前段落或块", "Delete current paragraph or block"],
-    ["deleteSentence", "删除当前句子", "Delete current sentence"],
-    ["deleteWord", "删除当前词", "Delete current word"],
-    ["clearFormatting", "移除文本格式", "Clear formatting"],
-    ["moveParagraphUp", "上移当前段落", "Move paragraph up"],
-    ["moveParagraphDown", "下移当前段落", "Move paragraph down"],
-    ["bold", "加粗", "Bold"],
-    ["italic", "斜体", "Italic"],
-    ["strike", "删除线", "Strikethrough"],
-    ["highlight", "高亮", "Highlight"],
-    ["sup", "上标", "Superscript"],
-    ["sub", "下标", "Subscript"],
-    ["quote", "引用", "Quote"],
-    ["bullet", "无序列表", "Bullet list"],
-    ["ordered", "有序列表", "Numbered list"],
-    ["task", "任务列表", "Task list"],
-    ["link", "插入链接", "Insert link"],
-    ["insertImage", "插入本地图片", "Insert local image"],
-    ["insertImageURL", "从 URL 插入图片", "Insert image from URL"],
-    ["resizeImage", "调整图片尺寸", "Resize image"],
-    ["collectImages", "归集图片到资源目录", "Collect images into asset folder"],
-    ["manageImages", "图片资源管理", "Manage image resources"],
-    [
-      "downloadImage",
-      "下载网络图片到资源目录",
-      "Download remote image to assets",
-    ],
-    ["table", "创建表格", "Create table"],
-    ["tableEdit", "表格编辑工具", "Table tools"],
-    ["codeFence", "插入代码块", "Code fence"],
-    ["codeLanguage", "代码块语言", "Code language"],
-    ["copyCode", "复制当前代码块", "Copy current code block"],
-    ["copyPath", "复制文档路径", "Copy document path"],
-    ["clearRecent", "清除最近文档记录", "Clear recent documents"],
-    ["math", "插入数学公式", "Math block"],
-    ["toc", "插入目录", "Table of contents"],
-    ["footnote", "插入脚注", "Footnote"],
-    ["hr", "分隔线", "Horizontal rule"],
-    ["pageBreak", "分页符", "Page break"],
-    ["copyRich", "复制为富文本", "Copy as rich text"],
-    ["copyHTML", "复制 HTML", "Copy HTML"],
-    ["copyPlain", "复制纯文本", "Copy plain text"],
-    ["format", "整理 Markdown", "Format Markdown"],
-    ["outline", "大纲", "Outline"],
-    ["globalSearch", "全局搜索", "Search in folder"],
-    ["history", "版本历史", "Version history"],
-    ["recovery", "恢复草稿", "Recovery drafts"],
-    ["readOnly", "切换只读模式", "Toggle read-only"],
-    ["refresh", "刷新公式与图表", "Refresh math and diagrams"],
-    ["copyMathML", "复制当前公式 MathML", "Copy current formula as MathML"],
-    ["statistics", "文档统计", "Document statistics"],
-    ["settings", "偏好设置", "Preferences"],
-    ["defaultApps", "Markdown 默认打开方式", "Default Markdown app"],
-    ["about", "关于墨石", "About Inkstone"],
-  ];
-  for (let i = 1; i <= 6; i++)
-    list.push(["heading" + i, "标题 " + i, "Heading " + i]);
-  const result = list.map(([id, zh, en]) => ({ id, label: t(zh, en) }));
-  Object.keys(settings.snippets || {}).forEach((name) =>
-    result.push({
-      id: "snippet:" + name,
-      label: t("插入片段：", "Insert snippet: ") + name,
-    }),
-  );
-  return result;
+  return commandCatalog(settings.snippets, t);
 }
 async function historyDialog() {
   if (settings.readOnly) {
@@ -3196,6 +3177,9 @@ async function execute(name, arg) {
       return fileOperation(arg);
     case "save":
       return saveDocument();
+    // Timed auto save: failures show the banner instead of a dialog.
+    case "autoSave":
+      return saveDocument(false, current.encoding, { quiet: true });
     case "saveAs":
       return saveDocument(true);
     case "convertEncoding": {
@@ -3227,7 +3211,19 @@ async function execute(name, arg) {
     case "about":
       return showAbout(await invoke("getAboutInfo"), invoke, {
         locale: settings.locale,
+        checkUpdates: () => run("checkUpdates"),
       });
+    case "checkUpdates":
+      if (!updateNotice) throw Error(t("编辑器仍在启动", "Still starting"));
+      return updateNotice.check();
+    case "copyDiagnostics":
+      await invoke("writeClipboard", { text: await invoke("getDiagnostics") });
+      return toast(
+        t(
+          "诊断信息已复制，可粘贴到 GitHub Issue 中。其中不含文档内容、文件路径和 API Key。",
+          "Diagnostic information copied. Paste it into a GitHub issue; it contains no document text, file paths or API keys.",
+        ),
+      );
     case "reopenClosed": {
       const path = closedDocuments.pop();
       if (path) await openDocument(path);
@@ -3898,6 +3894,19 @@ document.addEventListener(
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () =>
   applyAppearance(),
 );
+// Uncaught errors go to the diagnostic report (Tools → Copy diagnostic
+// information); nothing leaves the computer unless the user pastes it.
+function reportProblem(error) {
+  const message =
+    error?.stack || error?.message || String(error ?? "Unknown error");
+  native
+    ?.invoke("reportProblem", { message: message.slice(0, 4000) })
+    .catch(() => {});
+}
+addEventListener("error", (event) =>
+  reportProblem(event.error || event.message),
+);
+addEventListener("unhandledrejection", (event) => reportProblem(event.reason));
 
 async function init() {
   shell();
@@ -4006,6 +4015,7 @@ async function init() {
   }
   startupRecoveryCount = (bootstrapData.recoverableAtStartup || []).length;
   renderRecoveryNotice();
+  updateNotice = createUpdateNotice({ invoke, native });
   if (bootstrapData.warnings?.length)
     toast(bootstrapData.warnings.join("\n"), true);
   editor.focus();

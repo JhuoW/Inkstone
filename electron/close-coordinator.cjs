@@ -22,7 +22,10 @@ class CloseCoordinator {
     if (request?.pending && !request.sent && !request.recovering)
       this.deliver(request);
   }
-  request(ids, reason = "close") {
+  // `batch` ({ mode: "save" | "discard", ids }) carries a choice the user made
+  // once for several unsaved documents; those windows then skip their own
+  // Save / Don't Save prompt. Other windows still ask.
+  request(ids, reason = "close", batch = null) {
     if (this.current) {
       if (this.current.phase === "prepare") {
         for (const id of ids) this.current.ids.add(id);
@@ -41,6 +44,9 @@ class CloseCoordinator {
     const operation = {
       ids: new Set(ids),
       reason,
+      batch: ["save", "discard"].includes(batch?.mode)
+        ? { mode: batch.mode, ids: new Set(batch.ids) }
+        : null,
       phase: "prepare",
       requests: new Map(),
     };
@@ -51,12 +57,14 @@ class CloseCoordinator {
   deliver(request) {
     clearTimeout(request.timer);
     request.sent = true;
+    const { reason, batch } = this.current;
     this.send(
       request.id,
       request.phase === "prepare" ? "before-close" : "before-close-commit",
       {
         requestId: request.requestId,
-        reason: this.current.reason,
+        reason,
+        ...(batch?.ids.has(request.id) ? { batch: batch.mode } : {}),
       },
     );
   }

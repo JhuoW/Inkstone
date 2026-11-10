@@ -121,6 +121,40 @@ function preserveEndings(original, edited) {
     original.slice(position(normalized.length - suffix))
   );
 }
+// On Windows, antivirus scanners and sync clients such as OneDrive briefly
+// hold files open, so replacing one can fail for a moment.
+async function renameWithRetry(from, to) {
+  for (let attempt = 0; ; attempt++)
+    try {
+      return await fs.rename(from, to);
+    } catch (error) {
+      if (
+        process.platform !== "win32" ||
+        attempt >= 4 ||
+        !["EPERM", "EACCES", "EBUSY"].includes(error.code)
+      )
+        throw error;
+      await new Promise((resolve) => setTimeout(resolve, 50 * (attempt + 1)));
+    }
+}
+// Saving errors the editor can explain and offer Save As for. Messages keep
+// the CODE: prefix the renderer branches on.
+function saveError(error) {
+  if (/^[A-Z][A-Z_]+: /.test(error?.message || "")) return error;
+  if (["EACCES", "EPERM", "EROFS"].includes(error?.code))
+    return new Error(
+      "PERMISSION: Inkstone could not write this file. It may be read-only, in use by another program, or in a folder you cannot change. Your edits are retained; try again or use Save As.",
+    );
+  if (error?.code === "EBUSY")
+    return new Error(
+      "BUSY: Another program is using this file. Your edits are retained; close the other program and save again, or use Save As.",
+    );
+  if (error?.code === "ENOSPC")
+    return new Error(
+      "DISK_FULL: The disk is full. Your edits are retained; free some space or use Save As to save elsewhere.",
+    );
+  return error;
+}
 async function atomicWrite(file, bytes, { beforeRename } = {}) {
   await fs.mkdir(path.dirname(file), { recursive: true });
   const temp = path.join(
@@ -139,7 +173,7 @@ async function atomicWrite(file, bytes, { beforeRename } = {}) {
     await handle.close();
     handle = null;
     if (beforeRename) await beforeRename();
-    await fs.rename(temp, file);
+    await renameWithRetry(temp, file);
     try {
       const dir = await fs.open(path.dirname(file), "r");
       try {
@@ -222,6 +256,10 @@ class FileStore {
       const currentRevision = await this.revision(file);
       if (createOnly && currentRevision !== null)
         throw new Error("EXISTS: A file with this name already exists.");
+      if (revision && currentRevision === null)
+        throw new Error(
+          "MISSING: The file was moved or deleted outside Inkstone. Your edits are retained; save it again at its original location or use Save As.",
+        );
       if (currentRevision !== null && !revision && !createOnly)
         throw new Error(
           "CONFLICT: Saving over an existing file requires its current revision. Use Save As or reopen the file.",
@@ -259,6 +297,17 @@ class FileStore {
         this.documents.set(file, result);
         return { ...result, unchanged: true };
       }
+      // Replacing the file would bypass a read-only attribute on Linux and
+      // fail with a bare EPERM on Windows; say so before writing anything.
+      if (bytes)
+        try {
+          await fs.access(file, fs.constants.W_OK);
+        } catch (error) {
+          if (!["EACCES", "EPERM", "EROFS"].includes(error.code)) throw error;
+          throw new Error(
+            "READONLY: This file is read-only. Your edits are retained; use Save As to save a copy, or remove the read-only setting and save again.",
+          );
+        }
       if (bytes) await this.addHistory(file, bytes, originalEncoding);
       await atomicWrite(file, newBytes, {
         beforeRename: async () => {
@@ -267,6 +316,8 @@ class FileStore {
               "CONFLICT: The file changed while saving. Your edits have not overwritten it.",
             );
         },
+      }).catch((error) => {
+        throw saveError(error);
       });
       this.documents.set(file, result);
       return result;

@@ -1979,9 +1979,14 @@ export function createEditor(
         if (performance.now() - started > 1000) return false;
         await new Promise((resolve) => setTimeout(resolve, 16));
       }
-      await new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve)),
-      );
+      await new Promise((resolve) => {
+        // A window hidden in the tray draws no frames, and has no IME
+        // composition to settle; never wait for frames that will not come.
+        if (view.dom.ownerDocument.visibilityState === "hidden")
+          return resolve();
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+        setTimeout(resolve, 250);
+      });
       const finished =
         !composingInputs.size &&
         !view.composing &&

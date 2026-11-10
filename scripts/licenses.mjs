@@ -41,7 +41,10 @@ for (const [location, entry] of Object.entries(lock.packages).sort()) {
   }
 }
 for (const [name, license] of [
-  ["Chromium en-US Hunspell/SCOWL dictionary (upstream notices)", "electron/dictionaries/README_en_US.txt"],
+  [
+    "Chromium en-US Hunspell/SCOWL dictionary (upstream notices)",
+    "electron/dictionaries/README_en_US.txt",
+  ],
   [
     "js-sequence-diagrams 2.0.1 (vendored, BSD-2-Clause)",
     "src/vendor/sequence-diagrams/LICENCE",

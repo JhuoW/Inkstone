@@ -34,6 +34,7 @@ const exact = new Map(
     "Unsupported desktop operation": "不支持的桌面操作。",
     "Unsupported window action": "不支持的窗口操作。",
     "Settings must be a JSON object.": "设置必须是 JSON 对象。",
+    "Invalid close action": "关闭窗口时的操作无效。",
     "Invalid default code language": "默认代码语言无效。",
     "Invalid export options": "导出选项无效。",
     "Invalid file sort": "文件排序方式无效。",
@@ -49,6 +50,16 @@ const exact = new Map(
     "Invalid Windows UI language.": "Windows 界面语言无效。",
     "The bundled dictionary did not pass its integrity check.":
       "内置词典未通过完整性校验。",
+    // Updates
+    "UPDATE: Could not check for updates. Check the network connection and try again.":
+      "无法检查更新，请检查网络连接后重试。",
+    "UPDATE: The update could not be downloaded. Try again, or download it from the release page.":
+      "更新下载失败，请重试，或到发布页面下载。",
+    "UPDATE: This copy of Inkstone installs updates from the release page.":
+      "这个版本需要到发布页面下载更新。",
+    "UPDATE: No update is available to download.": "没有可下载的更新。",
+    "UPDATE: No downloaded update is ready to install.":
+      "没有已下载、可安装的更新。",
     // Files and saving
     "CONFLICT: Saving over an existing file requires its current revision. Use Save As or reopen the file.":
       "覆盖已有文件需要其当前版本。请使用“另存为”或重新打开该文件。",
@@ -56,6 +67,16 @@ const exact = new Map(
       "文件已在 Inkstone 之外被修改。你的编辑仍保留，可重新打开磁盘版本或另存为新文件。",
     "CONFLICT: The file changed while saving. Your edits have not overwritten it.":
       "保存过程中文件被修改，你的编辑没有覆盖它。",
+    "MISSING: The file was moved or deleted outside Inkstone. Your edits are retained; save it again at its original location or use Save As.":
+      "文件已在 Inkstone 之外被移动或删除。你的编辑仍保留，可在原位置重新保存，或使用“另存为”。",
+    "READONLY: This file is read-only. Your edits are retained; use Save As to save a copy, or remove the read-only setting and save again.":
+      "此文件是只读的。你的编辑仍保留，可使用“另存为”保存副本，或取消文件的只读属性后再保存。",
+    "PERMISSION: Inkstone could not write this file. It may be read-only, in use by another program, or in a folder you cannot change. Your edits are retained; try again or use Save As.":
+      "Inkstone 无法写入此文件。文件可能是只读的、正被其他程序使用，或所在文件夹不允许修改。你的编辑仍保留，可重试或使用“另存为”。",
+    "BUSY: Another program is using this file. Your edits are retained; close the other program and save again, or use Save As.":
+      "另一个程序正在使用此文件。你的编辑仍保留，请关闭该程序后重新保存，或使用“另存为”。",
+    "DISK_FULL: The disk is full. Your edits are retained; free some space or use Save As to save elsewhere.":
+      "磁盘空间已满。你的编辑仍保留，请释放空间，或使用“另存为”保存到其他位置。",
     "CONFLICT: Export destination changed while rendering. The existing file was not overwritten; choose a new destination.":
       "渲染期间导出目标已变化，已有文件未被覆盖，请选择新的保存位置。",
     "CONFLICT: An image changed after preparing this operation. No original files were removed.":
@@ -336,9 +357,11 @@ const codeLabels = {
   ACCESS: "访问受限",
   AI: "AI",
   ASSET: "资源",
+  BUSY: "文件被占用",
   CLIPBOARD: "剪贴板",
   CLOSE: "关闭",
   CONFLICT: "文件冲突",
+  DISK_FULL: "磁盘已满",
   DOWNLOAD: "下载失败",
   ENCODING: "编码",
   EXISTS: "已存在",
@@ -347,9 +370,12 @@ const codeLabels = {
   IMAGES: "图片",
   INVALID: "无效操作",
   LINK: "链接",
+  MISSING: "文件不存在",
   OPEN: "打开失败",
   PATH: "路径",
+  PERMISSION: "没有写入权限",
   PREFERENCES: "偏好设置",
+  READONLY: "只读文件",
   SPELLCHECK: "拼写检查",
   STATE_BACKUP: "备份失败",
   TOO_LARGE: "文件过大",

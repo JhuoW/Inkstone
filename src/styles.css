@@ -1378,10 +1378,28 @@ kbd {
   min-width: 180px;
   color: var(--muted);
 }
-#recovery-dismiss {
+#recovery-dismiss,
+.update-dismiss {
   background: transparent;
   border-color: transparent;
   color: var(--muted);
+}
+/* Update notice: same bar as recovery drafts, with the version in plain text. */
+.update-notice > span:first-child {
+  color: var(--text);
+}
+.update-notice strong {
+  font-weight: 600;
+}
+.update-notice progress {
+  width: 160px;
+  height: 6px;
+  accent-color: var(--accent);
+}
+.update-notice > .update-percent {
+  flex: none;
+  min-width: 3ch;
+  font-variant-numeric: tabular-nums;
 }
 @container writing-sidebar (max-width: 220px) {
   .brand {

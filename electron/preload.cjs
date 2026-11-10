@@ -9,6 +9,12 @@ const methods = new Set([
   "aiCancel",
   "bootstrap",
   "getAboutInfo",
+  "getDiagnostics",
+  "reportProblem",
+  "getUpdateStatus",
+  "checkForUpdates",
+  "downloadUpdate",
+  "restartToUpdate",
   "getDefaultAppInfo",
   "openDefaultApps",
   "claimDefaultAppPrompt",
@@ -62,6 +68,7 @@ const events = new Set([
   "open-path",
   "folder-change",
   "context-menu-details",
+  "update-status",
 ]);
 contextBridge.exposeInMainWorld("inkstone", {
   invoke(method, payload = {}) {

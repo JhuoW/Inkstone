@@ -9,7 +9,11 @@ const licenseURL = "https://www.gnu.org/licenses/agpl-3.0.html";
 const dialogs = new WeakMap();
 
 /** Runtime metadata and the actual bundled LICENSE are provided by getAboutInfo. */
-export function showAbout(info, invoke, { locale = getLocale() } = {}) {
+export function showAbout(
+  info,
+  invoke,
+  { locale = getLocale(), checkUpdates } = {},
+) {
   const previous = dialogs.get(document);
   if (previous?.el.isConnected) {
     previous.el.querySelector("[data-about-close]").focus();
@@ -52,7 +56,7 @@ export function showAbout(info, invoke, { locale = getLocale() } = {}) {
         <div class="about-identity">
           <p class="about-eyebrow">${t("Markdown 编辑器", "Markdown editor")}</p>
           <h3 class="about-product">Inkstone <span lang="zh-CN">墨石</span></h3>
-          <p class="about-version"><span>${t("版本", "Version")}</span> <strong data-about-version>${esc(version)}</strong></p>
+          <p class="about-version"><span>${t("版本", "Version")}</span> <strong data-about-version>${esc(version)}</strong>${typeof checkUpdates === "function" ? ` <button type="button" class="about-text-button" data-about-check-updates>${t("检查更新", "Check for updates")}</button>` : ""}</p>
         </div>
       </div>
       <p class="about-description" data-about-description>${t("让想法落在纸上", "A place for your thoughts")}</p>
@@ -90,6 +94,8 @@ export function showAbout(info, invoke, { locale = getLocale() } = {}) {
     .querySelector("header .close")
     .setAttribute("aria-label", t("关闭", "Close"));
   licenseRegion.textContent = licenseText;
+  const updateButton = d.el.querySelector("[data-about-check-updates]");
+  if (updateButton) updateButton.onclick = () => void checkUpdates();
   licenseButton.onclick = () => {
     overview.hidden = true;
     licenseView.hidden = false;

@@ -206,7 +206,9 @@ test("external changes and deleted file cannot be silently overwritten", async (
   await assert.rejects(store.save({ ...opened, text: "mine" }), /CONFLICT/);
   assert.equal(await fs.readFile(file, "utf8"), "external");
   await fs.unlink(file);
-  await assert.rejects(store.save({ ...opened, text: "mine" }), /CONFLICT/);
+  // A deleted file is reported as such, and nothing is recreated silently.
+  await assert.rejects(store.save({ ...opened, text: "mine" }), /MISSING/);
+  await assert.rejects(fs.stat(file), { code: "ENOENT" });
 });
 test("parallel saves with same revision serialize and detect conflict", async (t) => {
   const { file, store } = await fixture(t);
@@ -655,4 +657,40 @@ test("offline dictionary installation preserves cached dictionaries and user wor
   const unavailable = await installDictionaryCache(blocked);
   assert.deepEqual(unavailable.dictionaries, []);
   assert.ok(unavailable.warnings.length > 0);
+});
+test("saving a moved or deleted file says so instead of reporting a conflict, and can recreate it", async (t) => {
+  const { store, file } = await fixture(t);
+  const saved = await store.save({ path: file, text: "one", createOnly: true });
+  await fs.rm(file);
+  await assert.rejects(
+    store.save({ path: file, text: "two", revision: saved.revision }),
+    /^Error: MISSING: /,
+  );
+  // Saving without a revision creates the file again at the same path.
+  await store.save({ path: file, text: "two", createOnly: true });
+  assert.equal(await fs.readFile(file, "utf8"), "two");
+});
+test("a read-only file is reported before anything is written", async (t) => {
+  if (process.getuid?.() === 0) return t.skip("root ignores file modes");
+  const { store, file } = await fixture(t);
+  const saved = await store.save({ path: file, text: "one", createOnly: true });
+  await fs.chmod(file, 0o444);
+  t.after(() => fs.chmod(file, 0o644).catch(() => {}));
+  // Saving identical text writes nothing and still succeeds.
+  assert.equal(
+    (await store.save({ path: file, text: "one", revision: saved.revision }))
+      .unchanged,
+    true,
+  );
+  await assert.rejects(
+    store.save({ path: file, text: "two", revision: saved.revision }),
+    /^Error: READONLY: /,
+  );
+  assert.equal(await fs.readFile(file, "utf8"), "one");
+  assert.deepEqual(
+    (await fs.readdir(path.dirname(file))).filter((name) =>
+      name.endsWith(".tmp"),
+    ),
+    [],
+  );
 });

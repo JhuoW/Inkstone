@@ -7,6 +7,9 @@ playwright-report/
 *.log
 .DS_Store
 
+# Output of test and validation runs (scripts/artifact-path.mjs)
+artifacts/runs/
+
 # Validation logs referenced by the delivery documentation
 !artifacts/**/*.log
 

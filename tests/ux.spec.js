@@ -349,6 +349,15 @@ test("multi-window Quit is atomic on Cancel; Save and Don't Save commit only aft
   );
   await waitEditable(second);
   await append("Second window.", second);
+  // Two unsaved documents: the native summary box offers Review Each…, which
+  // keeps the per-window prompts this test covers.
+  await app.evaluate(({ dialog }) => {
+    globalThis.uxSummaries = [];
+    dialog.showMessageBox = async (...args) => {
+      globalThis.uxSummaries.push(args.at(-1).message);
+      return { response: 1 };
+    };
+  });
   await page.evaluate(() => __inkstone.execute("quit"));
   await choice("Don't Save").click();
   await choice("Cancel", second).click();
@@ -364,6 +373,10 @@ test("multi-window Quit is atomic on Cancel; Save and Don't Save commit only aft
   expect(await fs.readFile(file, "utf8")).toBe(original);
   await page.evaluate(() => __inkstone.execute("quit"));
   await choice("Save").click();
+  expect(await app.evaluate(() => globalThis.uxSummaries)).toEqual([
+    "2 documents have unsaved changes.",
+    "2 documents have unsaved changes.",
+  ]);
   const firstClosed = page.waitForEvent("close"),
     secondClosed = second.waitForEvent("close");
   await choice("Don't Save", second).click();

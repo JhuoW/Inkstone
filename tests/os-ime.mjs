@@ -4,10 +4,11 @@ import { spawn, execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
+import { artifactPath } from "../scripts/artifact-path.mjs";
 import assert from "node:assert/strict";
 const root = process.cwd();
 const temp = await fs.mkdtemp(path.join(os.tmpdir(), "inkstone-os-ime-"));
-const output = path.join(root, "artifacts", "os-ime-validation");
+const output = artifactPath("os-ime-validation");
 await fs.mkdir(output, { recursive: true });
 const env = {
   ...process.env,
@@ -61,7 +62,12 @@ try {
   await fs.mkdir(env.INKSTONE_USER_DATA, { recursive: true });
   await fs.writeFile(
     path.join(env.INKSTONE_USER_DATA, "settings.json"),
-    JSON.stringify({ locale: "en", firstRunComplete: true }),
+    // Closing exits as before; the tray choice dialog is native and would wait.
+    JSON.stringify({
+      locale: "en",
+      firstRunComplete: true,
+      closeAction: "quit",
+    }),
   );
   app = await electron.launch({ args: ["--no-sandbox", root, file], env });
   const page = await app.firstWindow();
